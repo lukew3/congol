@@ -13,6 +13,7 @@ class Game {
 		this.totalRounds = totalRounds;
 		this.roundTime = roundTime;
 		this.data = this.createEmptyData();
+		this.initBoard();
 	}
 	createEmptyData() {
 		let myarr = [];
@@ -107,5 +108,4 @@ document.getElementById('nextButton').addEventListener('click', (e) => {
 
 
 gameObj = new Game(boardSize, cellSize, totalRounds, roundTime)
-gameObj.initBoard();
 
