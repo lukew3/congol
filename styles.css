@@ -1,0 +1,35 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+#gameBoard {
+	margin-top: 30px;
+	margin-left: 50%;
+	transform: translate(-50%, 0);
+	width: 500px;
+	height: 500px;
+	border: 1px solid black;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.cell {
+	width: 18px;
+	height: 18px;
+	border: 1px grey solid;
+}
+
+#controls {
+	display: flex;
+	justify-content: center;
+}
+
+#startButton, #nextButton {
+	width: 50px;
+	text-align: center;
+	padding: 5px;
+	margin: 10px;
+	border: 1px grey solid;
+	cursor: pointer;
+}
