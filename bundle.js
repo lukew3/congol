@@ -128,7 +128,7 @@ let gameObj = new Game(boardSize, cellSize, totalRounds, roundTime, roundCtr)
 document.addEventListener('click', (e) => {
 	let element = e.target;
 	if (element.className === "cell") {
-		element.style.backgroundColor = (element.style.backgroundColor === "black") ? "white" : "black"
+		element.style.backgroundColor = (element.style.backgroundColor === "black") ? "#EDEDED" : "black"
 		gameObj.toggleCell(element.id);
 	};
 });
