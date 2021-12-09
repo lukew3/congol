@@ -42,6 +42,8 @@ class Game {
 		this.stopGame();
 		this.data = this.createEmptyData();
 		this.renderBoard();
+		this.round = 0;
+                this.roundCtr.innerHTML = 0;
 	}
 	stopGame() {
 		// for each to in roundTimeouts, clear timeout
