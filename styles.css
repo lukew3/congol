@@ -20,7 +20,7 @@ html {
 }
 
 #gameBoard {
-	margin-top: 30px;
+	margin-top: 40px;
 	margin-left: 50%;
 	transform: translate(-50%, 0);
 	width: 500px;
