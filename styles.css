@@ -47,18 +47,62 @@ html {
 	min-width: 60px;
 }
 
-#controls {
-	display: flex;
-	justify-content: center;
-}
-
-#controls div {
-	margin: 15px 10px;
-}
-
 #roundCtrCont {
 	display: flex;
 	width: 100%;
 	justify-content: center;
 	margin-top: 5px;
 }
+
+#scoreboard {
+	margin: 15px 0px;
+	display: flex;
+	width: 100%;
+	justify-content: center;
+}
+
+.playerGroup {
+	display: flex;
+}
+
+.playerScore {
+	font-size: 18pt;
+}
+
+.playerUsername {
+	margin: 0px 5px;
+	margin-top: 4.5pt;
+}
+
+#switch-container {
+	width: 65px;
+	height: 30px;
+	background-color: #C4C4C4;
+	border-radius: 30px;
+	margin: 0px 100px;
+}
+
+#switchHandle {
+	width: 24px;
+	height: 24px;
+	background-color: #3E7CF3;
+	border-radius: 12px;
+	margin-top: 3px;
+	margin-left: 4px;
+}
+
+input:checked + label #switchHandle {
+	transform: translateX(30px);
+	background-color: red;
+}
+
+#controls {
+	display: flex;
+	justify-content: center;
+}
+
+#controls div {
+	margin: 10px 10px;
+}
+
+
