@@ -92,8 +92,15 @@ html {
 }
 
 input:checked + label #switchHandle {
-	transform: translateX(30px);
+	transform: translateX(33px);
 	background-color: red;
+	transition: 0.1s;
+}
+
+input + label #switchHandle {
+        transform: translateX(0px);
+        background-color: blue;    
+        transition: 0.1s;
 }
 
 #controls {
