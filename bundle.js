@@ -1,11 +1,15 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 class Game {
-        constructor(boardSize, cellSize, totalRounds, roundTime) {
+        constructor(boardSize, cellSize, totalRounds, roundTime, roundCtr) {
                 this.board = document.getElementById("gameBoard");
                 this.boardSize = boardSize;
                 this.cellSize = cellSize;
                 this.totalRounds = totalRounds;
                 this.roundTime = roundTime;
+                this.roundCtr = roundCtr;
+		this.round = 0;
+                this.running = false;
+		this.roundTimeouts = [];
                 this.data = this.createEmptyData();
                 this.initBoard();
         }
@@ -31,18 +35,34 @@ class Game {
         renderBoard() {
                 this.data.forEach((row, y) => {
                         row.forEach((cell, x) => {
-                                document.getElementById(`cell-${y*this.boardSize+x}`).style.backgroundColor = cell ? "black" : "white";
+                                document.getElementById(`cell-${y*this.boardSize+x}`).style.backgroundColor = cell ? "black" : "#EDEDED"; // ED would usually be "white". Cell bg color might be user-customizable later
                         });
                 });
         }
+	resetBoard() {
+		this.stopGame();
+		this.data = this.createEmptyData();
+		this.renderBoard();
+	}
+	stopGame() {
+		// for each to in roundTimeouts, clear timeout
+		this.roundTimeouts.forEach((id) => {
+			clearTimeout(id);
+		});
+		this.running = false;
+	}
         runGame() {
                 for(let r=0; r<this.totalRounds; r++) {
-                        setTimeout(() => {
-                                this.runRound();
-                        }, r*this.roundTime);
+                        this.roundTimeouts.push(
+				setTimeout(() => {
+                                	this.runRound();
+	                        }, r*this.roundTime)
+			);
                 }
+		this.running = true;
         }
         runRound() {
+		this.round++;
                 let newData = this.createEmptyData();
                 this.data.forEach((row, y) => {
                         row.forEach((cell, x) => {
@@ -58,6 +78,7 @@ class Game {
                 });
                 this.data = newData;
                 this.renderBoard();
+                this.roundCtr.innerHTML = this.round;
                 //console.log("Round ran");
         }
         countNeighbors(y,x) {
@@ -81,6 +102,9 @@ class Game {
                 //console.log(`${cy} ${num%this.boardSize}`);
                 this.data[cy][num%this.boardSize] = this.data[cy][num%this.boardSize] ? false : true;
         }
+	isRunning() {
+		return this.running;
+	}
 };
 
 module.exports = {
@@ -95,7 +119,9 @@ const cellSize = 20; // size of a cell in pixels
 const totalRounds = 100; // number of rounds to render
 const roundTime = 1000; // Time to pause for after each round
 
-let gameObj = new Game(boardSize, cellSize, totalRounds, roundTime)
+let roundCtr = document.getElementById('roundCounter');
+
+let gameObj = new Game(boardSize, cellSize, totalRounds, roundTime, roundCtr)
 
 document.addEventListener('click', (e) => {
 	let element = e.target;
@@ -105,12 +131,23 @@ document.addEventListener('click', (e) => {
 	};
 });
 
-document.getElementById('startButton').addEventListener('click', (e) => {
-	gameObj.runGame();
+document.getElementById('startStopButton').addEventListener('click', (e) => {
+	if (gameObj.isRunning()) {
+		gameObj.stopGame();
+		document.getElementById('startStopButton').innerHTML = "Start";
+	} else {
+		gameObj.runGame();
+		document.getElementById('startStopButton').innerHTML = "Stop";
+	}
 });
 
 document.getElementById('nextButton').addEventListener('click', (e) => {
 	gameObj.runRound();
+});
+
+document.getElementById('resetButton').addEventListener('click', (e) => {
+	gameObj.resetBoard();
+	document.getElementById('startStopButton').innerHTML = "Start";
 });
 
 

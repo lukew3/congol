@@ -5,7 +5,9 @@ const cellSize = 20; // size of a cell in pixels
 const totalRounds = 100; // number of rounds to render
 const roundTime = 1000; // Time to pause for after each round
 
-let gameObj = new Game(boardSize, cellSize, totalRounds, roundTime)
+let roundCtr = document.getElementById('roundCounter');
+
+let gameObj = new Game(boardSize, cellSize, totalRounds, roundTime, roundCtr)
 
 document.addEventListener('click', (e) => {
 	let element = e.target;
@@ -15,11 +17,22 @@ document.addEventListener('click', (e) => {
 	};
 });
 
-document.getElementById('startButton').addEventListener('click', (e) => {
-	gameObj.runGame();
+document.getElementById('startStopButton').addEventListener('click', (e) => {
+	if (gameObj.isRunning()) {
+		gameObj.stopGame();
+		document.getElementById('startStopButton').innerHTML = "Start";
+	} else {
+		gameObj.runGame();
+		document.getElementById('startStopButton').innerHTML = "Stop";
+	}
 });
 
 document.getElementById('nextButton').addEventListener('click', (e) => {
 	gameObj.runRound();
+});
+
+document.getElementById('resetButton').addEventListener('click', (e) => {
+	gameObj.resetBoard();
+	document.getElementById('startStopButton').innerHTML = "Start";
 });
 

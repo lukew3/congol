@@ -1,10 +1,14 @@
 class Game {
-        constructor(boardSize, cellSize, totalRounds, roundTime) {
+        constructor(boardSize, cellSize, totalRounds, roundTime, roundCtr) {
                 this.board = document.getElementById("gameBoard");
                 this.boardSize = boardSize;
                 this.cellSize = cellSize;
                 this.totalRounds = totalRounds;
                 this.roundTime = roundTime;
+                this.roundCtr = roundCtr;
+		this.round = 0;
+                this.running = false;
+		this.roundTimeouts = [];
                 this.data = this.createEmptyData();
                 this.initBoard();
         }
@@ -30,18 +34,34 @@ class Game {
         renderBoard() {
                 this.data.forEach((row, y) => {
                         row.forEach((cell, x) => {
-                                document.getElementById(`cell-${y*this.boardSize+x}`).style.backgroundColor = cell ? "black" : "white";
+                                document.getElementById(`cell-${y*this.boardSize+x}`).style.backgroundColor = cell ? "black" : "#EDEDED"; // ED would usually be "white". Cell bg color might be user-customizable later
                         });
                 });
         }
+	resetBoard() {
+		this.stopGame();
+		this.data = this.createEmptyData();
+		this.renderBoard();
+	}
+	stopGame() {
+		// for each to in roundTimeouts, clear timeout
+		this.roundTimeouts.forEach((id) => {
+			clearTimeout(id);
+		});
+		this.running = false;
+	}
         runGame() {
                 for(let r=0; r<this.totalRounds; r++) {
-                        setTimeout(() => {
-                                this.runRound();
-                        }, r*this.roundTime);
+                        this.roundTimeouts.push(
+				setTimeout(() => {
+                                	this.runRound();
+	                        }, r*this.roundTime)
+			);
                 }
+		this.running = true;
         }
         runRound() {
+		this.round++;
                 let newData = this.createEmptyData();
                 this.data.forEach((row, y) => {
                         row.forEach((cell, x) => {
@@ -57,6 +77,7 @@ class Game {
                 });
                 this.data = newData;
                 this.renderBoard();
+                this.roundCtr.innerHTML = this.round;
                 //console.log("Round ran");
         }
         countNeighbors(y,x) {
@@ -80,6 +101,9 @@ class Game {
                 //console.log(`${cy} ${num%this.boardSize}`);
                 this.data[cy][num%this.boardSize] = this.data[cy][num%this.boardSize] ? false : true;
         }
+	isRunning() {
+		return this.running;
+	}
 };
 
 module.exports = {

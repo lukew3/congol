@@ -3,12 +3,22 @@
 	<title>Congol</title>
 	<link rel="stylesheet" type="text/css" href="styles.css" />
 	<meta charset="UTF-8">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 </head>
 <body>
+	<div id="navbar">
+		<p id="navTitle">Congol</p>
+	</div>
 	<div id="gameBoard"></div>
+	<div id="roundCtrCont">
+		Round: <p id="roundCounter">0</p>
+	</div>
 	<div id="controls">
-		<div id="startButton">Start</div>
-		<div id="nextButton">Next</div>
+		<div id="resetButton" class="button">Reset</div>
+		<div id="startStopButton" class="button">Start</div>
+		<div id="nextButton" class="button">Next</div>
 	</div>
 	<script src="bundle.js"></script>
 </body>
