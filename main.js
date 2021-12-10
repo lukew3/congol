@@ -16,19 +16,22 @@ let gameObj = new Game({
 	totalRounds,
 	roundTime,
 	roundCtr,
-	colorDead,
-	colorP1,
-	colorP2
+	"colors": [
+		colorDead,
+		colorP1,
+		colorP2
+	]
 });
 
 document.addEventListener('click', (e) => {
 	let element = e.target;
+	let playerId = (document.getElementById("switch").checked) ? 2 : 1;
 	if (element.className === "cell") {
-		if (!document.getElementById("switch").checked)
+		if (playerId == 1)
 			element.style.backgroundColor = (element.style.backgroundColor === colorP1) ? "#EDEDED" : colorP1;
 		else
 			element.style.backgroundColor = (element.style.backgroundColor === colorP2) ? "#EDEDED" : colorP2;
-		gameObj.toggleCell(element.id);
+		gameObj.toggleCell(element.id, playerId);
 	};
 });
 
