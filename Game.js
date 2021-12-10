@@ -96,11 +96,10 @@ class Game {
                 this.data = newData;
                 this.renderBoard();
                 this.roundCtr.innerHTML = this.round;
-		console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
+		//console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
         }
         countNeighbors(y,x) {
-		let countP1 = 0;
-		let countP2 = 0;
+		let count = [0,0];
 		let cell;
                 let ymin = (y === 0) ? y : y-1;
                 let xmin = (x === 0) ? x : x-1;
@@ -109,19 +108,15 @@ class Game {
                 for(let yc = ymin; yc < ymax+1; yc++) {
                         for(let xc = xmin; xc < xmax+1; xc++) {
 				cell = this.data[yc][xc];
-				if (cell == 1)
-					countP1 += 1;
-				else if (cell == 2)
-					countP2 += 1;
+				if (cell != 0)
+					count[cell-1] += 1;
                         }
                 }
 		cell = this.data[y][x];
-		if (cell == 1)
-			countP1 -= 1;
-		else if (cell == 2)
-			countP2 -= 1;
-		let dominant = countP1>countP2 ? 1 : 2;
-		return [countP1+countP2, dominant];
+		if (cell != 0)
+			count[cell-1] -= 1;
+		let dominant = count[0]>count[1] ? 1 : 2;
+		return [count[0]+count[1], dominant];
         }
         toggleCell(cellId, playerId) {
                 // Lol I don't know regex
