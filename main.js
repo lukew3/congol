@@ -5,9 +5,10 @@ const cellSize = 20; // size of a cell in pixels
 const totalRounds = 100; // number of rounds to render
 const roundTime = 1000; // Time to pause for after each round
 
-let roundCtr = document.getElementById('roundCounter');
-let scoreP1 = document.getElementById('p1Score');
-let scoreP2 = document.getElementById('p2Score');
+const roundCtr = document.getElementById('roundCounter');
+const scoreP1 = document.getElementById('p1Score');
+const scoreP2 = document.getElementById('p2Score');
+const playerSwitch = document.getElementById("switch");
 let colorDead = "#EDEDED";
 let colorP1 = "blue";
 let colorP2 = "red";
@@ -31,7 +32,11 @@ let gameObj = new Game({
 
 document.addEventListener('click', (e) => {
 	let element = e.target;
-	let playerId = (document.getElementById("switch").checked) ? 2 : 1;
+	let playerId;
+	if (playerSwitch == undefined)
+		playerId = 1;
+	else
+		playerId = (document.getElementById("switch").checked) ? 2 : 1;
 	if (element.className === "cell") {
 		gameObj.toggleCell(element, playerId);
 	};
