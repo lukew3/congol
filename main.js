@@ -33,11 +33,7 @@ document.addEventListener('click', (e) => {
 	let element = e.target;
 	let playerId = (document.getElementById("switch").checked) ? 2 : 1;
 	if (element.className === "cell") {
-		if (playerId == 1)
-			element.style.backgroundColor = (element.style.backgroundColor === colorP1) ? "#EDEDED" : colorP1;
-		else
-			element.style.backgroundColor = (element.style.backgroundColor === colorP2) ? "#EDEDED" : colorP2;
-		gameObj.toggleCell(element.id, playerId);
+		gameObj.toggleCell(element, playerId);
 	};
 });
 

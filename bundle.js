@@ -59,6 +59,7 @@ class Game {
 		this.renderBoard();
 		this.round = 0;
                 this.roundCtr.innerHTML = 0;
+		this.setScores();
 	}
 	stopGame() {
 		// for each to in roundTimeouts, clear timeout
@@ -133,16 +134,20 @@ class Game {
 		this.scores[0].innerHTML = scores[0];
 		this.scores[1].innerHTML = scores[1];
 	}
-        toggleCell(cellId, playerId) {
+        toggleCell(cellObj, playerId) {
                 // Lol I don't know regex
-                let num = -Number(cellId.match(/\-[0-9a-z]+$/i)[0]);
+                let num = -Number(cellObj.id.match(/\-[0-9a-z]+$/i)[0]);
                 let cy = Math.floor(num/this.boardSize);
                 //console.log(`${cy} ${num%this.boardSize}`);
 		if (this.data[cy][num%this.boardSize] == 0) {
+			// fill empty square
 			this.data[cy][num%this.boardSize] = playerId;
+			cellObj.style.backgroundColor = this.colors[playerId];
 			this.scores[playerId-1].innerHTML = Number(this.scores[playerId-1].innerHTML) + 1;
 		} else if (this.data[cy][num%this.boardSize] == playerId) {
+			// empty filled square
 			this.data[cy][num%this.boardSize] = 0;
+			cellObj.style.backgroundColor = this.colors[0];
 			this.scores[playerId-1].innerHTML = Number(this.scores[playerId-1].innerHTML) - 1;
 		}
         }
@@ -191,11 +196,7 @@ document.addEventListener('click', (e) => {
 	let element = e.target;
 	let playerId = (document.getElementById("switch").checked) ? 2 : 1;
 	if (element.className === "cell") {
-		if (playerId == 1)
-			element.style.backgroundColor = (element.style.backgroundColor === colorP1) ? "#EDEDED" : colorP1;
-		else
-			element.style.backgroundColor = (element.style.backgroundColor === colorP2) ? "#EDEDED" : colorP2;
-		gameObj.toggleCell(element.id, playerId);
+		gameObj.toggleCell(element, playerId);
 	};
 });
 
