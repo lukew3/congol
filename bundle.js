@@ -1,12 +1,23 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+const acceptedArgs = ["boardSize", "cellSize", "totalRounds", "roundTime", "roundCtr", "colorDead", "colorP1", "colorP2"];
+
 class Game {
-        constructor(boardSize, cellSize, totalRounds, roundTime, roundCtr) {
+        constructor(args) {
+		// Defaults that may be overwritten
+		this.boardSize = 25;
+		this.cellSize = 20;
+		this.totalRounds = 100;
+		this.roundTime = 1000;
+		this.colorDead = "#EDEDED";
+		this.colorP1 = "black";
+		// Parse args
+		Object.keys(args).forEach((key) => {
+			if (acceptedArgs.includes(key)){
+				this[key] = args[key];
+			};
+		});
+		// Variables that are always set to the same thing
                 this.board = document.getElementById("gameBoard");
-                this.boardSize = boardSize;
-                this.cellSize = cellSize;
-                this.totalRounds = totalRounds;
-                this.roundTime = roundTime;
-                this.roundCtr = roundCtr;
 		this.round = 0;
                 this.running = false;
 		this.roundTimeouts = [];
@@ -35,7 +46,7 @@ class Game {
         renderBoard() {
                 this.data.forEach((row, y) => {
                         row.forEach((cell, x) => {
-                                document.getElementById(`cell-${y*this.boardSize+x}`).style.backgroundColor = cell ? "black" : "#EDEDED"; // ED would usually be "white". Cell bg color might be user-customizable later
+                                document.getElementById(`cell-${y*this.boardSize+x}`).style.backgroundColor = cell ? this.colorP1 : this.colorDead;
                         });
                 });
         }
@@ -122,13 +133,28 @@ const totalRounds = 100; // number of rounds to render
 const roundTime = 1000; // Time to pause for after each round
 
 let roundCtr = document.getElementById('roundCounter');
+let colorDead = "#EDEDED";
+let colorP1 = "blue";
+let colorP2 = "red";
 
-let gameObj = new Game(boardSize, cellSize, totalRounds, roundTime, roundCtr)
+let gameObj = new Game({
+	boardSize,
+	cellSize,
+	totalRounds,
+	roundTime,
+	roundCtr,
+	colorDead,
+	colorP1,
+	colorP2
+});
 
 document.addEventListener('click', (e) => {
 	let element = e.target;
 	if (element.className === "cell") {
-		element.style.backgroundColor = (element.style.backgroundColor === "black") ? "#EDEDED" : "black"
+		if (!document.getElementById("switch").checked)
+			element.style.backgroundColor = (element.style.backgroundColor === colorP1) ? "#EDEDED" : colorP1;
+		else
+			element.style.backgroundColor = (element.style.backgroundColor === colorP2) ? "#EDEDED" : colorP2;
 		gameObj.toggleCell(element.id);
 	};
 });

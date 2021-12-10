@@ -9,9 +9,12 @@ html {
 }
 
 #navbar {
-	width: 100%;
+	width: calc(100% - 40px);
 	height: 65px;
 	background-color: #D2D2D2;
+	display: flex;
+	justify-content: space-between;
+	padding: 0px 20px;
 }
 
 #navTitle {
@@ -19,8 +22,17 @@ html {
 	padding: 20px;
 	color: black;
 	text-decoration: none;
-	position: relative;
-	top: 20px;
+}
+
+#navRight {
+	display: flex;
+}
+
+#navRight a {
+	font-size: 16px;
+	padding: 20px;
+	color: black;
+	text-decoration: none;
 }
 
 #gameBoard {

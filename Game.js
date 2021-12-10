@@ -1,11 +1,22 @@
+const acceptedArgs = ["boardSize", "cellSize", "totalRounds", "roundTime", "roundCtr", "colorDead", "colorP1", "colorP2"];
+
 class Game {
-        constructor(boardSize, cellSize, totalRounds, roundTime, roundCtr) {
+        constructor(args) {
+		// Defaults that may be overwritten
+		this.boardSize = 25;
+		this.cellSize = 20;
+		this.totalRounds = 100;
+		this.roundTime = 1000;
+		this.colorDead = "#EDEDED";
+		this.colorP1 = "black";
+		// Parse args
+		Object.keys(args).forEach((key) => {
+			if (acceptedArgs.includes(key)){
+				this[key] = args[key];
+			};
+		});
+		// Variables that are always set to the same thing
                 this.board = document.getElementById("gameBoard");
-                this.boardSize = boardSize;
-                this.cellSize = cellSize;
-                this.totalRounds = totalRounds;
-                this.roundTime = roundTime;
-                this.roundCtr = roundCtr;
 		this.round = 0;
                 this.running = false;
 		this.roundTimeouts = [];
@@ -34,7 +45,7 @@ class Game {
         renderBoard() {
                 this.data.forEach((row, y) => {
                         row.forEach((cell, x) => {
-                                document.getElementById(`cell-${y*this.boardSize+x}`).style.backgroundColor = cell ? "black" : "#EDEDED"; // ED would usually be "white". Cell bg color might be user-customizable later
+                                document.getElementById(`cell-${y*this.boardSize+x}`).style.backgroundColor = cell ? this.colorP1 : this.colorDead;
                         });
                 });
         }
