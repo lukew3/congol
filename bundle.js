@@ -1,5 +1,7 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-const acceptedArgs = ["boardSize", "cellSize", "totalRounds", "roundTime", "roundCtr", "colors"];
+const acceptedArgs = ["boardSize", "cellSize", "totalRounds", "roundTime", "roundCtr", "colors", "scores"];
+// Add required args? Ex: Scores, roundCtr (these aren't necessary for all modes, if somebody wanted to play without score or rounds, these would not be neccessary
+// board would be, if you chose to make that an arg
 
 class Game {
         constructor(args) {
@@ -96,8 +98,9 @@ class Game {
                 });
                 this.data = newData;
                 this.renderBoard();
+		this.setScores();
                 this.roundCtr.innerHTML = this.round;
-		console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
+		//console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
         }
         countNeighbors(y,x) {
 		let count = [0,0];
@@ -119,15 +122,29 @@ class Game {
 		let dominant = count[0]>count[1] ? 1 : 2;
 		return [count[0]+count[1], dominant];
         }
+	setScores() {
+		let scores = [0,0];
+		this.data.forEach((row, y) => {
+			row.forEach((cell, x) => {
+				if (cell != 0)
+					scores[cell-1] += 1;
+			});
+		});
+		this.scores[0].innerHTML = scores[0];
+		this.scores[1].innerHTML = scores[1];
+	}
         toggleCell(cellId, playerId) {
                 // Lol I don't know regex
                 let num = -Number(cellId.match(/\-[0-9a-z]+$/i)[0]);
                 let cy = Math.floor(num/this.boardSize);
                 //console.log(`${cy} ${num%this.boardSize}`);
-		if (this.data[cy][num%this.boardSize] == 0)
+		if (this.data[cy][num%this.boardSize] == 0) {
 			this.data[cy][num%this.boardSize] = playerId;
-		else if (this.data[cy][num%this.boardSize] == playerId)
+			this.scores[playerId-1].innerHTML = Number(this.scores[playerId-1].innerHTML) + 1;
+		} else if (this.data[cy][num%this.boardSize] == playerId) {
 			this.data[cy][num%this.boardSize] = 0;
+			this.scores[playerId-1].innerHTML = Number(this.scores[playerId-1].innerHTML) - 1;
+		}
         }
 	isRunning() {
 		return this.running;
@@ -147,6 +164,8 @@ const totalRounds = 100; // number of rounds to render
 const roundTime = 1000; // Time to pause for after each round
 
 let roundCtr = document.getElementById('roundCounter');
+let scoreP1 = document.getElementById('p1Score');
+let scoreP2 = document.getElementById('p2Score');
 let colorDead = "#EDEDED";
 let colorP1 = "blue";
 let colorP2 = "red";
@@ -161,6 +180,10 @@ let gameObj = new Game({
 		colorDead,
 		colorP1,
 		colorP2
+	],
+	"scores": [
+		scoreP1,
+		scoreP2
 	]
 });
 

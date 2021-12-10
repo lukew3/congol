@@ -1,4 +1,6 @@
-const acceptedArgs = ["boardSize", "cellSize", "totalRounds", "roundTime", "roundCtr", "colors"];
+const acceptedArgs = ["boardSize", "cellSize", "totalRounds", "roundTime", "roundCtr", "colors", "scores"];
+// Add required args? Ex: Scores, roundCtr (these aren't necessary for all modes, if somebody wanted to play without score or rounds, these would not be neccessary
+// board would be, if you chose to make that an arg
 
 class Game {
         constructor(args) {
@@ -95,6 +97,7 @@ class Game {
                 });
                 this.data = newData;
                 this.renderBoard();
+		this.setScores();
                 this.roundCtr.innerHTML = this.round;
 		//console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
         }
@@ -118,15 +121,29 @@ class Game {
 		let dominant = count[0]>count[1] ? 1 : 2;
 		return [count[0]+count[1], dominant];
         }
+	setScores() {
+		let scores = [0,0];
+		this.data.forEach((row, y) => {
+			row.forEach((cell, x) => {
+				if (cell != 0)
+					scores[cell-1] += 1;
+			});
+		});
+		this.scores[0].innerHTML = scores[0];
+		this.scores[1].innerHTML = scores[1];
+	}
         toggleCell(cellId, playerId) {
                 // Lol I don't know regex
                 let num = -Number(cellId.match(/\-[0-9a-z]+$/i)[0]);
                 let cy = Math.floor(num/this.boardSize);
                 //console.log(`${cy} ${num%this.boardSize}`);
-		if (this.data[cy][num%this.boardSize] == 0)
+		if (this.data[cy][num%this.boardSize] == 0) {
 			this.data[cy][num%this.boardSize] = playerId;
-		else if (this.data[cy][num%this.boardSize] == playerId)
+			this.scores[playerId-1].innerHTML = Number(this.scores[playerId-1].innerHTML) + 1;
+		} else if (this.data[cy][num%this.boardSize] == playerId) {
 			this.data[cy][num%this.boardSize] = 0;
+			this.scores[playerId-1].innerHTML = Number(this.scores[playerId-1].innerHTML) - 1;
+		}
         }
 	isRunning() {
 		return this.running;

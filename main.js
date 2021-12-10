@@ -6,6 +6,8 @@ const totalRounds = 100; // number of rounds to render
 const roundTime = 1000; // Time to pause for after each round
 
 let roundCtr = document.getElementById('roundCounter');
+let scoreP1 = document.getElementById('p1Score');
+let scoreP2 = document.getElementById('p2Score');
 let colorDead = "#EDEDED";
 let colorP1 = "blue";
 let colorP2 = "red";
@@ -20,6 +22,10 @@ let gameObj = new Game({
 		colorDead,
 		colorP1,
 		colorP2
+	],
+	"scores": [
+		scoreP1,
+		scoreP2
 	]
 });
 
