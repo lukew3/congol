@@ -128,4 +128,15 @@ input + label #switchHandle {
 	margin: 10px 10px;
 }
 
-
+#rulesCont {
+	margin: auto;
+	margin-top: 10px;
+	padding: 15px;
+	max-width: 800px;
+}
+#rulesCont p,ol {
+	margin-top: 1em;
+}
+#rulesCont ol {
+	margin-left: 2em;
+}
