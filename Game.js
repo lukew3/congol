@@ -1,4 +1,4 @@
-const acceptedArgs = ["boardSize", "cellSize", "totalRounds", "roundTime", "roundCtr", "colors", "scores"];
+const acceptedArgs = ["boardObj", "boardSize", "cellSize", "totalRounds", "roundTime", "roundCtr", "colors", "scores"];
 // Add required args? Ex: Scores, roundCtr (these aren't necessary for all modes, if somebody wanted to play without score or rounds, these would not be neccessary
 // board would be, if you chose to make that an arg
 
@@ -10,6 +10,7 @@ class Game {
 		this.totalRounds = 100;
 		this.roundTime = 1000;
 		this.colors = ["#EDEDED", "black"];
+                this.boardObj = document.getElementById("gameBoard");
 		// Parse args
 		Object.keys(args).forEach((key) => {
 			if (acceptedArgs.includes(key)){
@@ -17,7 +18,6 @@ class Game {
 			};
 		});
 		// Variables that are always set to the same thing
-                this.board = document.getElementById("gameBoard");
 		this.round = 0;
                 this.running = false;
 		this.roundTimeouts = [];
@@ -35,12 +35,12 @@ class Game {
                 return myarr;
         }
         initBoard() {
-                this.board.innerHTML = "";
+                this.boardObj.innerHTML = "";
                 for (let i=0; i < Math.pow(this.boardSize, 2); i++) {
                         let newCell = document.createElement('div');
                         newCell.classList.add('cell');
                         newCell.id = `cell-${i}`;
-                        this.board.append(newCell);
+                        this.boardObj.append(newCell);
                 }
         }
         renderBoard() {
