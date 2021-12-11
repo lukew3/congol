@@ -37,9 +37,6 @@ class Game {
 		let width = Math.min(screen.availWidth, 500);
 		let boardWH = (width-10) - ((width-10) % this.boardSize); // 10 pixels of space between board and edge of screen
 		let cellWH = boardWH / this.boardSize - 2; // 2 pixels for the border
-		console.log(width);
-		console.log(boardWH);
-		console.log(cellWH);
                 this.boardObj.innerHTML = "";
 		this.boardObj.style = `width: ${boardWH}; height: ${boardWH}`;
                 for (let i=0; i < Math.pow(this.boardSize, 2); i++) {
