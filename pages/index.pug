@@ -1,36 +1,22 @@
-doctype html
-html
-  head
-    title Congol
-    link(rel='stylesheet' type='text/css' href='styles/styles.css')
-    meta(charset='UTF-8')
-    meta(name='viewport' content='width=device-width, initial-scale=1')
-    link(rel='shortcut icon' type='image/x-icon' href='img/favicon.ico')
-    link(rel='preconnect' href='https://fonts.googleapis.com')
-    link(rel='preconnect' href='https://fonts.gstatic.com' crossorigin)
-    link(href='https://fonts.googleapis.com/css2?family=Roboto&display=swap' rel='stylesheet')
-  body
-    div#navbar
-      a#navTitle(href='./index.html') Congol
-      div#navRight
-        a(href='./solo.html') Solo
-        a(href='./rules.html') Rules
-    div#gameBoard
-    div#roundCtrCont Round:
-      p#roundCounter 0
-    div#scoreboard
-      div.playerGroup
-        p#p1Username.playerUsername Player 1
-        p#p1Score.playerScore 0
-      div#switch-container
-        input#switch(type='checkbox' style='display:none')
-        label(for='switch')
-          div#switchHandle
-      div.playerGroup
-        p#p2Username.playerUsername Player 2
-        p#p2Score.playerScore 0
-    div#controls
-      div#resetButton.button Reset
-      div#startStopButton.button Start
-      div#nextButton.button Next
-    script(src='src/bundle.js')
+extends layout.pug
+
+block content
+  div#gameBoard
+  div#roundCtrCont Round:
+    p#roundCounter 0
+  div#scoreboard
+    div.playerGroup
+      p#p1Username.playerUsername Player 1
+      p#p1Score.playerScore 0
+    div#switch-container
+      input#switch(type='checkbox' style='display:none')
+      label(for='switch')
+        div#switchHandle
+    div.playerGroup
+      p#p2Username.playerUsername Player 2
+      p#p2Score.playerScore 0
+  div#controls
+    div#resetButton.button Reset
+    div#startStopButton.button Start
+    div#nextButton.button Next
+  script(src='src/bundle.js')

@@ -1,28 +1,13 @@
-doctype html
-html
-  head
-    title Congol
-    link(rel='stylesheet' type='text/css' href='styles/styles.css')
-    meta(charset='UTF-8')
-    meta(name='viewport' content='width=device-width, initial-scale=1')
-    link(rel='shortcut icon' type='image/x-icon' href='img/favicon.ico')
-    link(rel='preconnect' href='https://fonts.googleapis.com')
-    link(rel='preconnect' href='https://fonts.gstatic.com' crossorigin)
-    link(href='https://fonts.googleapis.com/css2?family=Roboto&display=swap' rel='stylesheet')
-  body
-    div#navbar
-      a#navTitle(href='./index.html') Congol
-      div#navRight
-        a(href='./solo.html') Solo
-        a(href='./rules.html') Rules
+extends layout.pug
 
-    div#rulesCont
-      h1 Rules
-      p Congol is based off of John Conway's Game of Life. All of the original rules of Conway's Game of Life are kept in Congol. The original rules are as follows:
-      ol
-        li Survival: A cell surrounded by two or three cells survives for the next generation
-        li Death: A cell with 4 or more neighbors dies of overpopulation. A cell with one or no neighbors dies of isolation.
-        li Birth: An unoccupied square becomes a living cell if it has exactly 3 neighbors
-      p To make this game playable with multiple species of cells, another rule was added:
-      p(style='margin-left: 1rem') The species that contributes the most to the birth of a new cell decides the species of the new cell.
-      p As the game develops, rules will be formed concerning how the game should be played, but the rules stated previously shall always apply
+block content
+  div#rulesCont
+    h1 Rules
+    p Congol is based off of John Conway's Game of Life. All of the original rules of Conway's Game of Life are kept in Congol. The original rules are as follows:
+    ol
+      li Survival: A cell surrounded by two or three cells survives for the next generation
+      li Death: A cell with 4 or more neighbors dies of overpopulation. A cell with one or no neighbors dies of isolation.
+      li Birth: An unoccupied square becomes a living cell if it has exactly 3 neighbors
+    p To make this game playable with multiple species of cells, another rule was added:
+    p(style='margin-left: 1rem') The species that contributes the most to the birth of a new cell decides the species of the new cell.
+    p As the game develops, rules will be formed concerning how the game should be played, but the rules stated previously shall always apply
