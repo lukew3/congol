@@ -39,16 +39,16 @@ html {
 	margin-top: 40px;
 	margin-left: 50%;
 	transform: translate(-50%, 0);
-	width: 500px;
-	height: 500px;
+	width: 495px;
+	height: 495px;
 	border: 1px solid black;
 	display: flex;
 	flex-wrap: wrap;
 }
 
 .cell {
-	width: 18px;
-	height: 18px;
+	width: 31px;
+	height: 31px;
 	border: 1px grey solid;
 	background-color: #EDEDED;
 }

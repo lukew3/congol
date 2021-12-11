@@ -1,5 +1,5 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-const acceptedArgs = ["boardSize", "cellSize", "totalRounds", "roundTime", "roundCtr", "colors", "scores"];
+const acceptedArgs = ["boardObj", "boardSize", "cellSize", "totalRounds", "roundTime", "roundCtr", "colors", "scores"];
 // Add required args? Ex: Scores, roundCtr (these aren't necessary for all modes, if somebody wanted to play without score or rounds, these would not be neccessary
 // board would be, if you chose to make that an arg
 
@@ -11,6 +11,7 @@ class Game {
 		this.totalRounds = 100;
 		this.roundTime = 1000;
 		this.colors = ["#EDEDED", "black"];
+                this.boardObj = document.getElementById("gameBoard");
 		// Parse args
 		Object.keys(args).forEach((key) => {
 			if (acceptedArgs.includes(key)){
@@ -18,7 +19,6 @@ class Game {
 			};
 		});
 		// Variables that are always set to the same thing
-                this.board = document.getElementById("gameBoard");
 		this.round = 0;
                 this.running = false;
 		this.roundTimeouts = [];
@@ -36,12 +36,20 @@ class Game {
                 return myarr;
         }
         initBoard() {
-                this.board.innerHTML = "";
+		let width = Math.min(screen.availWidth, 500);
+		let boardWH = (width-10) - ((width-10) % this.boardSize); // 10 pixels of space between board and edge of screen
+		let cellWH = boardWH / this.boardSize - 2; // 2 pixels for the border
+		console.log(width);
+		console.log(boardWH);
+		console.log(cellWH);
+                this.boardObj.innerHTML = "";
+		this.boardObj.style = `width: ${boardWH}; height: ${boardWH}`;
                 for (let i=0; i < Math.pow(this.boardSize, 2); i++) {
                         let newCell = document.createElement('div');
                         newCell.classList.add('cell');
                         newCell.id = `cell-${i}`;
-                        this.board.append(newCell);
+			newCell.style = `width: ${cellWH}; height: ${cellWH}`
+                        this.boardObj.append(newCell);
                 }
         }
         renderBoard() {
@@ -163,11 +171,12 @@ module.exports = {
 },{}],2:[function(require,module,exports){
 const { Game } = require("./Game.js");
 
-const boardSize = 25; // amount of cells in a row or column
+const boardSize = 15; // amount of cells in a row or column
 const cellSize = 20; // size of a cell in pixels
 const totalRounds = 100; // number of rounds to render
 const roundTime = 1000; // Time to pause for after each round
 
+const boardObj = document.getElementById('gameBoard');
 const roundCtr = document.getElementById('roundCounter');
 const scoreP1 = document.getElementById('p1Score');
 const scoreP2 = document.getElementById('p2Score');
@@ -177,6 +186,7 @@ let colorP1 = "blue";
 let colorP2 = "red";
 
 let gameObj = new Game({
+	boardObj,
 	boardSize,
 	cellSize,
 	totalRounds,
@@ -199,7 +209,7 @@ document.addEventListener('click', (e) => {
 	if (playerSwitch == undefined)
 		playerId = 1;
 	else
-		playerId = (document.getElementById("switch").checked) ? 2 : 1;
+		playerId = (playerSwitch.checked) ? 2 : 1;
 	if (element.className === "cell") {
 		gameObj.toggleCell(element, playerId);
 	};
