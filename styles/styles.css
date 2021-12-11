@@ -8,7 +8,7 @@ html {
 	background-color: #E0E0E0;
 }
 
-#navbar {
+nav {
 	width: 100%;
 	background-color: #D2D2D2;
 	display: flex;
@@ -32,6 +32,22 @@ html {
 	padding: 20px 10px;
 	color: black;
 	text-decoration: none;
+}
+
+footer {
+	width: calc(100% - 40px);
+	padding: 20px;
+	position: absolute;
+	bottom: 0;
+}
+
+footer a {
+	padding: 0 10px;
+	text-decoration: none;
+	color: black;
+}
+footer a:hover {
+	color: #424242;
 }
 
 #gameBoard {
