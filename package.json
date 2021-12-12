@@ -1,0 +1,20 @@
+{
+  "name": "congol",
+  "version": "1.0.0",
+  "description": "Multiplayer Conway's Game Of Life",
+  "main": "index.js",
+  "scripts": {
+    "build": "pug pages -o ./ && cd src; browserify main.js -o bundle.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukew3/congol.git"
+  },
+  "author": "Luke Weiler",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/lukew3/congol/issues"
+  },
+  "homepage": "https://github.com/lukew3/congol#readme"
+}

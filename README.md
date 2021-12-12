@@ -8,5 +8,5 @@ npm i -g browserify pug
 
 ## Build
 ```
-./build.sh
+npm run build
 ```
