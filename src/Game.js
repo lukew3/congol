@@ -1,11 +1,10 @@
-const acceptedArgs = ["boardObj", "boardSize", "cellSize", "totalRounds", "roundTime", "roundCtr", "colors", "scores"];
+const acceptedArgs = ["boardObj", "boardSize", "totalRounds", "roundTime", "roundCtr", "colors", "scores"];
 // Add required args? Ex: Scores, roundCtr (these aren't necessary for all modes, if somebody wanted to play without score or rounds, these would not be neccessary
 
 class Game {
         constructor(args) {
 		// Defaults that may be overwritten
 		this.boardSize = 25;
-		this.cellSize = 20;
 		this.totalRounds = 100;
 		this.roundTime = 1000;
 		this.colors = ["#EDEDED", "black"];
@@ -38,12 +37,12 @@ class Game {
 		let boardWH = (width-10) - ((width-10) % this.boardSize); // 10 pixels of space between board and edge of screen
 		let cellWH = boardWH / this.boardSize - 2; // 2 pixels for the border
                 this.boardObj.innerHTML = "";
-		this.boardObj.style = `width: ${boardWH}; height: ${boardWH}`;
+		this.boardObj.style = `width: ${boardWH}px; height: ${boardWH}px`;
                 for (let i=0; i < Math.pow(this.boardSize, 2); i++) {
                         let newCell = document.createElement('div');
                         newCell.classList.add('cell');
                         newCell.id = `cell-${i}`;
-			newCell.style = `width: ${cellWH}; height: ${cellWH}`
+			newCell.style = `width: ${cellWH}px; height: ${cellWH}px`
                         this.boardObj.append(newCell);
                 }
         }
