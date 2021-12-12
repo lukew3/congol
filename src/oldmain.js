@@ -30,7 +30,6 @@ let gameObj = new Game({
 	]
 });
 
-// Toggle cell
 document.addEventListener('click', (e) => {
 	let element = e.target;
 	let playerId;
@@ -43,14 +42,6 @@ document.addEventListener('click', (e) => {
 	};
 });
 
-
-document.getElementById('submitMoveButton').addEventListener('click', (e) => {
-	playerSwitch.checked = !playerSwitch.checked;
-	gameObj.runRound();
-});
-
-
-// 2pPlayground Buttons
 document.getElementById('startStopButton').addEventListener('click', (e) => {
 	if (gameObj.isRunning()) {
 		gameObj.stopGame();
