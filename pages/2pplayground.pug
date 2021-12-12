@@ -1,0 +1,22 @@
+extends layout.pug
+
+block content
+  div#gameBoard
+  div#roundCtrCont Round:
+    p#roundCounter 0
+  div#scoreboard
+    div.playerGroup
+      p#p1Username.playerUsername Player 1
+      p#p1Score.playerScore 0
+    div#switch-container
+      input#switch(type='checkbox' style='display:none')
+      label(for='switch')
+        div#switchHandle
+    div.playerGroup
+      p#p2Score.playerScore 0
+      p#p2Username.playerUsername Player 2
+  div#controls
+    div#resetButton.button Reset
+    div#startStopButton.button Start
+    div#nextButton.button Next
+  script(src='src/bundle.js')

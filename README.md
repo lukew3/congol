@@ -1,12 +1,22 @@
-# congol
-Conway's game of life
+# Congol
+
+Conway's game of life for 2 players
+
+[congol.net](http://congol.net)
+
 
 ## Install Requirements
 ```
-npm i -g browserify pug
+npm ci
 ```
 
 ## Build
 ```
 npm run build
+```
+
+## Deploy
+Deploys to the gh-pages branch of the repo
+```
+npm run deploy
 ```
