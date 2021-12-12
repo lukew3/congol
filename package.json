@@ -4,9 +4,10 @@
   "description": "Multiplayer Conway's Game Of Life",
   "main": "index.js",
   "scripts": {
-    "build": "pug pages -o ./build/ && browserify ./src/main.js -o ./build/src/bundle.js && cp -r img build/img && cp -r styles build/styles",
+    "build": "pug pages -o ./ && browserify src/main.js -o src/bundle.js",
     "deploy": "gh-pages -d build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-todir": "pug pages -o ./build/ && browserify ./src/main.js -o ./build/src/bundle.js && cp -r img build/img && cp -r styles build/styles"
   },
   "repository": {
     "type": "git",
