@@ -159,12 +159,37 @@ class Game {
 	}
 };
 
-module.exports = {
-	Game
-};
 
-},{}],2:[function(require,module,exports){
-const { Game } = require("./Game.js");
+// Router
+const defaultPage = document.getElementById('defaultGamePage');
+const rulesPage = document.getElementById('rulesPage');
+const newGamePage = document.getElementById('newGamePage');
+
+const setPage = (pageId) => {
+	defaultPage.style = 'display: none;';
+	rulesPage.style = 'display: none;';
+	newGamePage.style = 'display: none;';
+	document.getElementById(pageId).style = 'display: block;';
+}
+
+if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+	defaultPage.style = 'display: block;';
+}
+
+document.getElementById('navTitle').addEventListener('click', (e) => {
+	setPage('defaultGamePage');
+});
+
+document.getElementById('navRules').addEventListener('click', (e) => {
+	setPage('rulesPage');
+});
+
+document.getElementById('navPlay').addEventListener('click', (e) => {
+	setPage('newGamePage');
+});
+
+
+// Main.js
 
 const boardSize = 15; // amount of cells in a row or column
 const totalRounds = 100; // number of rounds to render
@@ -180,61 +205,62 @@ let colorP1 = "blue";
 let colorP2 = "red";
 
 let gameObj = new Game({
-	boardObj,
-	boardSize,
-	totalRounds,
-	roundTime,
-	roundCtr,
-	"colors": [
-		colorDead,
-		colorP1,
-		colorP2
-	],
-	"scores": [
-		scoreP1,
-		scoreP2
-	]
+        boardObj,
+        boardSize,
+        totalRounds,
+        roundTime,
+        roundCtr,
+        "colors": [
+                colorDead,
+                colorP1,
+                colorP2
+        ],
+        "scores": [
+                scoreP1,
+                scoreP2
+        ]
 });
 
 // Toggle cell
 document.addEventListener('click', (e) => {
-	let element = e.target;
-	let playerId;
-	if (playerSwitch == undefined)
-		playerId = 1;
-	else
-		playerId = (playerSwitch.checked) ? 2 : 1;
-	if (element.className === "cell") {
-		gameObj.toggleCell(element, playerId);
-	};
+        let element = e.target;
+        let playerId;
+        if (playerSwitch == undefined)
+                playerId = 1;
+        else
+                playerId = (playerSwitch.checked) ? 2 : 1;
+        if (element.className === "cell") {
+                gameObj.toggleCell(element, playerId);
+        };
 });
 
 
 document.getElementById('submitMoveButton').addEventListener('click', (e) => {
-	playerSwitch.checked = !playerSwitch.checked;
-	gameObj.runRound();
+        playerSwitch.checked = !playerSwitch.checked;
+        gameObj.runRound();
 });
 
 
 // 2pPlayground Buttons
 document.getElementById('startStopButton').addEventListener('click', (e) => {
-	if (gameObj.isRunning()) {
-		gameObj.stopGame();
-		document.getElementById('startStopButton').innerHTML = "Start";
-	} else {
-		gameObj.runGame();
-		document.getElementById('startStopButton').innerHTML = "Stop";
-	}
+        if (gameObj.isRunning()) {
+                gameObj.stopGame();
+                document.getElementById('startStopButton').innerHTML = "Start";
+        } else {
+                gameObj.runGame();
+                document.getElementById('startStopButton').innerHTML = "Stop";
+        }
 });
 
 document.getElementById('nextButton').addEventListener('click', (e) => {
-	gameObj.runRound();
+        gameObj.runRound();
 });
 
 document.getElementById('resetButton').addEventListener('click', (e) => {
-	gameObj.resetBoard();
-	document.getElementById('startStopButton').innerHTML = "Start";
+        gameObj.resetBoard();
+        document.getElementById('startStopButton').innerHTML = "Start";
 });
 
 
-},{"./Game.js":1}]},{},[2]);
+
+},{}]},{},[1]);
