@@ -1,5 +1,5 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-const acceptedArgs = ["boardObj", "boardSize", "totalRounds", "roundTime", "roundCtr", "colors", "scoreObjs", "startingPieceCount", "maxPieceCount", "piecesObjs"];
+const acceptedArgs = ["boardObj", "boardSize", "totalRounds", "roundTime", "roundCtr", "colors", "scoreObjs", "startingPieceCount", "maxPieceCount", "piecesObjs", "scoreLimit"];
 // Add required args? Ex: Scores, roundCtr (these aren't necessary for all modes, if somebody wanted to play without score or rounds, these would not be neccessary
 
 class Game {
@@ -12,6 +12,7 @@ class Game {
                 this.boardObj = document.getElementById("gameBoard");
 		this.startingPieceCount = 4;
 		this.maxPieceCount = 12;
+		this.scoreLimit = 10;
 		// Parse args
 		Object.keys(args).forEach((key) => {
 			if (acceptedArgs.includes(key)){
@@ -72,6 +73,8 @@ class Game {
                 this.roundCtr.innerHTML = 0;
 		this.scores = [0, 0];
 		this.setScores();
+		this.piecesAvail = [this.startingPieceCount, this.startingPieceCount];
+		this.setPieces();
 	}
 	stopGame() {
 		// for each to in roundTimeouts, clear timeout
@@ -117,6 +120,8 @@ class Game {
 		this.setPieces();
                 this.roundCtr.innerHTML = this.round;
 		//console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
+		if (this.scores[0] > this.scoreLimit || this.scores[1] > this.scoreLimit)
+			this.endGame();
         }
         countNeighbors(y,x) {
 		let count = [0,0];
@@ -191,6 +196,13 @@ class Game {
 		}
 		this.setPieces();
         }
+	endGame() {
+		// Should not use document.getElementById
+		document.getElementById('winnerMessage').style.display = 'block';
+		document.getElementById('winnerMessage').innerHTML = `Player 1 wins!`;
+		document.getElementById('submitMoveButton').style.display = 'none';
+		document.getElementById('resetGameButton').style.display = 'block';
+	}
 	isRunning() {
 		return this.running;
 	}
@@ -263,6 +275,12 @@ document.getElementById('submitMoveButton').addEventListener('click', (e) => {
         gameObj.runRound();
 });
 
+document.getElementById('resetGameButton').addEventListener('click', (e) => {
+	gameObj.resetBoard();
+	document.getElementById('submitMoveButton').style.display = 'block';
+	document.getElementById('resetGameButton').style.display = 'none';
+	document.getElementById('winnerMessage').style.display = 'none';
+});
 
 // 2pPlayground Buttons
 document.getElementById('startStopButton').addEventListener('click', (e) => {
