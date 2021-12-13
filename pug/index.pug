@@ -1,0 +1,21 @@
+doctype html
+html
+  include head.pug
+  body
+    nav
+      p#navTitle Congol
+      div#navRight
+        p#navPlay Play
+        p#navRules Rules
+
+    include pages/defaultGame.pug
+    include pages/rules.pug
+    include pages/newGame.pug
+    include pages/2pplayground.pug
+    include pages/solo.pug
+
+    footer
+      a(href='https://github.com/lukew3/congol') Github
+      a(href='https://www.paypal.com/paypalme/weilerluke') Donate
+
+    script(src='bundle.js')
