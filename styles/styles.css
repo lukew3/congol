@@ -103,8 +103,13 @@ footer a:hover {
 }
 
 .playerUsername {
-	margin: 0px 5px;
 	margin-top: 4.5pt;
+}
+#p1Username {
+	margin-right: 5px;
+}
+#p2Username {
+	margin-left: 5px;
 }
 
 #switch-container {
@@ -190,7 +195,7 @@ input + label #switchHandle {
 
 /* default game */
 #underBoard {
-	width: 500px; /* Should be resized by js to fit the board size. Or have it's container be resized */
+	width: 482px; /* Should be resized by js to fit the board size. Or have it's container be resized */
 	margin: auto;
 }
 
@@ -209,4 +214,11 @@ input + label #switchHandle {
 
 #roundGroup {
 	display: flex;
+}
+.piecesAvail {
+	display: flex;
+	width: calc(50% - 20px);
+}
+#p2PiecesAvail {
+	justify-content: right;
 }

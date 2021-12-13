@@ -1,4 +1,4 @@
-const acceptedArgs = ["boardObj", "boardSize", "totalRounds", "roundTime", "roundCtr", "colors", "scoreObjs", "staringPieceCount"];
+const acceptedArgs = ["boardObj", "boardSize", "totalRounds", "roundTime", "roundCtr", "colors", "scoreObjs", "startingPieceCount", "piecesObjs"];
 // Add required args? Ex: Scores, roundCtr (these aren't necessary for all modes, if somebody wanted to play without score or rounds, these would not be neccessary
 
 class Game {
@@ -20,7 +20,7 @@ class Game {
 		});
 		// Variables that are always set to the same thing
 		this.scores = [0,0];
-		this.piecesAvailable = [this.startingPieceCount, this.startingPieceCount];
+		this.piecesAvail = [this.startingPieceCount, this.startingPieceCount];
 		this.round = 0;
                 this.running = false;
 		this.roundTimeouts = [];
@@ -39,17 +39,18 @@ class Game {
         }
         initBoard() {
 		let width = Math.min(screen.availWidth, 500);
-		let boardWH = (width-10) - ((width-10) % this.boardSize); // 10 pixels of space between board and edge of screen
-		let cellWH = boardWH / this.boardSize - 2; // 2 pixels for the border
+		this.boardWH = (width-10) - ((width-10) % this.boardSize); // 10 pixels of space between board and edge of screen
+		this.cellWH = this.boardWH / this.boardSize - 2; // 2 pixels for the border
                 this.boardObj.innerHTML = "";
-		this.boardObj.style = `width: ${boardWH}px; height: ${boardWH}px`;
+		this.boardObj.style = `width: ${this.boardWH}px; height: ${this.boardWH}px`;
                 for (let i=0; i < Math.pow(this.boardSize, 2); i++) {
                         let newCell = document.createElement('div');
                         newCell.classList.add('cell');
                         newCell.id = `cell-${i}`;
-			newCell.style = `width: ${cellWH}px; height: ${cellWH}px`
+			newCell.style = `width: ${this.cellWH}px; height: ${this.cellWH}px`
                         this.boardObj.append(newCell);
                 }
+		this.setPieces();
         }
         renderBoard() {
 		let cell, cellObj;
@@ -109,6 +110,8 @@ class Game {
                 this.renderBoard();
 		this.updateScores();
 		this.setScores();
+		this.updatePieces();
+		this.setPieces();
                 this.roundCtr.innerHTML = this.round;
 		//console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
         }
@@ -149,20 +152,39 @@ class Game {
 		this.scoreObjs[0].innerHTML = this.scores[0];
 		this.scoreObjs[1].innerHTML = this.scores[1];
 	}
+	updatePieces() {
+		this.piecesAvail[0]++;
+		this.piecesAvail[1]++;
+	}
+	setPieces() {
+		//ideally, I think this should delete and append cells depending on the amount of children
+		for(let p = 0; p < 2; p++) {
+			this.piecesObjs[p].innerHTML = "";
+			for(let i = 0; i < this.piecesAvail[p]; i++) {
+				let newCell = document.createElement('div');
+				newCell.classList.add('cell');
+				newCell.style = `width: ${this.cellWH/2}px; height: ${this.cellWH/2}px; background-color: ${this.colors[p+1]}`
+				this.piecesObjs[p].append(newCell);
+			}
+		}
+	}
         toggleCell(cellObj, playerId) {
                 // Lol I don't know regex
                 let num = -Number(cellObj.id.match(/\-[0-9a-z]+$/i)[0]);
                 let cy = Math.floor(num/this.boardSize);
                 //console.log(`${cy} ${num%this.boardSize}`);
-		if (this.data[cy][num%this.boardSize] == 0) {
+		if (this.data[cy][num%this.boardSize] == 0 && this.piecesAvail[playerId-1] != 0) {
 			// fill empty square
 			this.data[cy][num%this.boardSize] = playerId;
 			cellObj.style.backgroundColor = this.colors[playerId];
+			this.piecesAvail[playerId-1]--;
 		} else if (this.data[cy][num%this.boardSize] == playerId) {
 			// empty filled square
 			this.data[cy][num%this.boardSize] = 0;
 			cellObj.style.backgroundColor = this.colors[0];
+			this.piecesAvail[playerId-1]++;
 		}
+		this.setPieces();
         }
 	isRunning() {
 		return this.running;

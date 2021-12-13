@@ -5,13 +5,15 @@ const boardObj = document.getElementById('gameBoard');
 const roundCtr = document.getElementById('roundCounter');
 const scoreP1 = document.getElementById('p1Score');
 const scoreP2 = document.getElementById('p2Score');
+const piecesP1= document.getElementById('p1PiecesAvail');
+const piecesP2 = document.getElementById('p2PiecesAvail');
 const playerSwitch = document.getElementById("switch");
 
 // Set game variables
 let boardSize = 15; // amount of cells in a row or column
 let totalRounds = 100; // number of rounds to render
 let roundTime = 1000; // Time to pause for after each round
-let startingPieceCount = 5; // Pieces that each player gets at the beginning of the game
+let startingPieceCount = 3; // Pieces that each player gets at the beginning of the game
 let colorDead = "#EDEDED";
 let colorP1 = "blue";
 let colorP2 = "red";
@@ -31,7 +33,11 @@ let gameObj = new Game({
         "scoreObjs": [
                 scoreP1,
                 scoreP2
-        ]
+        ],
+	"piecesObjs": [
+		piecesP1,
+		piecesP2,
+	]
 });
 
 // Toggle cell
