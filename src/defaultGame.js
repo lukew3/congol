@@ -1,64 +1,39 @@
 const { Game } = require("./Game.js");
+const { defConfig } = require("./config.js");
 
 // Get DOM objects
-const boardObj = document.getElementById('gameBoard');
-const roundCtr = document.getElementById('roundCounter');
-const scoreP1 = document.getElementById('p1Score');
-const scoreP2 = document.getElementById('p2Score');
-const piecesP1= document.getElementById('p1PiecesAvail');
-const piecesP2 = document.getElementById('p2PiecesAvail');
-const playerSwitch = document.getElementById("switch");
-
-// Set game variables
-let boardSize = 15; // amount of cells in a row or column
-let totalRounds = 100; // number of rounds to render
-let roundTime = 1000; // Time to pause for after each round
-let startingPieceCount = 3; // Pieces that each player gets at the beginning of the game
-let maxPieceCount = 12; // Most amount of pieces that a user can hold at one time
-let colorDead = "#EDEDED";
-let colorP1 = "blue";
-let colorP2 = "red";
-let scoreLimit = 100;
-
-let gameObj = new Game({
-        boardObj,
-        boardSize,
-        totalRounds,
-        roundTime,
-        roundCtr,
-	startingPieceCount,
-	maxPieceCount,
-	scoreLimit,
-        "colors": [
-                colorDead,
-                colorP1,
-                colorP2
-        ],
-        "scoreObjs": [
-                scoreP1,
-                scoreP2
-        ],
+const domObjs = {
+	"gameContainer": document.getElementById("gameContainer"),
+	"boardObj": document.getElementById('gameBoard'),
+	"roundCtr": document.getElementById('roundCounter'),
+	"scoreObjs": [
+		document.getElementById('p1Score'),
+		document.getElementById('p2Score')
+	],
 	"piecesObjs": [
-		piecesP1,
-		piecesP2,
-	]
-});
+		document.getElementById('p1PiecesAvail'),
+		document.getElementById('p2PiecesAvail')
+	],
+	"playerSwitch": document.getElementById("switch")
+}
+
+let gameObj = new Game(defConfig, domObjs);
 
 // Toggle cell
 document.addEventListener('click', (e) => {
         let element = e.target;
         let playerId;
-        if (playerSwitch == undefined)
+        if (domObjs.playerSwitch == undefined)
                 playerId = 1;
         else
-                playerId = (playerSwitch.checked) ? 2 : 1;
+                playerId = (domObjs.playerSwitch.checked) ? 2 : 1;
         if (element.className === "cell") {
                 gameObj.toggleCell(element, playerId);
         };
 });
 
 document.getElementById('submitMoveButton').addEventListener('click', (e) => {
-        playerSwitch.checked = !playerSwitch.checked;
+        domObjs.playerSwitch.checked = !domObjs.playerSwitch.checked;
         gameObj.runRound();
 });
 

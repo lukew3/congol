@@ -1,21 +1,20 @@
-const acceptedArgs = ["boardObj", "boardSize", "totalRounds", "roundTime", "roundCtr", "colors", "scoreObjs", "startingPieceCount", "maxPieceCount", "piecesObjs", "scoreLimit"];
-// Add required args? Ex: Scores, roundCtr (these aren't necessary for all modes, if somebody wanted to play without score or rounds, these would not be neccessary
+const acceptedConfigKeys = ["boardSize", "totalRounds", "roundTime", "colors", "startingPieceCount", "maxPieceCount", "scoreLimit"];
 
 class Game {
-        constructor(args) {
+        constructor(configObj, domObjs) {
 		// Defaults that may be overwritten
 		this.boardSize = 25;
 		this.totalRounds = 100;
 		this.roundTime = 1000;
 		this.colors = ["#EDEDED", "black"];
-                this.boardObj = document.getElementById("gameBoard");
 		this.startingPieceCount = 4;
 		this.maxPieceCount = 12;
 		this.scoreLimit = 10;
 		// Parse args
-		Object.keys(args).forEach((key) => {
-			if (acceptedArgs.includes(key)){
-				this[key] = args[key];
+		this.domObjs = domObjs;
+		Object.keys(configObj).forEach((key) => {
+			if (acceptedConfigKeys.includes(key)){
+				this[key] = configObj[key];
 			} else {
 				console.log(`ERROR: Unknown key ${key}`);
 			}
@@ -44,15 +43,15 @@ class Game {
 		let width = Math.min(screen.availWidth, 500);
 		this.boardWH = (width-10) - ((width-10) % this.boardSize); // 10 pixels of space between board and edge of screen
 		this.cellWH = this.boardWH / this.boardSize - 2; // 2 pixels for the border
-                this.boardObj.innerHTML = "";
-		this.boardObj.style = `width: ${this.boardWH}px; height: ${this.boardWH}px`;
-		document.getElementById("gameContainer").style = `width: ${this.boardWH}px; height: ${this.boardWH}px`;
+                this.domObjs.boardObj.innerHTML = "";
+		this.domObjs.boardObj.style = `width: ${this.boardWH}px; height: ${this.boardWH}px`;
+		this.domObjs.gameContainer.style = `width: ${this.boardWH}px; height: ${this.boardWH}px`;
                 for (let i=0; i < Math.pow(this.boardSize, 2); i++) {
                         let newCell = document.createElement('div');
                         newCell.classList.add('cell');
                         newCell.id = `cell-${i}`;
 			newCell.style = `width: ${this.cellWH}px; height: ${this.cellWH}px`
-                        this.boardObj.append(newCell);
+                        this.domObjs.boardObj.append(newCell);
                 }
 		this.setPieces();
         }
@@ -70,7 +69,7 @@ class Game {
 		this.data = this.createEmptyData();
 		this.renderBoard();
 		this.round = 0;
-                this.roundCtr.innerHTML = 0;
+                this.domObjs.roundCtr.innerHTML = 0;
 		this.scores = [0, 0];
 		this.setScores();
 		this.piecesAvail = [this.startingPieceCount, this.startingPieceCount];
@@ -118,7 +117,7 @@ class Game {
 		this.setScores();
 		this.updatePieces();
 		this.setPieces();
-                this.roundCtr.innerHTML = this.round;
+                this.domObjs.roundCtr.innerHTML = this.round;
 		//console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
 		if (this.scores[0] > this.scoreLimit || this.scores[1] > this.scoreLimit)
 			this.endGame();
@@ -158,8 +157,8 @@ class Game {
 		this.setScores();
 	}
 	setScores() {
-		this.scoreObjs[0].innerHTML = this.scores[0];
-		this.scoreObjs[1].innerHTML = this.scores[1];
+		this.domObjs.scoreObjs[0].innerHTML = this.scores[0];
+		this.domObjs.scoreObjs[1].innerHTML = this.scores[1];
 	}
 	updatePieces() {
 		if (this.piecesAvail[0] < this.maxPieceCount)
@@ -170,12 +169,12 @@ class Game {
 	setPieces() {
 		//ideally, I think this should delete and append cells depending on the amount of children
 		for(let p = 0; p < 2; p++) {
-			this.piecesObjs[p].innerHTML = "";
+			this.domObjs.piecesObjs[p].innerHTML = "";
 			for(let i = 0; i < this.piecesAvail[p]; i++) {
 				let newCell = document.createElement('div');
 				newCell.classList.add('cell');
 				newCell.style = `width: ${this.cellWH/2}px; height: ${this.cellWH/2}px; background-color: ${this.colors[p+1]}`
-				this.piecesObjs[p].append(newCell);
+				this.domObjs.piecesObjs[p].append(newCell);
 			}
 		}
 	}
