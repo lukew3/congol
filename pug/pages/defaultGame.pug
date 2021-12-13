@@ -1,17 +1,21 @@
 div#defaultGamePage.page
   div#gameBoard
-  div#roundCtrCont Round:
-    p#roundCounter 0
-  div#scoreboard
-    div.playerGroup
-      p#p1Username.playerUsername Player 1
-      p#p1Score.playerScore 0
-    div#switch-container
-      input#switch(type='checkbox' style='display:none' onclick='return false;')
-      label(for='switch')
-        div#switchHandle
-    div.playerGroup
-      p#p2Score.playerScore 0
-      p#p2Username.playerUsername Player 2
-  div#controls
+  div#underBoard
+    div#underBoardUpper
+      div#p1PiecesAvail.piecesAvail
+      div#roundGroup
+        p Round: 
+        p#roundCounter 0
+      div#p1PiecesAvail.piecesAvail
+    div#underBoardLower
+      div.playerGroup
+        p#p1Username.playerUsername Player 1
+        p#p1Score.playerScore 0
+      div#switch-container
+        input#switch(type='checkbox' style='display:none' onclick='return false;')
+        label(for='switch')
+          div#switchHandle
+      div.playerGroup
+        p#p2Score.playerScore 0
+        p#p2Username.playerUsername Player 2
     div#submitMoveButton.button Submit

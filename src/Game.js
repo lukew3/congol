@@ -66,6 +66,7 @@ class Game {
 		this.renderBoard();
 		this.round = 0;
                 this.roundCtr.innerHTML = 0;
+		this.scores = [0, 0];
 		this.setScores();
 	}
 	stopGame() {
@@ -106,6 +107,7 @@ class Game {
                 });
                 this.data = newData;
                 this.renderBoard();
+		this.updateScores();
 		this.setScores();
                 this.roundCtr.innerHTML = this.round;
 		//console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
@@ -130,16 +132,22 @@ class Game {
 		let dominant = count[0]>count[1] ? 1 : 2;
 		return [count[0]+count[1], dominant];
         }
-	setScores() {
-		let scores = [0,0];
+	updateScores() {
+		// Outdated method
+		let cellCounts = [0, 0];
 		this.data.forEach((row, y) => {
 			row.forEach((cell, x) => {
 				if (cell != 0)
-					scores[cell-1] += 1;
+					cellCounts[cell-1] += 1;
 			});
 		});
-		this.scoreObjs[0].innerHTML = scores[0];
-		this.scoreObjs[1].innerHTML = scores[1];
+		let winner = (cellCounts[0] > cellCounts[1]) ? 0 : 1;
+		this.scores[winner] += Math.abs(cellCounts[0] - cellCounts[1]);
+		this.setScores();
+	}
+	setScores() {
+		this.scoreObjs[0].innerHTML = this.scores[0];
+		this.scoreObjs[1].innerHTML = this.scores[1];
 	}
         toggleCell(cellObj, playerId) {
                 // Lol I don't know regex
@@ -150,12 +158,10 @@ class Game {
 			// fill empty square
 			this.data[cy][num%this.boardSize] = playerId;
 			cellObj.style.backgroundColor = this.colors[playerId];
-			this.scoreObjs[playerId-1].innerHTML = Number(this.scoreObjs[playerId-1].innerHTML) + 1;
 		} else if (this.data[cy][num%this.boardSize] == playerId) {
 			// empty filled square
 			this.data[cy][num%this.boardSize] = 0;
 			cellObj.style.backgroundColor = this.colors[0];
-			this.scoreObjs[playerId-1].innerHTML = Number(this.scoreObjs[playerId-1].innerHTML) - 1;
 		}
         }
 	isRunning() {
