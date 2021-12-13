@@ -159,37 +159,12 @@ class Game {
 	}
 };
 
+module.exports = {
+	Game
+};
 
-// Router
-const defaultPage = document.getElementById('defaultGamePage');
-const rulesPage = document.getElementById('rulesPage');
-const newGamePage = document.getElementById('newGamePage');
-
-const setPage = (pageId) => {
-	defaultPage.style = 'display: none;';
-	rulesPage.style = 'display: none;';
-	newGamePage.style = 'display: none;';
-	document.getElementById(pageId).style = 'display: block;';
-}
-
-if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
-	defaultPage.style = 'display: block;';
-}
-
-document.getElementById('navTitle').addEventListener('click', (e) => {
-	setPage('defaultGamePage');
-});
-
-document.getElementById('navRules').addEventListener('click', (e) => {
-	setPage('rulesPage');
-});
-
-document.getElementById('navPlay').addEventListener('click', (e) => {
-	setPage('newGamePage');
-});
-
-
-// Main.js
+},{}],2:[function(require,module,exports){
+const { Game } = require("./Game.js");
 
 const boardSize = 15; // amount of cells in a row or column
 const totalRounds = 100; // number of rounds to render
@@ -205,11 +180,11 @@ let colorP1 = "blue";
 let colorP2 = "red";
 
 let gameObj = new Game({
-        boardObj,
-        boardSize,
+        boardObj, 
+        boardSize,  
         totalRounds,
         roundTime,
-        roundCtr,
+        roundCtr,  
         "colors": [
                 colorDead,
                 colorP1,
@@ -233,7 +208,6 @@ document.addEventListener('click', (e) => {
                 gameObj.toggleCell(element, playerId);
         };
 });
-
 
 document.getElementById('submitMoveButton').addEventListener('click', (e) => {
         playerSwitch.checked = !playerSwitch.checked;
@@ -262,5 +236,35 @@ document.getElementById('resetButton').addEventListener('click', (e) => {
 });
 
 
+},{"./Game.js":1}],3:[function(require,module,exports){
+require("./defaultGame.js");
 
-},{}]},{},[1]);
+const defaultPage = document.getElementById('defaultGamePage');
+const rulesPage = document.getElementById('rulesPage');
+const newGamePage = document.getElementById('newGamePage');
+
+const setPage = (pageId) => {
+        defaultPage.style = 'display: none;';
+        rulesPage.style = 'display: none;';
+        newGamePage.style = 'display: none;';
+        document.getElementById(pageId).style = 'display: block;';
+}
+
+if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+        defaultPage.style = 'display: block;';
+}
+
+document.getElementById('navTitle').addEventListener('click', (e) => {
+        setPage('defaultGamePage');
+});
+
+document.getElementById('navRules').addEventListener('click', (e) => {
+        setPage('rulesPage');
+});
+
+document.getElementById('navPlay').addEventListener('click', (e) => {
+        setPage('newGamePage');
+});
+
+
+},{"./defaultGame.js":2}]},{},[3]);
