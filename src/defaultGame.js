@@ -18,6 +18,7 @@ let maxPieceCount = 12; // Most amount of pieces that a user can hold at one tim
 let colorDead = "#EDEDED";
 let colorP1 = "blue";
 let colorP2 = "red";
+let scoreLimit = 100;
 
 let gameObj = new Game({
         boardObj,
@@ -27,6 +28,7 @@ let gameObj = new Game({
         roundCtr,
 	startingPieceCount,
 	maxPieceCount,
+	scoreLimit,
         "colors": [
                 colorDead,
                 colorP1,
@@ -60,6 +62,12 @@ document.getElementById('submitMoveButton').addEventListener('click', (e) => {
         gameObj.runRound();
 });
 
+document.getElementById('resetGameButton').addEventListener('click', (e) => {
+	gameObj.resetBoard();
+	document.getElementById('submitMoveButton').style.display = 'block';
+	document.getElementById('resetGameButton').style.display = 'none';
+	document.getElementById('winnerMessage').style.display = 'none';
+});
 
 // 2pPlayground Buttons
 document.getElementById('startStopButton').addEventListener('click', (e) => {

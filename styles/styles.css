@@ -203,10 +203,14 @@ input + label #switchHandle {
 	justify-content: space-between;
 }
 
-#submitMoveButton {
+#submitMoveButton, #resetGameButton {
 	width: 70px;
 	margin: auto;
 	margin-top: 15px;
+}
+
+#resetGameButton {
+	display: none;
 }
 
 #roundGroup {
@@ -218,4 +222,11 @@ input + label #switchHandle {
 }
 #p2PiecesAvail {
 	justify-content: right;
+}
+#winnerMessage {
+	display: none;
+	margin-top: 10pt;
+	width: 100%;
+	font-size: 14pt;
+	text-align: center;
 }
