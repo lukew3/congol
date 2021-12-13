@@ -28,6 +28,7 @@ class Game {
 		this.roundTimeouts = [];
                 this.data = this.createEmptyData();
                 this.initBoard();
+		this.roundToggledCells = [];
         }
         createEmptyData() {
                 let myarr = [];
@@ -121,6 +122,7 @@ class Game {
 		//console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
 		if (this.scores[0] > this.scoreLimit || this.scores[1] > this.scoreLimit)
 			this.endGame();
+		this.roundToggledCells = [];
         }
         countNeighbors(y,x) {
 		let count = [0,0];
@@ -178,6 +180,7 @@ class Game {
 		}
 	}
         toggleCell(cellObj, playerId) {
+		//this.roundToggledCells = [];
                 // Lol I don't know regex
                 let num = -Number(cellObj.id.match(/\-[0-9a-z]+$/i)[0]);
                 let cy = Math.floor(num/this.boardSize);
@@ -187,11 +190,14 @@ class Game {
 			this.data[cy][num%this.boardSize] = playerId;
 			cellObj.style.backgroundColor = this.colors[playerId];
 			this.piecesAvail[playerId-1]--;
-		} else if (this.data[cy][num%this.boardSize] == playerId) {
+			this.roundToggledCells.push(num);
+		} else if (this.data[cy][num%this.boardSize] == playerId && this.roundToggledCells.includes(num)) {
 			// empty filled square
 			this.data[cy][num%this.boardSize] = 0;
 			cellObj.style.backgroundColor = this.colors[0];
 			this.piecesAvail[playerId-1]++;
+			// remove num from roundToggledCells, not sure if this is the best way to do this
+			this.roundToggledCells = this.roundToggledCells.filter((val) => {return val != num});
 		}
 		this.setPieces();
         }
