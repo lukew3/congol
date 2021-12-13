@@ -52,12 +52,15 @@ footer a:hover {
 	color: #424242;
 }
 
-#gameBoard {
+#gameContainer {
 	margin-top: 40px;
 	margin-left: 50%;
 	transform: translate(-50%, 0);
 	width: 495px;
 	height: 495px;
+}
+
+#gameBoard{
 	border: 1px solid black;
 	display: flex;
 	flex-wrap: wrap;
@@ -194,12 +197,6 @@ input + label #switchHandle {
 }
 
 /* default game */
-#underBoard {
-	width: 482px; /* Should be resized by js to fit the board size. Or have it's container be resized */
-	margin: auto;
-}
-
-
 #underBoardUpper, #underBoardLower {
 	margin-top: 10px;
 	display: flex;
