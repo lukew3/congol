@@ -187,3 +187,26 @@ input + label #switchHandle {
 .page {
 	display: none;
 }
+
+/* default game */
+#underBoard {
+	width: 500px; /* Should be resized by js to fit the board size. Or have it's container be resized */
+	margin: auto;
+}
+
+
+#underBoardUpper, #underBoardLower {
+	margin-top: 10px;
+	display: flex;
+	justify-content: space-between;
+}
+
+#submitMoveButton {
+	width: 70px;
+	margin: auto;
+	margin-top: 15px;
+}
+
+#roundGroup {
+	display: flex;
+}
