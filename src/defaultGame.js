@@ -14,6 +14,7 @@ let boardSize = 15; // amount of cells in a row or column
 let totalRounds = 100; // number of rounds to render
 let roundTime = 1000; // Time to pause for after each round
 let startingPieceCount = 3; // Pieces that each player gets at the beginning of the game
+let maxPieceCount = 12; // Most amount of pieces that a user can hold at one time
 let colorDead = "#EDEDED";
 let colorP1 = "blue";
 let colorP2 = "red";
@@ -25,6 +26,7 @@ let gameObj = new Game({
         roundTime,
         roundCtr,
 	startingPieceCount,
+	maxPieceCount,
         "colors": [
                 colorDead,
                 colorP1,

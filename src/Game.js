@@ -1,4 +1,4 @@
-const acceptedArgs = ["boardObj", "boardSize", "totalRounds", "roundTime", "roundCtr", "colors", "scoreObjs", "startingPieceCount", "piecesObjs"];
+const acceptedArgs = ["boardObj", "boardSize", "totalRounds", "roundTime", "roundCtr", "colors", "scoreObjs", "startingPieceCount", "maxPieceCount", "piecesObjs"];
 // Add required args? Ex: Scores, roundCtr (these aren't necessary for all modes, if somebody wanted to play without score or rounds, these would not be neccessary
 
 class Game {
@@ -10,6 +10,7 @@ class Game {
 		this.colors = ["#EDEDED", "black"];
                 this.boardObj = document.getElementById("gameBoard");
 		this.startingPieceCount = 4;
+		this.maxPieceCount = 12;
 		// Parse args
 		Object.keys(args).forEach((key) => {
 			if (acceptedArgs.includes(key)){
@@ -43,6 +44,7 @@ class Game {
 		this.cellWH = this.boardWH / this.boardSize - 2; // 2 pixels for the border
                 this.boardObj.innerHTML = "";
 		this.boardObj.style = `width: ${this.boardWH}px; height: ${this.boardWH}px`;
+		document.getElementById("gameContainer").style = `width: ${this.boardWH}px; height: ${this.boardWH}px`;
                 for (let i=0; i < Math.pow(this.boardSize, 2); i++) {
                         let newCell = document.createElement('div');
                         newCell.classList.add('cell');
@@ -153,8 +155,10 @@ class Game {
 		this.scoreObjs[1].innerHTML = this.scores[1];
 	}
 	updatePieces() {
-		this.piecesAvail[0]++;
-		this.piecesAvail[1]++;
+		if (this.piecesAvail[0] < this.maxPieceCount)
+			this.piecesAvail[0]++;
+		if (this.piecesAvail[1] < this.maxPieceCount)
+			this.piecesAvail[1]++;
 	}
 	setPieces() {
 		//ideally, I think this should delete and append cells depending on the amount of children
