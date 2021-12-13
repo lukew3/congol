@@ -1,4 +1,4 @@
-const acceptedArgs = ["boardObj", "boardSize", "totalRounds", "roundTime", "roundCtr", "colors", "scores"];
+const acceptedArgs = ["boardObj", "boardSize", "totalRounds", "roundTime", "roundCtr", "colors", "scoreObjs", "staringPieceCount"];
 // Add required args? Ex: Scores, roundCtr (these aren't necessary for all modes, if somebody wanted to play without score or rounds, these would not be neccessary
 
 class Game {
@@ -9,13 +9,18 @@ class Game {
 		this.roundTime = 1000;
 		this.colors = ["#EDEDED", "black"];
                 this.boardObj = document.getElementById("gameBoard");
+		this.startingPieceCount = 4;
 		// Parse args
 		Object.keys(args).forEach((key) => {
 			if (acceptedArgs.includes(key)){
 				this[key] = args[key];
-			};
+			} else {
+				console.log(`ERROR: Unknown key ${key}`);
+			}
 		});
 		// Variables that are always set to the same thing
+		this.scores = [0,0];
+		this.piecesAvailable = [this.startingPieceCount, this.startingPieceCount];
 		this.round = 0;
                 this.running = false;
 		this.roundTimeouts = [];
@@ -133,8 +138,8 @@ class Game {
 					scores[cell-1] += 1;
 			});
 		});
-		this.scores[0].innerHTML = scores[0];
-		this.scores[1].innerHTML = scores[1];
+		this.scoreObjs[0].innerHTML = scores[0];
+		this.scoreObjs[1].innerHTML = scores[1];
 	}
         toggleCell(cellObj, playerId) {
                 // Lol I don't know regex
@@ -145,12 +150,12 @@ class Game {
 			// fill empty square
 			this.data[cy][num%this.boardSize] = playerId;
 			cellObj.style.backgroundColor = this.colors[playerId];
-			this.scores[playerId-1].innerHTML = Number(this.scores[playerId-1].innerHTML) + 1;
+			this.scoreObjs[playerId-1].innerHTML = Number(this.scoreObjs[playerId-1].innerHTML) + 1;
 		} else if (this.data[cy][num%this.boardSize] == playerId) {
 			// empty filled square
 			this.data[cy][num%this.boardSize] = 0;
 			cellObj.style.backgroundColor = this.colors[0];
-			this.scores[playerId-1].innerHTML = Number(this.scores[playerId-1].innerHTML) - 1;
+			this.scoreObjs[playerId-1].innerHTML = Number(this.scoreObjs[playerId-1].innerHTML) - 1;
 		}
         }
 	isRunning() {

@@ -1,30 +1,34 @@
 const { Game } = require("./Game.js");
 
-const boardSize = 15; // amount of cells in a row or column
-const totalRounds = 100; // number of rounds to render
-const roundTime = 1000; // Time to pause for after each round
-
+// Get DOM objects
 const boardObj = document.getElementById('gameBoard');
 const roundCtr = document.getElementById('roundCounter');
 const scoreP1 = document.getElementById('p1Score');
 const scoreP2 = document.getElementById('p2Score');
 const playerSwitch = document.getElementById("switch");
+
+// Set game variables
+let boardSize = 15; // amount of cells in a row or column
+let totalRounds = 100; // number of rounds to render
+let roundTime = 1000; // Time to pause for after each round
+let startingPieceCount = 5; // Pieces that each player gets at the beginning of the game
 let colorDead = "#EDEDED";
 let colorP1 = "blue";
 let colorP2 = "red";
 
 let gameObj = new Game({
-        boardObj, 
-        boardSize,  
+        boardObj,
+        boardSize,
         totalRounds,
         roundTime,
-        roundCtr,  
+        roundCtr,
+	startingPieceCount,
         "colors": [
                 colorDead,
                 colorP1,
                 colorP2
         ],
-        "scores": [
+        "scoreObjs": [
                 scoreP1,
                 scoreP2
         ]
