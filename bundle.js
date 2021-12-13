@@ -1,5 +1,5 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-const acceptedArgs = ["boardObj", "boardSize", "totalRounds", "roundTime", "roundCtr", "colors", "scoreObjs", "staringPieceCount"];
+const acceptedArgs = ["boardObj", "boardSize", "totalRounds", "roundTime", "roundCtr", "colors", "scoreObjs", "startingPieceCount", "piecesObjs"];
 // Add required args? Ex: Scores, roundCtr (these aren't necessary for all modes, if somebody wanted to play without score or rounds, these would not be neccessary
 
 class Game {
@@ -21,7 +21,7 @@ class Game {
 		});
 		// Variables that are always set to the same thing
 		this.scores = [0,0];
-		this.piecesAvailable = [this.startingPieceCount, this.startingPieceCount];
+		this.piecesAvail = [this.startingPieceCount, this.startingPieceCount];
 		this.round = 0;
                 this.running = false;
 		this.roundTimeouts = [];
@@ -40,17 +40,18 @@ class Game {
         }
         initBoard() {
 		let width = Math.min(screen.availWidth, 500);
-		let boardWH = (width-10) - ((width-10) % this.boardSize); // 10 pixels of space between board and edge of screen
-		let cellWH = boardWH / this.boardSize - 2; // 2 pixels for the border
+		this.boardWH = (width-10) - ((width-10) % this.boardSize); // 10 pixels of space between board and edge of screen
+		this.cellWH = this.boardWH / this.boardSize - 2; // 2 pixels for the border
                 this.boardObj.innerHTML = "";
-		this.boardObj.style = `width: ${boardWH}px; height: ${boardWH}px`;
+		this.boardObj.style = `width: ${this.boardWH}px; height: ${this.boardWH}px`;
                 for (let i=0; i < Math.pow(this.boardSize, 2); i++) {
                         let newCell = document.createElement('div');
                         newCell.classList.add('cell');
                         newCell.id = `cell-${i}`;
-			newCell.style = `width: ${cellWH}px; height: ${cellWH}px`
+			newCell.style = `width: ${this.cellWH}px; height: ${this.cellWH}px`
                         this.boardObj.append(newCell);
                 }
+		this.setPieces();
         }
         renderBoard() {
 		let cell, cellObj;
@@ -110,6 +111,8 @@ class Game {
                 this.renderBoard();
 		this.updateScores();
 		this.setScores();
+		this.updatePieces();
+		this.setPieces();
                 this.roundCtr.innerHTML = this.round;
 		//console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
         }
@@ -150,20 +153,39 @@ class Game {
 		this.scoreObjs[0].innerHTML = this.scores[0];
 		this.scoreObjs[1].innerHTML = this.scores[1];
 	}
+	updatePieces() {
+		this.piecesAvail[0]++;
+		this.piecesAvail[1]++;
+	}
+	setPieces() {
+		//ideally, I think this should delete and append cells depending on the amount of children
+		for(let p = 0; p < 2; p++) {
+			this.piecesObjs[p].innerHTML = "";
+			for(let i = 0; i < this.piecesAvail[p]; i++) {
+				let newCell = document.createElement('div');
+				newCell.classList.add('cell');
+				newCell.style = `width: ${this.cellWH/2}px; height: ${this.cellWH/2}px; background-color: ${this.colors[p+1]}`
+				this.piecesObjs[p].append(newCell);
+			}
+		}
+	}
         toggleCell(cellObj, playerId) {
                 // Lol I don't know regex
                 let num = -Number(cellObj.id.match(/\-[0-9a-z]+$/i)[0]);
                 let cy = Math.floor(num/this.boardSize);
                 //console.log(`${cy} ${num%this.boardSize}`);
-		if (this.data[cy][num%this.boardSize] == 0) {
+		if (this.data[cy][num%this.boardSize] == 0 && this.piecesAvail[playerId-1] != 0) {
 			// fill empty square
 			this.data[cy][num%this.boardSize] = playerId;
 			cellObj.style.backgroundColor = this.colors[playerId];
+			this.piecesAvail[playerId-1]--;
 		} else if (this.data[cy][num%this.boardSize] == playerId) {
 			// empty filled square
 			this.data[cy][num%this.boardSize] = 0;
 			cellObj.style.backgroundColor = this.colors[0];
+			this.piecesAvail[playerId-1]++;
 		}
+		this.setPieces();
         }
 	isRunning() {
 		return this.running;
@@ -182,13 +204,15 @@ const boardObj = document.getElementById('gameBoard');
 const roundCtr = document.getElementById('roundCounter');
 const scoreP1 = document.getElementById('p1Score');
 const scoreP2 = document.getElementById('p2Score');
+const piecesP1= document.getElementById('p1PiecesAvail');
+const piecesP2 = document.getElementById('p2PiecesAvail');
 const playerSwitch = document.getElementById("switch");
 
 // Set game variables
 let boardSize = 15; // amount of cells in a row or column
 let totalRounds = 100; // number of rounds to render
 let roundTime = 1000; // Time to pause for after each round
-let startingPieceCount = 5; // Pieces that each player gets at the beginning of the game
+let startingPieceCount = 3; // Pieces that each player gets at the beginning of the game
 let colorDead = "#EDEDED";
 let colorP1 = "blue";
 let colorP2 = "red";
@@ -208,7 +232,11 @@ let gameObj = new Game({
         "scoreObjs": [
                 scoreP1,
                 scoreP2
-        ]
+        ],
+	"piecesObjs": [
+		piecesP1,
+		piecesP2,
+	]
 });
 
 // Toggle cell
