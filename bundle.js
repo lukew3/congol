@@ -1,22 +1,21 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-const acceptedArgs = ["boardObj", "boardSize", "totalRounds", "roundTime", "roundCtr", "colors", "scoreObjs", "startingPieceCount", "maxPieceCount", "piecesObjs", "scoreLimit"];
-// Add required args? Ex: Scores, roundCtr (these aren't necessary for all modes, if somebody wanted to play without score or rounds, these would not be neccessary
+const acceptedConfigKeys = ["boardSize", "totalRounds", "roundTime", "colors", "startingPieceCount", "maxPieceCount", "scoreLimit"];
 
 class Game {
-        constructor(args) {
+        constructor(configObj, domObjs) {
 		// Defaults that may be overwritten
 		this.boardSize = 25;
 		this.totalRounds = 100;
 		this.roundTime = 1000;
 		this.colors = ["#EDEDED", "black"];
-                this.boardObj = document.getElementById("gameBoard");
 		this.startingPieceCount = 4;
 		this.maxPieceCount = 12;
 		this.scoreLimit = 10;
 		// Parse args
-		Object.keys(args).forEach((key) => {
-			if (acceptedArgs.includes(key)){
-				this[key] = args[key];
+		this.domObjs = domObjs;
+		Object.keys(configObj).forEach((key) => {
+			if (acceptedConfigKeys.includes(key)){
+				this[key] = configObj[key];
 			} else {
 				console.log(`ERROR: Unknown key ${key}`);
 			}
@@ -45,15 +44,15 @@ class Game {
 		let width = Math.min(screen.availWidth, 500);
 		this.boardWH = (width-10) - ((width-10) % this.boardSize); // 10 pixels of space between board and edge of screen
 		this.cellWH = this.boardWH / this.boardSize - 2; // 2 pixels for the border
-                this.boardObj.innerHTML = "";
-		this.boardObj.style = `width: ${this.boardWH}px; height: ${this.boardWH}px`;
-		document.getElementById("gameContainer").style = `width: ${this.boardWH}px; height: ${this.boardWH}px`;
+                this.domObjs.boardObj.innerHTML = "";
+		this.domObjs.boardObj.style = `width: ${this.boardWH}px; height: ${this.boardWH}px`;
+		this.domObjs.gameContainer.style = `width: ${this.boardWH}px; height: ${this.boardWH}px`;
                 for (let i=0; i < Math.pow(this.boardSize, 2); i++) {
                         let newCell = document.createElement('div');
                         newCell.classList.add('cell');
                         newCell.id = `cell-${i}`;
 			newCell.style = `width: ${this.cellWH}px; height: ${this.cellWH}px`
-                        this.boardObj.append(newCell);
+                        this.domObjs.boardObj.append(newCell);
                 }
 		this.setPieces();
         }
@@ -71,7 +70,7 @@ class Game {
 		this.data = this.createEmptyData();
 		this.renderBoard();
 		this.round = 0;
-                this.roundCtr.innerHTML = 0;
+                this.domObjs.roundCtr.innerHTML = 0;
 		this.scores = [0, 0];
 		this.setScores();
 		this.piecesAvail = [this.startingPieceCount, this.startingPieceCount];
@@ -119,7 +118,7 @@ class Game {
 		this.setScores();
 		this.updatePieces();
 		this.setPieces();
-                this.roundCtr.innerHTML = this.round;
+                this.domObjs.roundCtr.innerHTML = this.round;
 		//console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
 		if (this.scores[0] > this.scoreLimit || this.scores[1] > this.scoreLimit)
 			this.endGame();
@@ -159,8 +158,8 @@ class Game {
 		this.setScores();
 	}
 	setScores() {
-		this.scoreObjs[0].innerHTML = this.scores[0];
-		this.scoreObjs[1].innerHTML = this.scores[1];
+		this.domObjs.scoreObjs[0].innerHTML = this.scores[0];
+		this.domObjs.scoreObjs[1].innerHTML = this.scores[1];
 	}
 	updatePieces() {
 		if (this.piecesAvail[0] < this.maxPieceCount)
@@ -171,12 +170,12 @@ class Game {
 	setPieces() {
 		//ideally, I think this should delete and append cells depending on the amount of children
 		for(let p = 0; p < 2; p++) {
-			this.piecesObjs[p].innerHTML = "";
+			this.domObjs.piecesObjs[p].innerHTML = "";
 			for(let i = 0; i < this.piecesAvail[p]; i++) {
 				let newCell = document.createElement('div');
 				newCell.classList.add('cell');
 				newCell.style = `width: ${this.cellWH/2}px; height: ${this.cellWH/2}px; background-color: ${this.colors[p+1]}`
-				this.piecesObjs[p].append(newCell);
+				this.domObjs.piecesObjs[p].append(newCell);
 			}
 		}
 	}
@@ -219,67 +218,61 @@ module.exports = {
 };
 
 },{}],2:[function(require,module,exports){
+const defConfig = {
+	"boardSize": 15,
+	"totalRounds": 100,
+	"roundTime": 1000,
+	"startingPieceCount": 3,
+	"maxPieceCount": 12,
+	"scoreLimit": 100,
+	"colors": [
+		"#EDEDED",
+		"blue",
+		"red"
+	]
+}
+
+module.exports = {
+	defConfig
+}
+
+},{}],3:[function(require,module,exports){
 const { Game } = require("./Game.js");
+const { defConfig } = require("./config.js");
 
 // Get DOM objects
-const boardObj = document.getElementById('gameBoard');
-const roundCtr = document.getElementById('roundCounter');
-const scoreP1 = document.getElementById('p1Score');
-const scoreP2 = document.getElementById('p2Score');
-const piecesP1= document.getElementById('p1PiecesAvail');
-const piecesP2 = document.getElementById('p2PiecesAvail');
-const playerSwitch = document.getElementById("switch");
-
-// Set game variables
-let boardSize = 15; // amount of cells in a row or column
-let totalRounds = 100; // number of rounds to render
-let roundTime = 1000; // Time to pause for after each round
-let startingPieceCount = 3; // Pieces that each player gets at the beginning of the game
-let maxPieceCount = 12; // Most amount of pieces that a user can hold at one time
-let colorDead = "#EDEDED";
-let colorP1 = "blue";
-let colorP2 = "red";
-let scoreLimit = 100;
-
-let gameObj = new Game({
-        boardObj,
-        boardSize,
-        totalRounds,
-        roundTime,
-        roundCtr,
-	startingPieceCount,
-	maxPieceCount,
-	scoreLimit,
-        "colors": [
-                colorDead,
-                colorP1,
-                colorP2
-        ],
-        "scoreObjs": [
-                scoreP1,
-                scoreP2
-        ],
+const domObjs = {
+	"gameContainer": document.getElementById("gameContainer"),
+	"boardObj": document.getElementById('gameBoard'),
+	"roundCtr": document.getElementById('roundCounter'),
+	"scoreObjs": [
+		document.getElementById('p1Score'),
+		document.getElementById('p2Score')
+	],
 	"piecesObjs": [
-		piecesP1,
-		piecesP2,
-	]
-});
+		document.getElementById('p1PiecesAvail'),
+		document.getElementById('p2PiecesAvail')
+	],
+	"playerSwitch": document.getElementById("switch")
+}
+
+let gameObj = new Game(defConfig, domObjs);
 
 // Toggle cell
 document.addEventListener('click', (e) => {
         let element = e.target;
         let playerId;
-        if (playerSwitch == undefined)
+        if (domObjs.playerSwitch == undefined)
                 playerId = 1;
         else
-                playerId = (playerSwitch.checked) ? 2 : 1;
+                playerId = (domObjs.playerSwitch.checked) ? 2 : 1;
         if (element.className === "cell") {
                 gameObj.toggleCell(element, playerId);
         };
 });
 
 document.getElementById('submitMoveButton').addEventListener('click', (e) => {
-        playerSwitch.checked = !playerSwitch.checked;
+        domObjs.playerSwitch.checked = !domObjs.playerSwitch.checked;
         gameObj.runRound();
 });
 
@@ -311,7 +304,7 @@ document.getElementById('resetButton').addEventListener('click', (e) => {
 });
 
 
-},{"./Game.js":1}],3:[function(require,module,exports){
+},{"./Game.js":1,"./config.js":2}],4:[function(require,module,exports){
 require("./defaultGame.js");
 
 const defaultPage = document.getElementById('defaultGamePage');
@@ -342,4 +335,4 @@ document.getElementById('navPlay').addEventListener('click', (e) => {
 });
 
 
-},{"./defaultGame.js":2}]},{},[3]);
+},{"./defaultGame.js":3}]},{},[4]);
