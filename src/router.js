@@ -1,4 +1,4 @@
-require("./defaultGame.js");
+require("./game.js");
 require("./newGame.js");
 
 const defaultPage = document.getElementById('defaultGamePage');
