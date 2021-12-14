@@ -1,6 +1,7 @@
 require("./game.js");
 require("./newGame.js");
 
+
 const defaultPage = document.getElementById('defaultGamePage');
 const rulesPage = document.getElementById('rulesPage');
 const newGamePage = document.getElementById('newGamePage');

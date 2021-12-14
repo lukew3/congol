@@ -4,8 +4,8 @@
   "description": "Multiplayer Conway's Game Of Life",
   "main": "index.js",
   "scripts": {
-    "build": "pug ./pug/index.pug -o ./build/ && browserify ./src/router.js -o ./build/bundle.js && cp -r img build/img && cp styles/styles.css build/ && cp CNAME build/CNAME",
-    "deploy": "gh-pages -d build",
+    "build": "gulp build",
+    "deploy": "gh-pages -d dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,8 +20,10 @@
   "homepage": "https://github.com/lukew3/congol#readme",
   "dependencies": {},
   "devDependencies": {
-    "browserify": "^17.0.0",
     "gh-pages": "^3.2.3",
-    "pug": "^3.0.2"
+    "gulp": "^4.0.2",
+    "gulp-browserify": "^0.5.1",
+    "gulp-pug": "^5.0.0",
+    "vinyl-source-stream": "^2.0.0"
   }
 }
