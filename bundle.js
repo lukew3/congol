@@ -84,9 +84,9 @@ const renderBoard = () => {
 const resetBoard = () => {
   stopGame();
   gameVars.data = createEmptyData();
-  gameVars.renderBoard();
+  renderBoard();
   gameVars.round = 0;
-  domObjs.roundCtr.innerHTML = 0;
+  setRound();
   gameVars.scores = [0, 0];
   setScores();
   gameVars.piecesAvail = [rules.startingPieceCount, rules.startingPieceCount];
@@ -134,7 +134,7 @@ const runRound = () => {
   setScores();
   updatePieces();
   setPieces();
-  domObjs.roundCtr.innerHTML = gameVars.round;
+  setRound();
   //console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
   if (gameVars.scores[0] > rules.scoreLimit || gameVars.scores[1] > rules.scoreLimit)
     endGame();
@@ -182,6 +182,9 @@ const updatePieces = () => {
   if (gameVars.piecesAvail[1] < rules.maxPieceCount)
     gameVars.piecesAvail[1]++;
 }
+const setRound = () => {
+  domObjs.roundCtr.innerHTML = gameVars.round;
+}
 const setPieces = () => {
   //ideally, I think this should delete and append cells depending on the amount of children
   for (let p = 0; p < 2; p++) {
@@ -228,6 +231,13 @@ const endGame = () => {
 }
 const isRunning = () => {
   return gameVars.running;
+}
+const updateRules = (addedRulesObj) => {
+	Object.keys(addedRulesObj).forEach((key) => {
+		rules[key] = addedRulesObj[key];
+	});
+	gameVars.data = createEmptyData();
+	initBoard();
 }
 
 // Event listeners
@@ -279,16 +289,22 @@ document.getElementById('resetButton').addEventListener('click', (e) => {
 gameVars.data = createEmptyData();
 initBoard();
 
+module.exports = {
+	updateRules
+}
+
 },{"./config.js":1}],3:[function(require,module,exports){
+const { updateRules } = require('./game.js');
+
 const gtOnline = document.getElementById("gt_online");
 const gtLocal = document.getElementById("gt_local");
 const gtSolo = document.getElementById("gt_solo");
-const bs10 = document.getElementById("bs_10");
+const bs10 = document.getElementById("bs_15");
 const bs25 = document.getElementById("bs_25");
-const bs50 = document.getElementById("bs_50");
+const bs50 = document.getElementById("bs_40");
 
 let gtSelected = "gt_online";
-let bsSelected = "bs_10";
+let bsSelected = "bs_15";
 
 const updateNewGameSelections = () => {
 	[gtOnline, gtLocal, gtSolo, bs10, bs25, bs50].forEach((newGameButton) => {
@@ -305,7 +321,8 @@ document.getElementById('newGameStartButton').addEventListener('click', () => {
 	// Find a better way to do this, this only works because the game is required before newGame.js
 	// Maybe you should just make the gameObj right away and then allow it to be accessed by all
 	// Actually this doesn't work at all
-	gameObj.boardSize = Number(bsSelected.splice(3, 5));
+	//gameObj.boardSize = Number(bsSelected.splice(3, 5));
+	updateRules({"boardSize": Number(bsSelected.slice(3, 5))});
 });
 
 document.addEventListener('click', (e) => {
@@ -319,7 +336,7 @@ document.addEventListener('click', (e) => {
 });
 
 
-},{}],4:[function(require,module,exports){
+},{"./game.js":2}],4:[function(require,module,exports){
 require("./game.js");
 require("./newGame.js");
 
