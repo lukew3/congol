@@ -1,224 +1,5 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-const acceptedConfigKeys = ["boardSize", "totalRounds", "roundTime", "colors", "startingPieceCount", "maxPieceCount", "scoreLimit"];
-
-class Game {
-        constructor(configObj, domObjs) {
-		// Defaults that may be overwritten
-		this.boardSize = 25;
-		this.totalRounds = 100;
-		this.roundTime = 1000;
-		this.colors = ["#EDEDED", "black"];
-		this.startingPieceCount = 4;
-		this.maxPieceCount = 12;
-		this.scoreLimit = 10;
-		// Parse args
-		this.domObjs = domObjs;
-		Object.keys(configObj).forEach((key) => {
-			if (acceptedConfigKeys.includes(key)){
-				this[key] = configObj[key];
-			} else {
-				console.log(`ERROR: Unknown key ${key}`);
-			}
-		});
-		// Variables that are always set to the same thing
-		this.scores = [0,0];
-		this.piecesAvail = [this.startingPieceCount, this.startingPieceCount];
-		this.round = 0;
-                this.running = false;
-		this.roundTimeouts = [];
-                this.data = this.createEmptyData();
-                this.initBoard();
-		this.roundToggledCells = [];
-        }
-        createEmptyData() {
-                let myarr = [];
-                for(let y=0; y<this.boardSize; y++) {
-                        let row = [];
-                        for(let x=0; x<this.boardSize; x++)
-                                row.push(0);
-                        myarr.push(row);
-                }
-                return myarr;
-        }
-        initBoard() {
-		let width = Math.min(screen.availWidth, 500);
-		this.boardWH = (width-10) - ((width-10) % this.boardSize); // 10 pixels of space between board and edge of screen
-		this.cellWH = this.boardWH / this.boardSize - 2; // 2 pixels for the border
-                this.domObjs.boardObj.innerHTML = "";
-		this.domObjs.boardObj.style = `width: ${this.boardWH}px; height: ${this.boardWH}px`;
-		this.domObjs.gameContainer.style = `width: ${this.boardWH}px; height: ${this.boardWH}px`;
-                for (let i=0; i < Math.pow(this.boardSize, 2); i++) {
-                        let newCell = document.createElement('div');
-                        newCell.classList.add('cell');
-                        newCell.id = `cell-${i}`;
-			newCell.style = `width: ${this.cellWH}px; height: ${this.cellWH}px`
-                        this.domObjs.boardObj.append(newCell);
-                }
-		this.setPieces();
-        }
-        renderBoard() {
-		let cell, cellObj;
-                this.data.forEach((row, y) => {
-                        row.forEach((cell, x) => {
-				cellObj = document.getElementById(`cell-${y*this.boardSize+x}`)
-				cellObj.style.backgroundColor = this.colors[cell];
-                        });
-                });
-        }
-	resetBoard() {
-		this.stopGame();
-		this.data = this.createEmptyData();
-		this.renderBoard();
-		this.round = 0;
-                this.domObjs.roundCtr.innerHTML = 0;
-		this.scores = [0, 0];
-		this.setScores();
-		this.piecesAvail = [this.startingPieceCount, this.startingPieceCount];
-		this.setPieces();
-	}
-	stopGame() {
-		// for each to in roundTimeouts, clear timeout
-		this.roundTimeouts.forEach((id) => {
-			clearTimeout(id);
-		});
-		this.running = false;
-	}
-        runGame() {
-                for(let r=0; r<this.totalRounds; r++) {
-                        this.roundTimeouts.push(
-				setTimeout(() => {
-                                	this.runRound();
-	                        }, r*this.roundTime)
-			);
-                }
-		this.running = true;
-        }
-        runRound() {
-		let startTime = performance.now();
-		let nvalues, n, dominant;
-		this.round++;
-                let newData = this.createEmptyData();
-                this.data.forEach((row, y) => {
-                        row.forEach((cell, x) => {
-				nvalues = this.countNeighbors(y,x);
-				n = nvalues[0];
-				dominant = nvalues[1];
-                                if (cell != 0 && (n < 2 || n > 3)) {
-                                        newData[y][x] = 0;
-                                } else if (cell == 0 && n === 3) {
-                                        newData[y][x] = dominant;
-                                } else {
-                                        newData[y][x] = cell;
-                                }
-                        });
-                });
-                this.data = newData;
-                this.renderBoard();
-		this.updateScores();
-		this.setScores();
-		this.updatePieces();
-		this.setPieces();
-                this.domObjs.roundCtr.innerHTML = this.round;
-		//console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
-		if (this.scores[0] > this.scoreLimit || this.scores[1] > this.scoreLimit)
-			this.endGame();
-		this.roundToggledCells = [];
-        }
-        countNeighbors(y,x) {
-		let count = [0,0];
-		let cell;
-                let ymin = (y === 0) ? y : y-1;
-                let xmin = (x === 0) ? x : x-1;
-                let ymax = (y === this.boardSize-1) ? y : y+1;
-                let xmax = (x === this.boardSize-1) ? x : x+1;
-                for(let yc = ymin; yc < ymax+1; yc++) {
-                        for(let xc = xmin; xc < xmax+1; xc++) {
-				cell = this.data[yc][xc];
-				if (cell != 0)
-					count[cell-1] += 1;
-                        }
-                }
-		cell = this.data[y][x];
-		if (cell != 0)
-			count[cell-1] -= 1;
-		let dominant = count[0]>count[1] ? 1 : 2;
-		return [count[0]+count[1], dominant];
-        }
-	updateScores() {
-		// Outdated method
-		let cellCounts = [0, 0];
-		this.data.forEach((row, y) => {
-			row.forEach((cell, x) => {
-				if (cell != 0)
-					cellCounts[cell-1] += 1;
-			});
-		});
-		let winner = (cellCounts[0] > cellCounts[1]) ? 0 : 1;
-		this.scores[winner] += Math.abs(cellCounts[0] - cellCounts[1]);
-		this.setScores();
-	}
-	setScores() {
-		this.domObjs.scoreObjs[0].innerHTML = this.scores[0];
-		this.domObjs.scoreObjs[1].innerHTML = this.scores[1];
-	}
-	updatePieces() {
-		if (this.piecesAvail[0] < this.maxPieceCount)
-			this.piecesAvail[0]++;
-		if (this.piecesAvail[1] < this.maxPieceCount)
-			this.piecesAvail[1]++;
-	}
-	setPieces() {
-		//ideally, I think this should delete and append cells depending on the amount of children
-		for(let p = 0; p < 2; p++) {
-			this.domObjs.piecesObjs[p].innerHTML = "";
-			for(let i = 0; i < this.piecesAvail[p]; i++) {
-				let newCell = document.createElement('div');
-				newCell.classList.add('cell');
-				newCell.style = `width: ${this.cellWH/2}px; height: ${this.cellWH/2}px; background-color: ${this.colors[p+1]}`
-				this.domObjs.piecesObjs[p].append(newCell);
-			}
-		}
-	}
-        toggleCell(cellObj, playerId) {
-		//this.roundToggledCells = [];
-                // Lol I don't know regex
-                let num = -Number(cellObj.id.match(/\-[0-9a-z]+$/i)[0]);
-                let cy = Math.floor(num/this.boardSize);
-                //console.log(`${cy} ${num%this.boardSize}`);
-		if (this.data[cy][num%this.boardSize] == 0 && this.piecesAvail[playerId-1] != 0) {
-			// fill empty square
-			this.data[cy][num%this.boardSize] = playerId;
-			cellObj.style.backgroundColor = this.colors[playerId];
-			this.piecesAvail[playerId-1]--;
-			this.roundToggledCells.push(num);
-		} else if (this.data[cy][num%this.boardSize] == playerId && this.roundToggledCells.includes(num)) {
-			// empty filled square
-			this.data[cy][num%this.boardSize] = 0;
-			cellObj.style.backgroundColor = this.colors[0];
-			this.piecesAvail[playerId-1]++;
-			// remove num from roundToggledCells, not sure if this is the best way to do this
-			this.roundToggledCells = this.roundToggledCells.filter((val) => {return val != num});
-		}
-		this.setPieces();
-        }
-	endGame() {
-		// Should not use document.getElementById
-		document.getElementById('winnerMessage').style.display = 'block';
-		document.getElementById('winnerMessage').innerHTML = `Player 1 wins!`;
-		document.getElementById('submitMoveButton').style.display = 'none';
-		document.getElementById('resetGameButton').style.display = 'block';
-	}
-	isRunning() {
-		return this.running;
-	}
-};
-
-module.exports = {
-	Game
-};
-
-},{}],2:[function(require,module,exports){
-const defConfig = {
+const defaultConfig = {
 	"boardSize": 15,
 	"totalRounds": 100,
 	"roundTime": 1000,
@@ -233,51 +14,242 @@ const defConfig = {
 }
 
 module.exports = {
-	defConfig
+	defaultConfig
 }
 
-},{}],3:[function(require,module,exports){
-const { Game } = require("./Game.js");
-const { defConfig } = require("./config.js");
+},{}],2:[function(require,module,exports){
+const {defaultConfig} = require("./config.js");
 
-// Get DOM objects
-const domObjs = {
-	"gameContainer": document.getElementById("gameContainer"),
-	"boardObj": document.getElementById('gameBoard'),
-	"roundCtr": document.getElementById('roundCounter'),
-	"scoreObjs": [
-		document.getElementById('p1Score'),
-		document.getElementById('p2Score')
-	],
-	"piecesObjs": [
-		document.getElementById('p1PiecesAvail'),
-		document.getElementById('p2PiecesAvail')
-	],
-	"playerSwitch": document.getElementById("switch")
+//rules and gameVars are separated so that rules can be modifiable in its entirety while gameVars cannot
+let rules = defaultConfig;
+let gameVars = {
+  "scores": [0, 0],
+  "piecesAvail": [rules.startingPieceCount, rules.startingPieceCount],
+  "round": 0,
+  "running": false,
+  "roundTimeouts": [],
+  "data": [],
+  "roundToggledCells": [],
+};
+let domObjs = {
+  "gameContainer": document.getElementById("gameContainer"),
+  "boardObj": document.getElementById('gameBoard'),
+  "roundCtr": document.getElementById('roundCounter'),
+  "scoreObjs": [
+      document.getElementById('p1Score'),
+      document.getElementById('p2Score')
+  ],
+  "piecesObjs": [
+      document.getElementById('p1PiecesAvail'),
+      document.getElementById('p2PiecesAvail')
+  ],
+  "playerSwitch": document.getElementById("switch")
 }
 
-let gameObj = new Game(defConfig, domObjs);
+const createEmptyData = () => {
+  let myarr = [];
+  for (let y = 0; y < rules.boardSize; y++) {
+    let row = [];
+    for (let x = 0; x < rules.boardSize; x++)
+      row.push(0);
+      myarr.push(row);
+  }
+  return myarr;
+}
+const initBoard = () => {
+  let width = Math.min(screen.availWidth, 500);
+  rules.boardWH = (width - 10) - ((width - 10) % rules.boardSize); // 10 pixels of space between board and edge of screen
+  rules.cellWH = rules.boardWH / rules.boardSize - 2; // 2 pixels for the border
+  domObjs.boardObj.innerHTML = "";
+  domObjs.boardObj.style = `width: ${rules.boardWH}px; height: ${rules.boardWH}px`;
+  domObjs.gameContainer.style = `width: ${rules.boardWH}px; height: ${rules.boardWH}px`;
+  for (let i = 0; i < Math.pow(rules.boardSize, 2); i++) {
+    let newCell = document.createElement('div');
+    newCell.classList.add('cell');
+    newCell.id = `cell-${i}`;
+    newCell.style = `width: ${rules.cellWH}px; height: ${rules.cellWH}px`
+    domObjs.boardObj.append(newCell);
+  }
+  setPieces();
+}
+const renderBoard = () => {
+  let cell, cellObj;
+  gameVars.data.forEach((row, y) => {
+    row.forEach((cell, x) => {
+      cellObj = document.getElementById(`cell-${y*rules.boardSize+x}`);
+      cellObj.style.backgroundColor = rules.colors[cell];
+    });
+  });
+}
+const resetBoard = () => {
+  stopGame();
+  gameVars.data = createEmptyData();
+  gameVars.renderBoard();
+  gameVars.round = 0;
+  domObjs.roundCtr.innerHTML = 0;
+  gameVars.scores = [0, 0];
+  setScores();
+  gameVars.piecesAvail = [rules.startingPieceCount, rules.startingPieceCount];
+  setPieces();
+}
+const stopGame = () => {
+  // for each to in roundTimeouts, clear timeout
+  gameVars.roundTimeouts.forEach((id) => {
+    clearTimeout(id);
+  });
+  gameVars.running = false;
+}
+const runGame = () => {
+  for (let r = 0; r < rules.totalRounds; r++) {
+    gameVars.roundTimeouts.push(
+      setTimeout(() => {
+        runRound();
+      }, r * rules.roundTime)
+    );
+  }
+  gameVars.running = true;
+}
+const runRound = () => {
+  let startTime = performance.now();
+  let nvalues, n, dominant;
+  gameVars.round++;
+  let newData = createEmptyData();
+  gameVars.data.forEach((row, y) => {
+    row.forEach((cell, x) => {
+      nvalues = countNeighbors(y, x);
+      n = nvalues[0];
+      dominant = nvalues[1];
+      if (cell != 0 && (n < 2 || n > 3)) {
+        newData[y][x] = 0;
+      } else if (cell == 0 && n === 3) {
+        newData[y][x] = dominant;
+      } else {
+        newData[y][x] = cell;
+      }
+    });
+  });
+  gameVars.data = newData;
+  renderBoard();
+  updateScores();
+  setScores();
+  updatePieces();
+  setPieces();
+  domObjs.roundCtr.innerHTML = gameVars.round;
+  //console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
+  if (gameVars.scores[0] > rules.scoreLimit || gameVars.scores[1] > rules.scoreLimit)
+    endGame();
+  gameVars.roundToggledCells = [];
+}
+const countNeighbors = (y, x) => {
+  let count = [0, 0];
+  let cell;
+  let ymin = (y === 0) ? y : y - 1;
+  let xmin = (x === 0) ? x : x - 1;
+  let ymax = (y === rules.boardSize - 1) ? y : y + 1;
+  let xmax = (x === rules.boardSize - 1) ? x : x + 1;
+  for (let yc = ymin; yc < ymax + 1; yc++) {
+    for (let xc = xmin; xc < xmax + 1; xc++) {
+      cell = gameVars.data[yc][xc];
+      if (cell != 0)
+        count[cell - 1] += 1;
+    }
+  }
+  cell = gameVars.data[y][x];
+  if (cell != 0)
+    count[cell - 1] -= 1;
+  let dominant = count[0] > count[1] ? 1 : 2;
+  return [count[0] + count[1], dominant];
+}
+const updateScores = () => {
+  let cellCounts = [0, 0];
+  gameVars.data.forEach((row, y) => {
+    row.forEach((cell, x) => {
+      if (cell != 0)
+        cellCounts[cell - 1] += 1;
+    });
+  });
+  let winner = (cellCounts[0] > cellCounts[1]) ? 0 : 1;
+  gameVars.scores[winner] += Math.abs(cellCounts[0] - cellCounts[1]);
+  setScores();
+}
+const setScores = () => {
+  domObjs.scoreObjs[0].innerHTML = gameVars.scores[0];
+  domObjs.scoreObjs[1].innerHTML = gameVars.scores[1];
+}
+const updatePieces = () => {
+  if (gameVars.piecesAvail[0] < rules.maxPieceCount)
+    gameVars.piecesAvail[0]++;
+  if (gameVars.piecesAvail[1] < rules.maxPieceCount)
+    gameVars.piecesAvail[1]++;
+}
+const setPieces = () => {
+  //ideally, I think this should delete and append cells depending on the amount of children
+  for (let p = 0; p < 2; p++) {
+    domObjs.piecesObjs[p].innerHTML = "";
+    for (let i = 0; i < gameVars.piecesAvail[p]; i++) {
+      let newCell = document.createElement('div');
+      newCell.classList.add('cell');
+      newCell.style = `width: ${rules.cellWH/2}px; height: ${rules.cellWH/2}px; background-color: ${rules.colors[p+1]}`
+      domObjs.piecesObjs[p].append(newCell);
+    }
+  }
+}
+const toggleCell = (cellObj, playerId) => {
+  //this.roundToggledCells = [];
+  // Lol I don't know regex
+  let num = -Number(cellObj.id.match(/\-[0-9a-z]+$/i)[0]);
+  let cy = Math.floor(num / rules.boardSize);
+  //console.log(`${cy} ${num%this.boardSize}`);
+  if (gameVars.data[cy][num % rules.boardSize] == 0 && gameVars.piecesAvail[playerId - 1] != 0) {
+    // fill empty square
+    gameVars.data[cy][num % rules.boardSize] = playerId;
+    cellObj.style.backgroundColor = rules.colors[playerId];
+    gameVars.piecesAvail[playerId - 1]--;
+    gameVars.roundToggledCells.push(num);
+  } else if (gameVars.data[cy][num % rules.boardSize] == playerId && gameVars.roundToggledCells.includes(num)) {
+    // empty filled square
+    gameVars.data[cy][num % rules.boardSize] = 0;
+    cellObj.style.backgroundColor = rules.colors[0];
+    gameVars.piecesAvail[playerId - 1]++;
+    // remove num from roundToggledCells, not sure if this is the best way to do this
+    gameVars.roundToggledCells = gameVars.roundToggledCells.filter((val) => {
+      return val != num;
+    });
+  }
+  setPieces();
+}
+const endGame = () => {
+  // Should not use document.getElementById
+  document.getElementById('winnerMessage').style.display = 'block';
+  // Set this to the actual winner of the game
+  document.getElementById('winnerMessage').innerHTML = `Player 1 wins!`;
+  document.getElementById('submitMoveButton').style.display = 'none';
+  document.getElementById('resetGameButton').style.display = 'block';
+}
+const isRunning = () => {
+  return gameVars.running;
+}
 
-// Toggle cell
+// Event listeners
 document.addEventListener('click', (e) => {
-        let element = e.target;
-        let playerId;
-        if (domObjs.playerSwitch == undefined)
-                playerId = 1;
-        else
-                playerId = (domObjs.playerSwitch.checked) ? 2 : 1;
-        if (element.className === "cell") {
-                gameObj.toggleCell(element, playerId);
-        };
+  let element = e.target;
+  let playerId;
+  if (domObjs.playerSwitch == undefined)
+    playerId = 1;
+  else
+    playerId = (domObjs.playerSwitch.checked) ? 2 : 1;
+  if (element.className === "cell") {
+    toggleCell(element, playerId);
+  };
 });
 
 document.getElementById('submitMoveButton').addEventListener('click', (e) => {
-        domObjs.playerSwitch.checked = !domObjs.playerSwitch.checked;
-        gameObj.runRound();
+  domObjs.playerSwitch.checked = !domObjs.playerSwitch.checked;
+  runRound();
 });
 
 document.getElementById('resetGameButton').addEventListener('click', (e) => {
-	gameObj.resetBoard();
+	resetBoard();
 	document.getElementById('submitMoveButton').style.display = 'block';
 	document.getElementById('resetGameButton').style.display = 'none';
 	document.getElementById('winnerMessage').style.display = 'none';
@@ -285,54 +257,97 @@ document.getElementById('resetGameButton').addEventListener('click', (e) => {
 
 // 2pPlayground Buttons
 document.getElementById('startStopButton').addEventListener('click', (e) => {
-        if (gameObj.isRunning()) {
-                gameObj.stopGame();
-                document.getElementById('startStopButton').innerHTML = "Start";
-        } else {
-                gameObj.runGame();
-                document.getElementById('startStopButton').innerHTML = "Stop";
-        }
+  if (isRunning()) {
+    stopGame();
+    document.getElementById('startStopButton').innerHTML = "Start";
+  } else {
+    runGame();
+    document.getElementById('startStopButton').innerHTML = "Stop";
+  }
 });
 
 document.getElementById('nextButton').addEventListener('click', (e) => {
-        gameObj.runRound();
+  runRound();
 });
 
 document.getElementById('resetButton').addEventListener('click', (e) => {
-        gameObj.resetBoard();
-        document.getElementById('startStopButton').innerHTML = "Start";
+  resetBoard();
+  document.getElementById('startStopButton').innerHTML = "Start";
+});
+
+// Stuff that runs on load
+gameVars.data = createEmptyData();
+initBoard();
+
+},{"./config.js":1}],3:[function(require,module,exports){
+const gtOnline = document.getElementById("gt_online");
+const gtLocal = document.getElementById("gt_local");
+const gtSolo = document.getElementById("gt_solo");
+const bs10 = document.getElementById("bs_10");
+const bs25 = document.getElementById("bs_25");
+const bs50 = document.getElementById("bs_50");
+
+let gtSelected = "gt_online";
+let bsSelected = "bs_10";
+
+const updateNewGameSelections = () => {
+	[gtOnline, gtLocal, gtSolo, bs10, bs25, bs50].forEach((newGameButton) => {
+		newGameButton.style.border = "none";
+	});
+	document.getElementById(gtSelected).style.border = "1px solid black";
+	document.getElementById(bsSelected).style.border = "1px solid black";
+}
+
+document.getElementById('newGameStartButton').addEventListener('click', () => {
+	// maybe use router to set the page
+	document.getElementById('newGamePage').style = 'display: none;';
+	document.getElementById('defaultGamePage').style = 'display: block;';
+	// Find a better way to do this, this only works because the game is required before newGame.js
+	// Maybe you should just make the gameObj right away and then allow it to be accessed by all
+	// Actually this doesn't work at all
+	gameObj.boardSize = Number(bsSelected.splice(3, 5));
+});
+
+document.addEventListener('click', (e) => {
+	let element = e.target;
+	if (element.id.slice(0, 3) == 'gt_') {
+		gtSelected = element.id;
+	} else if (element.id.slice(0, 3) == 'bs_') {
+		bsSelected = element.id;
+	}
+	updateNewGameSelections();
 });
 
 
-},{"./Game.js":1,"./config.js":2}],4:[function(require,module,exports){
-require("./defaultGame.js");
+},{}],4:[function(require,module,exports){
+require("./game.js");
+require("./newGame.js");
 
 const defaultPage = document.getElementById('defaultGamePage');
 const rulesPage = document.getElementById('rulesPage');
 const newGamePage = document.getElementById('newGamePage');
 
 const setPage = (pageId) => {
-        defaultPage.style = 'display: none;';
-        rulesPage.style = 'display: none;';
-        newGamePage.style = 'display: none;';
-        document.getElementById(pageId).style = 'display: block;';
+	[defaultPage, rulesPage, newGamePage].forEach((pageDiv) => {
+		pageDiv.style = 'display: none;';
+	});
+	document.getElementById(pageId).style = 'display: block;';
 }
 
 if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
-        defaultPage.style = 'display: block;';
+	defaultPage.style = 'display: block;';
 }
 
 document.getElementById('navTitle').addEventListener('click', (e) => {
-        setPage('defaultGamePage');
+	setPage('defaultGamePage');
 });
 
 document.getElementById('navRules').addEventListener('click', (e) => {
-        setPage('rulesPage');
+	setPage('rulesPage');
 });
 
 document.getElementById('navPlay').addEventListener('click', (e) => {
-        setPage('newGamePage');
+	setPage('newGamePage');
 });
 
-
-},{"./defaultGame.js":3}]},{},[4]);
+},{"./game.js":2,"./newGame.js":3}]},{},[4]);
