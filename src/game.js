@@ -64,9 +64,9 @@ const renderBoard = () => {
 const resetBoard = () => {
   stopGame();
   gameVars.data = createEmptyData();
-  gameVars.renderBoard();
+  renderBoard();
   gameVars.round = 0;
-  domObjs.roundCtr.innerHTML = 0;
+  setRound();
   gameVars.scores = [0, 0];
   setScores();
   gameVars.piecesAvail = [rules.startingPieceCount, rules.startingPieceCount];
@@ -114,7 +114,7 @@ const runRound = () => {
   setScores();
   updatePieces();
   setPieces();
-  domObjs.roundCtr.innerHTML = gameVars.round;
+  setRound();
   //console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
   if (gameVars.scores[0] > rules.scoreLimit || gameVars.scores[1] > rules.scoreLimit)
     endGame();
@@ -162,6 +162,9 @@ const updatePieces = () => {
   if (gameVars.piecesAvail[1] < rules.maxPieceCount)
     gameVars.piecesAvail[1]++;
 }
+const setRound = () => {
+  domObjs.roundCtr.innerHTML = gameVars.round;
+}
 const setPieces = () => {
   //ideally, I think this should delete and append cells depending on the amount of children
   for (let p = 0; p < 2; p++) {
@@ -208,6 +211,13 @@ const endGame = () => {
 }
 const isRunning = () => {
   return gameVars.running;
+}
+const updateRules = (addedRulesObj) => {
+	Object.keys(addedRulesObj).forEach((key) => {
+		rules[key] = addedRulesObj[key];
+	});
+	gameVars.data = createEmptyData();
+	initBoard();
 }
 
 // Event listeners
@@ -258,3 +268,7 @@ document.getElementById('resetButton').addEventListener('click', (e) => {
 // Stuff that runs on load
 gameVars.data = createEmptyData();
 initBoard();
+
+module.exports = {
+	updateRules
+}
