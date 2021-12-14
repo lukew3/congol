@@ -1,4 +1,4 @@
-const defConfig = {
+const defaultConfig = {
 	"boardSize": 15,
 	"totalRounds": 100,
 	"roundTime": 1000,
