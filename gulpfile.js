@@ -4,29 +4,29 @@ const browserify = require('gulp-browserify');
 
 
 gulp.task('pug', () => {
-	return gulp.src('pug/index.pug')
+	return gulp.src('client/pug/index.pug')
 		.pipe(pug())
 		.pipe(gulp.dest('dist'));
 });
 
 gulp.task('css', () => {
-	return gulp.src('styles/styles.css')
+	return gulp.src('client/styles/styles.css')
 		.pipe(gulp.dest('dist'));
 });
 
 gulp.task('img', () => {
-	return gulp.src('img/*')
+	return gulp.src('client/img/*')
 		.pipe(gulp.dest('dist/img'));
 });
 
 gulp.task('browserify', () => {
-	return gulp.src('src/router.js')
+	return gulp.src('client/js/router.js')
 		.pipe(browserify())
 		.pipe(gulp.dest('dist'));
 });
 
 gulp.task('CNAME', () => {
-	return gulp.src('CNAME')
+	return gulp.src('client/CNAME')
 		.pipe(gulp.dest('dist'));
 });
 
