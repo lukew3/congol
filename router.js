@@ -1,4 +1,4 @@
-(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 const defaultConfig = {
 	"boardSize": 15,
 	"totalRounds": 100,
@@ -18,6 +18,38 @@ module.exports = {
 }
 
 },{}],2:[function(require,module,exports){
+require("./game.js");
+require("./newGame.js");
+
+
+const defaultPage = document.getElementById('defaultGamePage');
+const rulesPage = document.getElementById('rulesPage');
+const newGamePage = document.getElementById('newGamePage');
+
+const setPage = (pageId) => {
+	[defaultPage, rulesPage, newGamePage].forEach((pageDiv) => {
+		pageDiv.style = 'display: none;';
+	});
+	document.getElementById(pageId).style = 'display: block;';
+}
+
+if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+	defaultPage.style = 'display: block;';
+}
+
+document.getElementById('navTitle').addEventListener('click', (e) => {
+	setPage('defaultGamePage');
+});
+
+document.getElementById('navRules').addEventListener('click', (e) => {
+	setPage('rulesPage');
+});
+
+document.getElementById('navPlay').addEventListener('click', (e) => {
+	setPage('newGamePage');
+});
+
+},{"./game.js":3,"./newGame.js":4}],3:[function(require,module,exports){
 const {defaultConfig} = require("./config.js");
 
 //rules and gameVars are separated so that rules can be modifiable in its entirety while gameVars cannot
@@ -293,7 +325,7 @@ module.exports = {
 	updateRules
 }
 
-},{"./config.js":1}],3:[function(require,module,exports){
+},{"./config.js":1}],4:[function(require,module,exports){
 const { updateRules } = require('./game.js');
 
 const gtOnline = document.getElementById("gt_online");
@@ -336,35 +368,4 @@ document.addEventListener('click', (e) => {
 });
 
 
-},{"./game.js":2}],4:[function(require,module,exports){
-require("./game.js");
-require("./newGame.js");
-
-const defaultPage = document.getElementById('defaultGamePage');
-const rulesPage = document.getElementById('rulesPage');
-const newGamePage = document.getElementById('newGamePage');
-
-const setPage = (pageId) => {
-	[defaultPage, rulesPage, newGamePage].forEach((pageDiv) => {
-		pageDiv.style = 'display: none;';
-	});
-	document.getElementById(pageId).style = 'display: block;';
-}
-
-if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
-	defaultPage.style = 'display: block;';
-}
-
-document.getElementById('navTitle').addEventListener('click', (e) => {
-	setPage('defaultGamePage');
-});
-
-document.getElementById('navRules').addEventListener('click', (e) => {
-	setPage('rulesPage');
-});
-
-document.getElementById('navPlay').addEventListener('click', (e) => {
-	setPage('newGamePage');
-});
-
-},{"./game.js":2,"./newGame.js":3}]},{},[4]);
+},{"./game.js":3}]},{},[2])
