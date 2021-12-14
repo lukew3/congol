@@ -236,8 +236,8 @@ const updateRules = (addedRulesObj) => {
 	Object.keys(addedRulesObj).forEach((key) => {
 		rules[key] = addedRulesObj[key];
 	});
-	gameVars.data = createEmptyData();
 	initBoard();
+	resetBoard();
 }
 
 // Event listeners
