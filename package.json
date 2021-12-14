@@ -23,7 +23,6 @@
     "gh-pages": "^3.2.3",
     "gulp": "^4.0.2",
     "gulp-browserify": "^0.5.1",
-    "gulp-pug": "^5.0.0",
-    "vinyl-source-stream": "^2.0.0"
+    "gulp-pug": "^5.0.0"
   }
 }
