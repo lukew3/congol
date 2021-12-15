@@ -20,7 +20,7 @@ gulp.task('img', () => {
 });
 
 gulp.task('browserify', () => {
-	return gulp.src('client/js/router.js')
+	return gulp.src('client/js/main.js')
 		.pipe(browserify())
 		.pipe(gulp.dest('dist'));
 });

@@ -1,7 +1,3 @@
-require("./game.js");
-require("./newGame.js");
-
-
 const defaultPage = document.getElementById('defaultGamePage');
 const rulesPage = document.getElementById('rulesPage');
 const newGamePage = document.getElementById('newGamePage');
@@ -17,14 +13,6 @@ if (window.location.pathname === '/' || window.location.pathname === '/index.htm
 	defaultPage.style = 'display: block;';
 }
 
-document.getElementById('navTitle').addEventListener('click', (e) => {
-	setPage('defaultGamePage');
-});
-
-document.getElementById('navRules').addEventListener('click', (e) => {
-	setPage('rulesPage');
-});
-
-document.getElementById('navPlay').addEventListener('click', (e) => {
-	setPage('newGamePage');
-});
+module.exports = {
+	setPage
+}
