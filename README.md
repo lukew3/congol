@@ -6,19 +6,19 @@ Conway's game of life for 2 players
 
 [Design files](https://www.figma.com/file/2FNvlsHa7aIuhYawCjx0iH/Congol)
 
+## Setup
 
-## Install Requirements
+### Install Requirements
 ```
 npm ci
 ```
 
-## Build
+### Build
 ```
 npm run build
 ```
-
-## Deploy
-Deploys to the gh-pages branch of the repo
+### Test
 ```
-npm run deploy
+cd dist
+python -m http.server
 ```
