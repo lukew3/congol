@@ -1,6 +1,12 @@
 const gulp = require('gulp');
 const pug = require('gulp-pug');
-const browserify = require('gulp-browserify');
+//const browserify = require('gulp-browserify');
+const browserify = require('browserify');
+const uglify = require('gulp-uglify');
+const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
+const autoprefixer = require('gulp-autoprefixer');
+const csso = require('gulp-csso');
 
 
 gulp.task('pug', () => {
@@ -11,6 +17,8 @@ gulp.task('pug', () => {
 
 gulp.task('css', () => {
 	return gulp.src('client/styles/styles.css')
+		.pipe(autoprefixer())
+		.pipe(csso())
 		.pipe(gulp.dest('dist'));
 });
 
@@ -20,9 +28,12 @@ gulp.task('img', () => {
 });
 
 gulp.task('browserify', () => {
-	return gulp.src('client/js/main.js')
-		.pipe(browserify())
-		.pipe(gulp.dest('dist'));
+	return browserify('./client/js/main.js')
+		.bundle()
+		.pipe(source('bundle.js'))
+		.pipe(buffer())
+		.pipe(uglify())
+		.pipe(gulp.dest('./dist'));
 });
 
 gulp.task('CNAME', () => {

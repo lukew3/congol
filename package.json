@@ -20,9 +20,15 @@
   "homepage": "https://github.com/lukew3/congol#readme",
   "dependencies": {},
   "devDependencies": {
+    "browserify": "^17.0.0",
     "gh-pages": "^3.2.3",
     "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^8.0.0",
     "gulp-browserify": "^0.5.1",
-    "gulp-pug": "^5.0.0"
+    "gulp-csso": "^4.0.1",
+    "gulp-pug": "^5.0.0",
+    "gulp-uglify": "^3.0.2",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
   }
 }
