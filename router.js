@@ -168,8 +168,10 @@ const runRound = () => {
   setPieces();
   setRound();
   //console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
-  if (gameVars.scores[0] > rules.scoreLimit || gameVars.scores[1] > rules.scoreLimit)
-    endGame();
+  if (gameVars.scores[0] >= rules.scoreLimit)
+    endGame(0);
+  else if (gameVars.scores[1] >= rules.scoreLimit)
+    endGame(1);
   gameVars.roundToggledCells = [];
 }
 const countNeighbors = (y, x) => {
@@ -253,11 +255,11 @@ const toggleCell = (cellObj, playerId) => {
   }
   setPieces();
 }
-const endGame = () => {
+const endGame = (winner) => {
   // Should not use document.getElementById
   document.getElementById('winnerMessage').style.display = 'block';
   // Set this to the actual winner of the game
-  document.getElementById('winnerMessage').innerHTML = `Player 1 wins!`;
+  document.getElementById('winnerMessage').innerHTML = `Player ${winner+1} wins!`;
   document.getElementById('submitMoveButton').style.display = 'none';
   document.getElementById('resetGameButton').style.display = 'block';
 }
