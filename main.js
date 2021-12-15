@@ -18,38 +18,11 @@ module.exports = {
 }
 
 },{}],2:[function(require,module,exports){
+require("./nav.js");
 require("./game.js");
 require("./newGame.js");
 
-
-const defaultPage = document.getElementById('defaultGamePage');
-const rulesPage = document.getElementById('rulesPage');
-const newGamePage = document.getElementById('newGamePage');
-
-const setPage = (pageId) => {
-	[defaultPage, rulesPage, newGamePage].forEach((pageDiv) => {
-		pageDiv.style = 'display: none;';
-	});
-	document.getElementById(pageId).style = 'display: block;';
-}
-
-if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
-	defaultPage.style = 'display: block;';
-}
-
-document.getElementById('navTitle').addEventListener('click', (e) => {
-	setPage('defaultGamePage');
-});
-
-document.getElementById('navRules').addEventListener('click', (e) => {
-	setPage('rulesPage');
-});
-
-document.getElementById('navPlay').addEventListener('click', (e) => {
-	setPage('newGamePage');
-});
-
-},{"./game.js":3,"./newGame.js":4}],3:[function(require,module,exports){
+},{"./game.js":3,"./nav.js":4,"./newGame.js":5}],3:[function(require,module,exports){
 const {defaultConfig} = require("./config.js");
 
 //rules and gameVars are separated so that rules can be modifiable in its entirety while gameVars cannot
@@ -328,6 +301,21 @@ module.exports = {
 }
 
 },{"./config.js":1}],4:[function(require,module,exports){
+const { setPage } = require('./router.js');
+
+document.getElementById('navTitle').addEventListener('click', (e) => {
+        setPage('defaultGamePage');
+});
+
+document.getElementById('navRules').addEventListener('click', (e) => {
+        setPage('rulesPage');
+});
+
+document.getElementById('navPlay').addEventListener('click', (e) => {
+        setPage('newGamePage');
+});
+
+},{"./router.js":6}],5:[function(require,module,exports){
 const { updateRules } = require('./game.js');
 
 const gtOnline = document.getElementById("gt_online");
@@ -370,4 +358,24 @@ document.addEventListener('click', (e) => {
 });
 
 
-},{"./game.js":3}]},{},[2])
+},{"./game.js":3}],6:[function(require,module,exports){
+const defaultPage = document.getElementById('defaultGamePage');
+const rulesPage = document.getElementById('rulesPage');
+const newGamePage = document.getElementById('newGamePage');
+
+const setPage = (pageId) => {
+	[defaultPage, rulesPage, newGamePage].forEach((pageDiv) => {
+		pageDiv.style = 'display: none;';
+	});
+	document.getElementById(pageId).style = 'display: block;';
+}
+
+if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+	defaultPage.style = 'display: block;';
+}
+
+module.exports = {
+	setPage
+}
+
+},{}]},{},[2])
