@@ -17,7 +17,7 @@ npm ci
 ```
 npm run build
 ```
-### Test
+### Run
 ```
 cd dist
 python -m http.server
