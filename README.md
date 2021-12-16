@@ -19,6 +19,5 @@ npm run build
 ```
 ### Run
 ```
-cd dist
-python -m http.server
+npm start
 ```
