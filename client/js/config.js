@@ -24,7 +24,8 @@ const local2pConfig = {
 		"blue",
 		"red"
 	],
-	"speciesCount": 2
+	"speciesCount": 2,
+	"startingTime": 5,
 }
 
 const soloConfig = {

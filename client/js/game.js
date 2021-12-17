@@ -3,6 +3,7 @@ const {baseConfig, local2pConfig, soloConfig} = require("./config.js");
 //rules and gameVars are separated so that rules can be modifiable in its entirety while gameVars cannot
 let rules = baseConfig;
 let gameVars = {
+  "gameOver": false,
   "scores": [0, 0],
   "piecesAvail": [rules.startingPieceCount, rules.startingPieceCount],
   "round": 0,
@@ -10,6 +11,7 @@ let gameVars = {
   "roundTimeouts": [],
   "data": [],
   "roundToggledCells": [],
+  "timers": [rules.startingTime, rules.startingTime]
 };
 let domObjs = {
   "gameContainer": document.getElementById("gameContainer"),
@@ -23,7 +25,11 @@ let domObjs = {
       document.getElementById('p1PiecesAvail'),
       document.getElementById('p2PiecesAvail')
   ],
-  "playerSwitch": document.getElementById("switch")
+  "playerSwitch": document.getElementById("switch"),
+  "timers": [
+      document.getElementById('p1Timer'),
+      document.getElementById('p2Timer')
+  ]
 }
 
 const createEmptyData = () => {
@@ -71,7 +77,12 @@ const resetBoard = () => {
   gameVars.scores = [0, 0];
   setScores();
   gameVars.piecesAvail = [rules.startingPieceCount, rules.startingPieceCount];
+  gameVars.timers = [rules.startingTime, rules.startingTime];
   setPieces();
+  gameVars.gameOver = false;
+  renderTimers();
+  stopTimers();
+  updateTimer();
 }
 const stopGame = () => {
   // for each to in roundTimeouts, clear timeout
@@ -147,6 +158,34 @@ const countNeighbors = (y, x) => {
   let dominant = count[0] > count[1] ? 1 : 2;
   return [count[0] + count[1], dominant];
 }
+const updateTimer = () => {
+  //update the timer of the id of the user who is playing now
+  gameVars.timerTimeout = setTimeout(() => {
+    let activePlayer = (domObjs.playerSwitch.checked) ? 1 : 0;
+    let s = --gameVars.timers[activePlayer];
+    domObjs.timers[activePlayer].innerHTML = `${Math.floor(s/60)}:${pad2(s%60)}`;
+    checkTimerEnd();
+    if (!gameVars.gameOver)
+      updateTimer();
+  }, 1000); // every second
+}
+const stopTimers = () => {
+  console.log("stopping timer");
+  clearTimeout(gameVars.timerTimeout);
+}
+const pad2 = (num) => {
+  return (num < 10 ? '0' : '') + num;
+}
+const renderTimers = () => {
+  gameVars.timers.forEach((s, i) => {
+    domObjs.timers[i].innerHTML = `${Math.floor(s/60)}:${pad2(s%60)}`;
+  });
+}
+const checkTimerEnd = () => {
+  gameVars.timers.forEach((s, i) => {
+    if (s === 0) endGame(Math.abs(1-i));
+  });
+}
 const updateScores = () => {
   let cellCounts = [0, 0];
   gameVars.data.forEach((row, y) => {
@@ -211,6 +250,8 @@ const toggleCell = (cellObj, playerId) => {
   setPieces();
 }
 const endGame = (winner) => {
+  gameVars.gameOver = true;
+  stopTimers();
   // Should not use document.getElementById
   document.getElementById('winnerMessage').style.display = 'block';
   // Set this to the actual winner of the game
