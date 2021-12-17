@@ -1,4 +1,4 @@
-const { updateRules, setGameMode } = require('./game.js');
+const { updateRules, setGameMode } = require('./game/game.js');
 
 const gtOnline = document.getElementById("gt_online");
 const gtLocal = document.getElementById("gt_local");

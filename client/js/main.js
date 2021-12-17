@@ -1,3 +1,3 @@
 require("./nav.js");
-require("./game.js");
+require("./game/game.js");
 require("./newGame.js");

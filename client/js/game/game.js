@@ -1,4 +1,5 @@
-const {baseConfig, local2pConfig, soloConfig} = require("./config.js");
+const { baseConfig, local2pConfig, soloConfig } = require("./config.js");
+const { domObjs, initBoard, renderBoard, renderScores, renderRound, renderPieces, renderTimers } = require("./rendering.js");
 
 //rules and gameVars are separated so that rules can be modifiable in its entirety while gameVars cannot
 let rules = baseConfig;
@@ -13,25 +14,6 @@ let gameVars = {
   "roundToggledCells": [],
   "timers": [rules.startingTime, rules.startingTime]
 };
-let domObjs = {
-  "gameContainer": document.getElementById("gameContainer"),
-  "boardObj": document.getElementById('gameBoard'),
-  "roundCtr": document.getElementById('roundCounter'),
-  "scoreObjs": [
-      document.getElementById('p1Score'),
-      document.getElementById('p2Score')
-  ],
-  "piecesObjs": [
-      document.getElementById('p1PiecesAvail'),
-      document.getElementById('p2PiecesAvail')
-  ],
-  "playerSwitch": document.getElementById("switch"),
-  "timers": [
-      document.getElementById('p1Timer'),
-      document.getElementById('p2Timer')
-  ]
-}
-
 const createEmptyData = () => {
   let myarr = [];
   for (let y = 0; y < rules.boardSize; y++) {
@@ -42,45 +24,19 @@ const createEmptyData = () => {
   }
   return myarr;
 }
-const initBoard = () => {
-  let width = Math.min(screen.availWidth, 500);
-  rules.boardWH = (width - 10) - ((width - 10) % rules.boardSize); // 10 pixels of space between board and edge of screen
-  rules.cellWH = rules.boardWH / rules.boardSize - 2; // 2 pixels for the border
-  domObjs.boardObj.innerHTML = "";
-  domObjs.boardObj.style = `width: ${rules.boardWH}px; height: ${rules.boardWH}px`;
-  domObjs.gameContainer.style = `width: ${rules.boardWH}px; height: ${rules.boardWH}px`;
-  for (let i = 0; i < Math.pow(rules.boardSize, 2); i++) {
-    let newCell = document.createElement('div');
-    newCell.classList.add('cell');
-    newCell.id = `cell-${i}`;
-    newCell.style = `width: ${rules.cellWH}px; height: ${rules.cellWH}px`
-    domObjs.boardObj.append(newCell);
-  }
-  setPieces();
-  domObjs.playerSwitch.checked = false;
-}
-const renderBoard = () => {
-  let cell, cellObj;
-  gameVars.data.forEach((row, y) => {
-    row.forEach((cell, x) => {
-      cellObj = document.getElementById(`cell-${y*rules.boardSize+x}`);
-      cellObj.style.backgroundColor = rules.colors[cell];
-    });
-  });
-}
 const resetBoard = () => {
   stopGame();
   gameVars.data = createEmptyData();
-  renderBoard();
+  renderBoard(gameVars.data, rules.colors, rules.boardSize);
   gameVars.round = 0;
-  setRound();
+  renderRound(gameVars.round);
   gameVars.scores = [0, 0];
-  setScores();
+  renderScores(gameVars.scores);
   gameVars.piecesAvail = [rules.startingPieceCount, rules.startingPieceCount];
   gameVars.timers = [rules.startingTime, rules.startingTime];
-  setPieces();
+  renderPieces(rules, gameVars.piecesAvail);
   gameVars.gameOver = false;
-  renderTimers();
+  renderTimers(gameVars.timers);
   stopTimers();
   updateTimer();
   domObjs.playerSwitch.checked = false;
@@ -122,12 +78,12 @@ const runRound = () => {
     });
   });
   gameVars.data = newData;
-  renderBoard();
+  renderBoard(gameVars.data, rules.colors, rules.boardSize);
   updateScores();
-  setScores();
+  renderScores(gameVars.scores);
   updatePieces();
-  setPieces();
-  setRound();
+  renderPieces(rules, gameVars.piecesAvail);
+  renderRound(gameVars.round);
   //console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
   checkScoreLimit();
   gameVars.roundToggledCells = [];
@@ -171,16 +127,10 @@ const updateTimer = () => {
   }, 1000); // every second
 }
 const stopTimers = () => {
-  console.log("stopping timer");
   clearTimeout(gameVars.timerTimeout);
 }
 const pad2 = (num) => {
   return (num < 10 ? '0' : '') + num;
-}
-const renderTimers = () => {
-  gameVars.timers.forEach((s, i) => {
-    domObjs.timers[i].innerHTML = `${Math.floor(s/60)}:${pad2(s%60)}`;
-  });
 }
 const checkTimerEnd = () => {
   gameVars.timers.forEach((s, i) => {
@@ -197,11 +147,7 @@ const updateScores = () => {
   });
   let winner = (cellCounts[0] > cellCounts[1]) ? 0 : 1;
   gameVars.scores[winner] += Math.abs(cellCounts[0] - cellCounts[1]);
-  setScores();
-}
-const setScores = () => {
-  domObjs.scoreObjs[0].innerHTML = gameVars.scores[0];
-  domObjs.scoreObjs[1].innerHTML = gameVars.scores[1];
+  renderScores(gameVars.scores);
 }
 const updatePieces = () => {
   if (rules.startingPieceCount == -1) return;
@@ -209,22 +155,6 @@ const updatePieces = () => {
     gameVars.piecesAvail[0]++;
   if (gameVars.piecesAvail[1] < rules.maxPieceCount)
     gameVars.piecesAvail[1]++;
-}
-const setRound = () => {
-  domObjs.roundCtr.innerHTML = gameVars.round;
-}
-const setPieces = () => {
-  if (rules.startingPieceCount == -1) return;
-  //ideally, I think this should delete and append cells depending on the amount of children
-  for (let p = 0; p < 2; p++) {
-    domObjs.piecesObjs[p].innerHTML = "";
-    for (let i = 0; i < gameVars.piecesAvail[p]; i++) {
-      let newCell = document.createElement('div');
-      newCell.classList.add('cell');
-      newCell.style = `width: ${rules.cellWH/2}px; height: ${rules.cellWH/2}px; background-color: ${rules.colors[p+1]}`
-      domObjs.piecesObjs[p].append(newCell);
-    }
-  }
 }
 const toggleCell = (cellObj, playerId) => {
   //this.roundToggledCells = [];
@@ -248,7 +178,7 @@ const toggleCell = (cellObj, playerId) => {
       return val != num;
     });
   }
-  setPieces();
+  renderPieces(rules, gameVars.piecesAvail);
 }
 const endGame = (winner) => {
   gameVars.gameOver = true;
@@ -267,7 +197,7 @@ const updateRules = (addedRulesObj) => {
 	Object.keys(addedRulesObj).forEach((key) => {
 		rules[key] = addedRulesObj[key];
 	});
-	initBoard();
+	rules = initBoard(rules, gameVars.piecesAvail);
 	resetBoard();
 }
 const setGameMode = (mode) => {
@@ -322,7 +252,6 @@ document.addEventListener('click', (e) => {
 document.getElementById('submitMoveButton').addEventListener('click', (e) => {
   if (rules.speciesCount === 2)
     domObjs.playerSwitch.checked = !domObjs.playerSwitch.checked;
-  console.log(rules.speciesCount);
   runRound();
 });
 
@@ -358,7 +287,7 @@ document.getElementById('resetButton').addEventListener('click', (e) => {
 
 // Stuff that runs on load
 gameVars.data = createEmptyData();
-initBoard();
+rules = initBoard(rules, gameVars.piecesAvail);
 
 
 module.exports = {
