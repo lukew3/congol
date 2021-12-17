@@ -1,4 +1,4 @@
-const { updateRules } = require('./game.js');
+const { updateRules, setGameMode } = require('./game.js');
 
 const gtOnline = document.getElementById("gt_online");
 const gtLocal = document.getElementById("gt_local");
@@ -27,6 +27,8 @@ document.getElementById('newGameStartButton').addEventListener('click', () => {
 	// Actually this doesn't work at all
 	//gameObj.boardSize = Number(bsSelected.splice(3, 5));
 	updateRules({"boardSize": Number(bsSelected.slice(3, 5))});
+	console.log(gtSelected);
+	setGameMode(gtSelected);
 });
 
 document.addEventListener('click', (e) => {

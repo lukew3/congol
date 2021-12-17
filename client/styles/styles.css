@@ -203,18 +203,23 @@ input + label #switchHandle {
 	justify-content: space-between;
 }
 
-#submitMoveButton, #resetGameButton {
+.gameButton {
 	width: 70px;
 	margin: auto;
 	margin-top: 15px;
 }
 
-#resetGameButton {
+#resetGame2pButton {
+	display: none;
+}
+
+#soloButtons {
 	display: none;
 }
 
 #roundGroup {
 	display: flex;
+	margin: auto;
 }
 .piecesAvail {
 	display: flex;
