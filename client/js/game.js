@@ -83,6 +83,7 @@ const resetBoard = () => {
   renderTimers();
   stopTimers();
   updateTimer();
+  domObjs.playerSwitch.checked = false;
 }
 const stopGame = () => {
   // for each to in roundTimeouts, clear timeout
