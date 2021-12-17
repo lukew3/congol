@@ -10,7 +10,8 @@ const setPage = (pageId) => {
 }
 
 if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
-	defaultPage.style = 'display: block;';
+	//setPage('defaultGamePage');
+	setPage('newGamePage');
 }
 
 module.exports = {
