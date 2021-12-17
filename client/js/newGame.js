@@ -26,9 +26,8 @@ document.getElementById('newGameStartButton').addEventListener('click', () => {
 	// Maybe you should just make the gameObj right away and then allow it to be accessed by all
 	// Actually this doesn't work at all
 	//gameObj.boardSize = Number(bsSelected.splice(3, 5));
-	updateRules({"boardSize": Number(bsSelected.slice(3, 5))});
-	console.log(gtSelected);
 	setGameMode(gtSelected);
+	updateRules({"boardSize": Number(bsSelected.slice(3, 5))});
 });
 
 document.addEventListener('click', (e) => {
