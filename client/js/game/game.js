@@ -1,13 +1,13 @@
-const { getRules, getGameVars, updateRules, updateGameVars } = require("./data.js");
+const Data = require("./data.js");
+const Render = require("./rendering.js");
 const { local2pConfig, soloConfig } = require("./config.js");
-const { domObjs, initBoard, renderBoard, renderScores, renderRound, renderPieces, renderTimers } = require("./rendering.js");
 
 //rules and gameVars are separated so that rules can be modifiable in its entirety while gameVars cannot
 const createEmptyData = () => {
   let myarr = [];
-  for (let y = 0; y < rules.boardSize; y++) {
+  for (let y = 0; y < Data.getRules().boardSize; y++) {
     let row = [];
-    for (let x = 0; x < rules.boardSize; x++)
+    for (let x = 0; x < Data.getRules().boardSize; x++)
       row.push(0);
       myarr.push(row);
   }
@@ -15,44 +15,44 @@ const createEmptyData = () => {
 }
 const resetBoard = () => {
   stopGame();
-  updateGameVars({"data": createEmptyData()});
-  renderBoard();
-  updateGameVars({"round": 0});
-  renderRound();
-  updateGameVars({"scores": [0, 0]});
-  renderScores();
-  updateGameVars({"piecesAvail": [getRules().startingPieceCount, getRules().startingPieceCount]});
-  updateGameVars({"timers": [getRules().startingTime, getRules().startingTime]});
-  renderPieces();
-  updateGameVars({"gameOver": false});
-  renderTimers();
+  Data.updateGameVars({"data": createEmptyData()});
+  Render.renderBoard();
+  Data.updateGameVars({"round": 0});
+  Render.renderRound();
+  Data.updateGameVars({"scores": [0, 0]});
+  Render.renderScores();
+  Data.updateGameVars({"piecesAvail": [Data.getRules().startingPieceCount, Data.getRules().startingPieceCount]});
+  Data.updateGameVars({"timers": [Data.getRules().startingTime, Data.getRules().startingTime]});
+  Render.renderPieces();
+  Data.updateGameVars({"gameOver": false});
+  Render.renderTimers();
   stopTimers();
   updateTimer();
-  domObjs.playerSwitch.checked = false;
+  Render.domObjs.playerSwitch.checked = false;
 }
 const stopGame = () => {
   // for each to in roundTimeouts, clear timeout
-  getGameVars().roundTimeouts.forEach((id) => {
+  Data.getGameVars().roundTimeouts.forEach((id) => {
     clearTimeout(id);
   });
-  updateGameVars({"running": false});
+  Data.updateGameVars({"running": false});
 }
 const runGame = () => {
-  for (let r = 0; r < getRules().totalRounds; r++) {
-    getGameVars().roundTimeouts.push(
+  for (let r = 0; r < Data.getRules().totalRounds; r++) {
+    Data.getGameVars().roundTimeouts.push(
       setTimeout(() => {
         runRound();
-      }, r * getRules().roundTime)
+      }, r * Data.getRules().roundTime)
     );
   }
-  updateGameVars({"running": true});
+  Data.updateGameVars({"running": true});
 }
 const runRound = () => {
   let startTime = performance.now();
   let nvalues, n, dominant;
-  updateGameVars({"gameVars": getGameVars().round + 1});
+  Data.updateGameVars({"round": Data.getGameVars().round + 1});
   let newData = createEmptyData();
-  getGameVars().data.forEach((row, y) => {
+  Data.getGameVars().data.forEach((row, y) => {
     row.forEach((cell, x) => {
       nvalues = countNeighbors(y, x);
       n = nvalues[0];
@@ -66,22 +66,22 @@ const runRound = () => {
       }
     });
   });
-  updateGameVars({"data": newData});
-  renderBoard();
+  Data.updateGameVars({"data": newData});
+  Render.renderBoard();
   updateScores();
-  renderScores();
+  Render.renderScores();
   updatePieces();
-  renderPieces();
-  renderRound();
+  Render.renderPieces();
+  Render.renderRound();
   //console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
   checkScoreLimit();
-  updateGameVars({"roundToggledCells": []});
+  Data.updateGameVars({"roundToggledCells": []});
 }
 const checkScoreLimit = () => {
-  if (getRules().scoreLimit == -1) return;
-  if (getGameVars().scores[0] >= getRules().scoreLimit)
+  if (Data.getRules().scoreLimit == -1) return;
+  if (Data.getGameVars().scores[0] >= Data.getRules().scoreLimit)
     endGame(0);
-  else if (getGameVars().scores[1] >= getRules().scoreLimit)
+  else if (Data.getGameVars().scores[1] >= Data.getRules().scoreLimit)
     endGame(1);
 }
 const countNeighbors = (y, x) => {
@@ -89,16 +89,16 @@ const countNeighbors = (y, x) => {
   let cell;
   let ymin = (y === 0) ? y : y - 1;
   let xmin = (x === 0) ? x : x - 1;
-  let ymax = (y === getRules().boardSize - 1) ? y : y + 1;
-  let xmax = (x === getRules().boardSize - 1) ? x : x + 1;
+  let ymax = (y === Data.getRules().boardSize - 1) ? y : y + 1;
+  let xmax = (x === Data.getRules().boardSize - 1) ? x : x + 1;
   for (let yc = ymin; yc < ymax + 1; yc++) {
     for (let xc = xmin; xc < xmax + 1; xc++) {
-      cell = getGameVars().data[yc][xc];
+      cell = Data.getGameVars().data[yc][xc];
       if (cell != 0)
         count[cell - 1] += 1;
     }
   }
-  cell = getGameVars().data[y][x];
+  cell = Data.getGameVars().data[y][x];
   if (cell != 0)
     count[cell - 1] -= 1;
   let dominant = count[0] > count[1] ? 1 : 2;
@@ -106,71 +106,79 @@ const countNeighbors = (y, x) => {
 }
 const updateTimer = () => {
   //update the timer of the id of the user who is playing now
-  getGameVars().timerTimeout = setTimeout(() => {
-    let activePlayer = (domObjs.playerSwitch.checked) ? 1 : 0;
-    let s = --gameVars.timers[activePlayer];
-    domObjs.timers[activePlayer].innerHTML = `${Math.floor(s/60)}:${pad2(s%60)}`;
+  Data.getGameVars().timerTimeout = setTimeout(() => {
+    let activePlayer = (Render.domObjs.playerSwitch.checked) ? 1 : 0;
+    let gv = Data.getGameVars();
+    let s = --gv.timers[activePlayer];
+    Data.updateGameVars(gv);
+    Render.domObjs.timers[activePlayer].innerHTML = `${Math.floor(s/60)}:${pad2(s%60)}`;
     checkTimerEnd();
-    if (!getGameVars().gameOver)
+    if (!Data.getGameVars().gameOver)
       updateTimer();
   }, 1000); // every second
 }
 const stopTimers = () => {
-  clearTimeout(getGameVars().timerTimeout);
+  clearTimeout(Data.getGameVars().timerTimeout);
 }
 const pad2 = (num) => {
   return (num < 10 ? '0' : '') + num;
 }
 const checkTimerEnd = () => {
-  getGameVars().timers.forEach((s, i) => {
+  Data.getGameVars().timers.forEach((s, i) => {
     if (s === 0) endGame(Math.abs(1-i));
   });
 }
 const updateScores = () => {
   let cellCounts = [0, 0];
-  getGameVars().data.forEach((row, y) => {
+  Data.getGameVars().data.forEach((row, y) => {
     row.forEach((cell, x) => {
       if (cell != 0)
         cellCounts[cell - 1] += 1;
     });
   });
   let winner = (cellCounts[0] > cellCounts[1]) ? 0 : 1;
-  gameVars.scores[winner] += Math.abs(cellCounts[0] - cellCounts[1]);
-  renderScores();
+  let gv = Data.getGameVars();
+  gv.scores[winner] += Math.abs(cellCounts[0] - cellCounts[1]);
+  Data.updateGameVars(gv);
+  Render.renderScores();
 }
 const updatePieces = () => {
-  if (getRules().startingPieceCount == -1) return;
-  if (getGameVars().piecesAvail[0] < getRules().maxPieceCount)
-    gameVars.piecesAvail[0]++;
-  if (getGameVars().piecesAvail[1] < getRules().maxPieceCount)
-    gameVars.piecesAvail[1]++;
+  if (Data.getRules().startingPieceCount == -1) return;
+  let gv = Data.getGameVars();
+  if (Data.getGameVars().piecesAvail[0] < Data.getRules().maxPieceCount)
+    gv.piecesAvail[0]++;
+  if (Data.getGameVars().piecesAvail[1] < Data.getRules().maxPieceCount)
+    gv.piecesAvail[1]++;
+  Data.updateGameVars(gv);
 }
 const toggleCell = (cellObj, playerId) => {
   //this.roundToggledCells = [];
   // Lol I don't know regex
   let num = -Number(cellObj.id.match(/\-[0-9a-z]+$/i)[0]);
-  let cy = Math.floor(num / getRules().boardSize);
+  let cy = Math.floor(num / Data.getRules().boardSize);
   //console.log(`${cy} ${num%this.boardSize}`);
-  if (getGameVars().data[cy][num % getRules().boardSize] == 0 && getGameVars().piecesAvail[playerId - 1] != 0) {
+  let gv = Data.getGameVars();
+  if (gv.data[cy][num % Data.getRules().boardSize] == 0 && gv.piecesAvail[playerId - 1] != 0) {
     // fill empty square
-    gameVars.data[cy][num % getRules().boardSize] = playerId;
-    cellObj.style.backgroundColor = getRules().colors[playerId];
-    gameVars.piecesAvail[playerId - 1]--;
-    gameVars.roundToggledCells.push(num);
-  } else if (getGameVars().data[cy][num % getRules().boardSize] == playerId && getGameVars().roundToggledCells.includes(num)) {
+    gv.data[cy][num % Data.getRules().boardSize] = playerId;
+    cellObj.style.backgroundColor = Data.getRules().colors[playerId];
+    gv.piecesAvail[playerId - 1]--;
+    gv.roundToggledCells.push(num);
+  } else if (Data.getGameVars().data[cy][num % Data.getRules().boardSize] == playerId && Data.getGameVars().roundToggledCells.includes(num)) {
     // empty filled square
-    gameVars.data[cy][num % getRules().boardSize] = 0;
-    cellObj.style.backgroundColor = getRules().colors[0];
-    gameVars.piecesAvail[playerId - 1]++;
+    gv.data[cy][num % Data.getRules().boardSize] = 0;
+    cellObj.style.backgroundColor = Data.getRules().colors[0];
+    gv.piecesAvail[playerId - 1]++;
     // remove num from roundToggledCells, not sure if this is the best way to do this
-    gameVars.roundToggledCells = getGameVars().roundToggledCells.filter((val) => {
+    gv.roundToggledCells = Data.getGameVars().roundToggledCells.filter((val) => {
       return val != num;
     });
   }
-  renderPieces();
+  Data.updateGameVars(gv);
+  Render.renderPieces();
 }
 const endGame = (winner) => {
-  gameVars.gameOver = true;
+  Data.updateGameVars({"gameOver": true})
   stopTimers();
   // Should not use document.getElementById
   document.getElementById('winnerMessage').style.display = 'block';
@@ -180,14 +188,14 @@ const endGame = (winner) => {
   document.getElementById('resetGame2pButton').style.display = 'block';
 }
 const isRunning = () => {
-  return getGameVars().running;
+  return Data.getGameVars().running;
 }
 const setGameMode = (mode) => {
         switch(mode) {
                 case 'gt_online':
 			// Restrict user to only use one color
 			// Should the user always have the right or left player?
-			updateRules({});
+			Data.updateRules({});
                         break;
                 case 'gt_local':
 			// Remove player groups
@@ -197,7 +205,7 @@ const setGameMode = (mode) => {
 			// Switch buttons sets
 			document.getElementById('local2pButtons').style.display = 'flex';
 			document.getElementById('soloButtons').style.display = 'none';
-			updateRules(local2pConfig);
+			Data.updateRules(local2pConfig);
                         break;
 		case 'gt_solo':
 			// Remove player groups
@@ -208,9 +216,9 @@ const setGameMode = (mode) => {
 			document.getElementById('local2pButtons').style.display = 'none';
 			document.getElementById('soloButtons').style.display = 'flex';
 			// Set player to player 1
-			domObjs.playerSwitch.checked = false;
+			Render.domObjs.playerSwitch.checked = false;
 			// Later: Remove timer
-			updateRules(soloConfig);
+			Data.updateRules(soloConfig);
                         break;
                 default:
                         console.log*("Game mode not recognized");
@@ -222,18 +230,18 @@ const setGameMode = (mode) => {
 document.addEventListener('click', (e) => {
   let element = e.target;
   let playerId;
-  if (domObjs.playerSwitch == undefined)
+  if (Render.domObjs.playerSwitch == undefined)
     playerId = 1;
   else
-    playerId = (domObjs.playerSwitch.checked) ? 2 : 1;
+    playerId = (Render.domObjs.playerSwitch.checked) ? 2 : 1;
   if (element.className === "cell") {
     toggleCell(element, playerId);
   };
 });
 
 document.getElementById('submitMoveButton').addEventListener('click', (e) => {
-  if (getRules().speciesCount === 2)
-    domObjs.playerSwitch.checked = !domObjs.playerSwitch.checked;
+  if (Data.getRules().speciesCount === 2)
+    Render.domObjs.playerSwitch.checked = !Render.domObjs.playerSwitch.checked;
   runRound();
 });
 
@@ -268,11 +276,11 @@ document.getElementById('resetButton').addEventListener('click', (e) => {
 });
 
 // Stuff that runs on load
-gameVars.data = createEmptyData();
-updateRules(initBoard());
+Data.updateGameVars({"data": createEmptyData()})
+Data.updateRules(Render.initBoard());
 
 
 module.exports = {
-	updateRules,
-	setGameMode
+	setGameMode,
+  resetBoard
 }

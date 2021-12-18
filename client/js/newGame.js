@@ -1,4 +1,5 @@
-const { updateRules, setGameMode } = require('./game/game.js');
+const Game = require('./game/game.js');
+const Data = require('./game/data.js');
 
 const gtOnline = document.getElementById("gt_online");
 const gtLocal = document.getElementById("gt_local");
@@ -26,8 +27,9 @@ document.getElementById('newGameStartButton').addEventListener('click', () => {
 	// Maybe you should just make the gameObj right away and then allow it to be accessed by all
 	// Actually this doesn't work at all
 	//gameObj.boardSize = Number(bsSelected.splice(3, 5));
-	setGameMode(gtSelected);
-	updateRules({"boardSize": Number(bsSelected.slice(3, 5))});
+	Game.setGameMode(gtSelected);
+	Data.updateRules({"boardSize": Number(bsSelected.slice(3, 5))});
+	Game.resetBoard();
 });
 
 document.addEventListener('click', (e) => {

@@ -1,4 +1,4 @@
-const { getRules, getGameVars, updateRules, updateGameVars } = require("./data.js");
+const Data = require('./data.js');
 
 let domObjs = {
   "gameContainer": document.getElementById("gameContainer"),
@@ -20,8 +20,8 @@ let domObjs = {
 }
 
 const initBoard = () => {
-  let rules = getRules();
-  let piecesAvail = getGameVars().piecesAvail;
+  let rules = Data.getRules();
+  let piecesAvail = Data.getGameVars().piecesAvail;
   let width = Math.min(screen.availWidth, 500);
   rules.boardWH = (width - 10) - ((width - 10) % rules.boardSize); // 10 pixels of space between board and edge of screen
   rules.cellWH = rules.boardWH / rules.boardSize - 2; // 2 pixels for the border
@@ -40,9 +40,9 @@ const initBoard = () => {
   return rules;
 }
 const renderBoard = () => {
-  let data = getGameVars().data;
-  let colors = getRules().colors;
-  let boardSize = getRules().gameVars;
+  let data = Data.getGameVars().data;
+  let colors = Data.getRules().colors;
+  let boardSize = Data.getRules().boardSize;
   let cell, cellObj;
   data.forEach((row, y) => {
     row.forEach((cell, x) => {
@@ -52,17 +52,17 @@ const renderBoard = () => {
   });
 }
 const renderScores = () => {
-  let scores = getGameVars().scores;
+  let scores = Data.getGameVars().scores;
   domObjs.scoreObjs[0].innerHTML = scores[0];
   domObjs.scoreObjs[1].innerHTML = scores[1];
 }
 const renderRound = () => {
-  let round = getGameVars().round;
+  let round = Data.getGameVars().round;
   domObjs.roundCtr.innerHTML = round;
 }
 const renderPieces = () => {
-  let gameRules = getRules();
-  let piecesAvail = getGameVars().piecesAvail;
+  let gameRules = Data.getRules();
+  let piecesAvail = Data.getGameVars().piecesAvail;
   if (gameRules.startingPieceCount == -1) return;
   //ideally, I think this should delete and append cells depending on the amount of children
   for (let p = 0; p < 2; p++) {
@@ -79,7 +79,7 @@ const pad2 = (num) => {
   return (num < 10 ? '0' : '') + num;
 }
 const renderTimers = () => {
-  getGameVars().timers.forEach((s, i) => {
+  Data.getGameVars().timers.forEach((s, i) => {
     domObjs.timers[i].innerHTML = `${Math.floor(s/60)}:${pad2(s%60)}`;
   });
 }
