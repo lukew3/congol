@@ -1,3 +1,5 @@
+const { getRules, getGameVars, updateRules, updateGameVars } = require("./data.js");
+
 let domObjs = {
   "gameContainer": document.getElementById("gameContainer"),
   "boardObj": document.getElementById('gameBoard'),
@@ -11,13 +13,15 @@ let domObjs = {
       document.getElementById('p2PiecesAvail')
   ],
   "playerSwitch": document.getElementById("switch"),
-  "timers": [  
+  "timers": [
       document.getElementById('p1Timer'),
       document.getElementById('p2Timer')
   ]
 }
 
-const initBoard = (rules, piecesAvail) => {
+const initBoard = () => {
+  let rules = getRules();
+  let piecesAvail = getGameVars().piecesAvail;
   let width = Math.min(screen.availWidth, 500);
   rules.boardWH = (width - 10) - ((width - 10) % rules.boardSize); // 10 pixels of space between board and edge of screen
   rules.cellWH = rules.boardWH / rules.boardSize - 2; // 2 pixels for the border
@@ -34,8 +38,11 @@ const initBoard = (rules, piecesAvail) => {
   renderPieces(rules, piecesAvail);
   domObjs.playerSwitch.checked = false;
   return rules;
-}  
-const renderBoard = (data, colors, boardSize) => {
+}
+const renderBoard = () => {
+  let data = getGameVars().data;
+  let colors = getRules().colors;
+  let boardSize = getRules().gameVars;
   let cell, cellObj;
   data.forEach((row, y) => {
     row.forEach((cell, x) => {
@@ -44,14 +51,18 @@ const renderBoard = (data, colors, boardSize) => {
     });
   });
 }
-const renderScores = (scores) => {
+const renderScores = () => {
+  let scores = getGameVars().scores;
   domObjs.scoreObjs[0].innerHTML = scores[0];
   domObjs.scoreObjs[1].innerHTML = scores[1];
 }
-const renderRound = (round) => {
+const renderRound = () => {
+  let round = getGameVars().round;
   domObjs.roundCtr.innerHTML = round;
 }
-const renderPieces = (gameRules, piecesAvail) => {       
+const renderPieces = () => {
+  let gameRules = getRules();
+  let piecesAvail = getGameVars().piecesAvail;
   if (gameRules.startingPieceCount == -1) return;
   //ideally, I think this should delete and append cells depending on the amount of children
   for (let p = 0; p < 2; p++) {
@@ -67,8 +78,8 @@ const renderPieces = (gameRules, piecesAvail) => {
 const pad2 = (num) => {
   return (num < 10 ? '0' : '') + num;
 }
-const renderTimers = (timers) => {
-  timers.forEach((s, i) => {
+const renderTimers = () => {
+  getGameVars().timers.forEach((s, i) => {
     domObjs.timers[i].innerHTML = `${Math.floor(s/60)}:${pad2(s%60)}`;
   });
 }
