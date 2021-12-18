@@ -1,5 +1,5 @@
 const { baseConfig, local2pConfig, soloConfig } = require("./config.js");
-const { domObjs, initBoard, renderBoard, renderScores, renderRound, renderPieces, renderTimers } = require("./rendering.js");
+const Render = require("./rendering.js");
 
 //rules and gameVars are separated so that rules can be modifiable in its entirety while gameVars cannot
 let rules = baseConfig;
@@ -27,19 +27,19 @@ const createEmptyData = () => {
 const resetBoard = () => {
   stopGame();
   gameVars.data = createEmptyData();
-  renderBoard(gameVars.data, rules.colors, rules.boardSize);
+  Render.renderBoard(gameVars.data, rules.colors, rules.boardSize);
   gameVars.round = 0;
-  renderRound(gameVars.round);
+  Render.renderRound(gameVars.round);
   gameVars.scores = [0, 0];
-  renderScores(gameVars.scores);
+  Render.renderScores(gameVars.scores);
   gameVars.piecesAvail = [rules.startingPieceCount, rules.startingPieceCount];
   gameVars.timers = [rules.startingTime, rules.startingTime];
-  renderPieces(rules, gameVars.piecesAvail);
+  Render.renderPieces(rules, gameVars.piecesAvail);
   gameVars.gameOver = false;
-  renderTimers(gameVars.timers);
+  Render.renderTimers(gameVars.timers);
   stopTimers();
   updateTimer();
-  domObjs.playerSwitch.checked = false;
+  Render.domObjs.playerSwitch.checked = false;
 }
 const stopGame = () => {
   // for each to in roundTimeouts, clear timeout
@@ -78,12 +78,12 @@ const runRound = () => {
     });
   });
   gameVars.data = newData;
-  renderBoard(gameVars.data, rules.colors, rules.boardSize);
+  Render.renderBoard(gameVars.data, rules.colors, rules.boardSize);
   updateScores();
-  renderScores(gameVars.scores);
+  Render.renderScores(gameVars.scores);
   updatePieces();
-  renderPieces(rules, gameVars.piecesAvail);
-  renderRound(gameVars.round);
+  Render.renderPieces(rules, gameVars.piecesAvail);
+  Render.renderRound(gameVars.round);
   //console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
   checkScoreLimit();
   gameVars.roundToggledCells = [];
@@ -118,9 +118,9 @@ const countNeighbors = (y, x) => {
 const updateTimer = () => {
   //update the timer of the id of the user who is playing now
   gameVars.timerTimeout = setTimeout(() => {
-    let activePlayer = (domObjs.playerSwitch.checked) ? 1 : 0;
+    let activePlayer = (Render.domObjs.playerSwitch.checked) ? 1 : 0;
     let s = --gameVars.timers[activePlayer];
-    domObjs.timers[activePlayer].innerHTML = `${Math.floor(s/60)}:${pad2(s%60)}`;
+    Render.domObjs.timers[activePlayer].innerHTML = `${Math.floor(s/60)}:${pad2(s%60)}`;
     checkTimerEnd();
     if (!gameVars.gameOver)
       updateTimer();
@@ -147,7 +147,7 @@ const updateScores = () => {
   });
   let winner = (cellCounts[0] > cellCounts[1]) ? 0 : 1;
   gameVars.scores[winner] += Math.abs(cellCounts[0] - cellCounts[1]);
-  renderScores(gameVars.scores);
+  Render.renderScores(gameVars.scores);
 }
 const updatePieces = () => {
   if (rules.startingPieceCount == -1) return;
@@ -178,7 +178,7 @@ const toggleCell = (cellObj, playerId) => {
       return val != num;
     });
   }
-  renderPieces(rules, gameVars.piecesAvail);
+  Render.renderPieces(rules, gameVars.piecesAvail);
 }
 const endGame = (winner) => {
   gameVars.gameOver = true;
@@ -197,7 +197,7 @@ const updateRules = (addedRulesObj) => {
 	Object.keys(addedRulesObj).forEach((key) => {
 		rules[key] = addedRulesObj[key];
 	});
-	rules = initBoard(rules, gameVars.piecesAvail);
+	rules = Render.initBoard(rules, gameVars.piecesAvail);
 	resetBoard();
 }
 const setGameMode = (mode) => {
@@ -226,7 +226,7 @@ const setGameMode = (mode) => {
 			document.getElementById('local2pButtons').style.display = 'none';
 			document.getElementById('soloButtons').style.display = 'flex';
 			// Set player to player 1
-			domObjs.playerSwitch.checked = false;
+			Render.domObjs.playerSwitch.checked = false;
 			// Later: Remove timer
 			updateRules(soloConfig);
                         break;
@@ -240,10 +240,10 @@ const setGameMode = (mode) => {
 document.addEventListener('click', (e) => {
   let element = e.target;
   let playerId;
-  if (domObjs.playerSwitch == undefined)
+  if (Render.domObjs.playerSwitch == undefined)
     playerId = 1;
   else
-    playerId = (domObjs.playerSwitch.checked) ? 2 : 1;
+    playerId = (Render.domObjs.playerSwitch.checked) ? 2 : 1;
   if (element.className === "cell") {
     toggleCell(element, playerId);
   };
@@ -251,7 +251,7 @@ document.addEventListener('click', (e) => {
 
 document.getElementById('submitMoveButton').addEventListener('click', (e) => {
   if (rules.speciesCount === 2)
-    domObjs.playerSwitch.checked = !domObjs.playerSwitch.checked;
+    Render.domObjs.playerSwitch.checked = !Render.domObjs.playerSwitch.checked;
   runRound();
 });
 
@@ -287,7 +287,7 @@ document.getElementById('resetButton').addEventListener('click', (e) => {
 
 // Stuff that runs on load
 gameVars.data = createEmptyData();
-rules = initBoard(rules, gameVars.piecesAvail);
+rules = Render.initBoard(rules, gameVars.piecesAvail);
 
 
 module.exports = {
