@@ -36,12 +36,7 @@ gulp.task('browserify', () => {
 		.pipe(gulp.dest('./dist'));
 });
 
-gulp.task('CNAME', () => {
-	return gulp.src('client/CNAME')
-		.pipe(gulp.dest('dist'));
-});
-
-gulp.task('build', gulp.parallel('pug', 'css', 'img', 'browserify', 'CNAME'));
+gulp.task('build', gulp.parallel('pug', 'css', 'img', 'browserify'));
 
 
 gulp.task('watch', () => {
