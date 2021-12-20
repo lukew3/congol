@@ -233,3 +233,20 @@ input + label #switchHandle {
 	font-size: 14pt;
 	text-align: center;
 }
+
+/* 404 page */
+#err404Cont {
+	margin-top: 40px;
+	text-align: center;
+}
+#err404Title {
+	font-size: 24pt;
+}
+#err404Desc {
+	margin: 20px 0;
+}
+#err404Button {
+	width: 70px;
+	margin-left: 50%;
+	transform: translate(-50%, 0);
+}
