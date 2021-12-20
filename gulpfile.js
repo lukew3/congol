@@ -40,5 +40,5 @@ gulp.task('build', gulp.parallel('pug', 'css', 'img', 'browserify'));
 
 
 gulp.task('watch', () => {
-	gulp.watch('./*', gulp.series('build'));
+	gulp.watch('./client/**/*', gulp.series('build'));
 });
