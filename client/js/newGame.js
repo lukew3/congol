@@ -1,6 +1,7 @@
 const Game = require('./game/game.js');
 const Data = require('./game/data.js');
 const Render = require('./game/rendering.js');
+const Router = require('./router.js');
 
 const gtOnline = document.getElementById("gt_online");
 const gtLocal = document.getElementById("gt_local");
@@ -21,9 +22,7 @@ const updateNewGameSelections = () => {
 }
 
 document.getElementById('newGameStartButton').addEventListener('click', () => {
-	// maybe use router to set the page
-	document.getElementById('newGamePage').style = 'display: none;';
-	document.getElementById('defaultGamePage').style = 'display: block;';
+	Router.setPath('game');
 	// Find a better way to do this, this only works because the game is required before newGame.js
 	// Maybe you should just make the gameObj right away and then allow it to be accessed by all
 	// Actually this doesn't work at all

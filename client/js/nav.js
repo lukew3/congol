@@ -1,13 +1,13 @@
-const { setPage } = require('./router.js');
+const Router = require('./router.js');
 
 document.getElementById('navTitle').addEventListener('click', (e) => {
-        setPage('newGamePage');
+        Router.setPath('newGame');
 });
 
 document.getElementById('navRules').addEventListener('click', (e) => {
-        setPage('rulesPage');
+        Router.setPath('rules');
 });
 
 document.getElementById('navPlay').addEventListener('click', (e) => {
-        setPage('newGamePage');
+        Router.setPath('newGame');
 });

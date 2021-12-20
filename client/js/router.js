@@ -8,12 +8,33 @@ const setPage = (pageId) => {
 	});
 	document.getElementById(pageId).style = 'display: block;';
 }
-
-if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
-	//setPage('defaultGamePage');
-	setPage('newGamePage');
+const setPath = (path) => {
+	window.history.pushState({ id: path }, `Congol - ${path}`, '/'+path);
+	handlePath();
+}
+const handlePath = () => {
+	const path = window.location.pathname;
+	if (path === '/' || path === '/newGame' || path === '/index.html') {
+		// New Game
+		setPage('newGamePage');
+	} else if (path === '/rules') {
+		// Rules
+		setPage('rulesPage');
+	} else if (path === '/game') {
+		setPage('defaultGamePage');
+	} else {
+		// 404 
+		setPage('newGamePage');
+	}
 }
 
+window.addEventListener('popstate', (e) => {
+	// When back button is pressed
+	handlePath();
+});
+
+handlePath();
+
 module.exports = {
-	setPage
+	setPath
 }
