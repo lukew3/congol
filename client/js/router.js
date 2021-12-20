@@ -14,7 +14,7 @@ const setPath = (path) => {
 }
 const handlePath = () => {
 	const path = window.location.pathname;
-	if (path === '/' || path === '/newGame' || path === '/index.html') {
+	if (path === '/') {
 		// New Game
 		setPage('newGamePage');
 	} else if (path === '/rules') {
