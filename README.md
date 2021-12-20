@@ -22,3 +22,13 @@ npm run build
 ```
 npm start
 ```
+### Deploy
+To deploy, install `pm2` globally with 
+```
+npm i -g pm2
+```
+Then, clone the repo and run 
+```
+npm run deploy
+```
+inside of the congol directory to run the production application. This can be proxied to nginx with `proxy_pass`.
