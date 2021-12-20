@@ -270,10 +270,12 @@ document.getElementById('nextButton').addEventListener('click', (e) => {
   runRound();
 });
 
+/*
 document.getElementById('resetButton').addEventListener('click', (e) => {
   resetBoard();
   document.getElementById('startStopButton').innerHTML = "Start";
 });
+*/
 
 // Stuff that runs on load
 Data.updateGameVars({"data": createEmptyData()})

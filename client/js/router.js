@@ -1,4 +1,4 @@
-const defaultPage = document.getElementById('defaultGamePage');
+const defaultPage = document.getElementById('gamePage');
 const rulesPage = document.getElementById('rulesPage');
 const newGamePage = document.getElementById('newGamePage');
 
@@ -21,9 +21,9 @@ const handlePath = () => {
 		// Rules
 		setPage('rulesPage');
 	} else if (path === '/game') {
-		setPage('defaultGamePage');
+		setPage('gamePage');
 	} else {
-		// 404 
+		// 404
 		setPage('newGamePage');
 	}
 }

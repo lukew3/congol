@@ -138,7 +138,7 @@ input:checked + label #switchHandle {
 
 input + label #switchHandle {
         transform: translateX(0px);
-        background-color: blue;    
+        background-color: blue;
         transition: 0.1s;
 }
 

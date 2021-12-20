@@ -23,11 +23,11 @@ npm run build
 npm start
 ```
 ### Deploy
-To deploy, install `pm2` globally with 
+To deploy, install `pm2` globally with
 ```
 npm i -g pm2
 ```
-Then, clone the repo and run 
+Then, clone the repo and run
 ```
 npm run deploy
 ```
