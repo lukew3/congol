@@ -1,7 +1,9 @@
 const express = require('express');
 const path = require('path');
+const dotenv = require('dotenv');
 
 const app = express();
+dotenv.config();
 const port = process.env.port || 3000;
 const indexPg = path.join(__dirname, './dist/index.html');
 
