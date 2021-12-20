@@ -42,3 +42,8 @@ gulp.task('CNAME', () => {
 });
 
 gulp.task('build', gulp.parallel('pug', 'css', 'img', 'browserify', 'CNAME'));
+
+
+gulp.task('watch', () => {
+	gulp.watch('./*', gulp.series('build'));
+});
