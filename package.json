@@ -6,7 +6,7 @@
   "scripts": {
     "build": "gulp build",
     "build-dev": "browserify client/js/main.js -o dist/bundle.js",
-    "start": "cd dist; lite-server",
+    "start": "node app.js",
     "deploy": "gh-pages -d dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/lukew3/congol#readme",
   "devDependencies": {
-    "babel-minify": "^0.5.1",
     "browserify": "^17.0.0",
     "gh-pages": "^3.2.3",
     "gulp": "^4.0.2",
@@ -30,8 +29,10 @@
     "gulp-csso": "^4.0.1",
     "gulp-pug": "^5.0.0",
     "gulp-uglify": "^3.0.2",
-    "lite-server": "^2.6.1",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
+  },
+  "dependencies": {
+    "express": "^4.17.2"
   }
 }

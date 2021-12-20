@@ -277,7 +277,7 @@ document.getElementById('resetButton').addEventListener('click', (e) => {
 
 // Stuff that runs on load
 Data.updateGameVars({"data": createEmptyData()})
-Data.updateRules(Render.initBoard());
+Render.initBoard();
 
 
 module.exports = {

@@ -1,5 +1,6 @@
 const Game = require('./game/game.js');
 const Data = require('./game/data.js');
+const Render = require('./game/rendering.js');
 
 const gtOnline = document.getElementById("gt_online");
 const gtLocal = document.getElementById("gt_local");
@@ -29,6 +30,7 @@ document.getElementById('newGameStartButton').addEventListener('click', () => {
 	//gameObj.boardSize = Number(bsSelected.splice(3, 5));
 	Game.setGameMode(gtSelected);
 	Data.updateRules({"boardSize": Number(bsSelected.slice(3, 5))});
+	Render.initBoard();
 	Game.resetBoard();
 });
 
