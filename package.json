@@ -7,9 +7,8 @@
     "build": "gulp build",
     "build-dev": "browserify client/js/main.js -o dist/bundle.js",
     "start": "npm run build; concurrently 'node app.js' 'gulp watch'",
-    "deploy-ghp": "gh-pages -d dist",
     "deploy": "git pull; npm run build; pm2 restart app.js",
-    "host": "npm run build; node app.js",
+    "deploy-ghp": "gh-pages -d dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
