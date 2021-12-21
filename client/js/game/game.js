@@ -20,10 +20,7 @@ const handleGameUpdate = (sdata) => {
 	Data.updateGameVars(sdata);
 	Render.domObjs.playerSwitch.checked = sdata.switchPos;
 	// May require more than renderBoard
-	Render.renderBoard();
-	Render.renderRound();
-	Render.renderPieces();
-	Render.renderScores();
+	Render.renderAll();
 }
 
 //rules and gameVars are separated so that rules can be modifiable in its entirety while gameVars cannot
@@ -39,16 +36,14 @@ const createEmptyData = () => {
 }
 const resetBoard = () => {
   stopGame();
-  Data.updateGameVars({"data": createEmptyData()});
-  Render.renderBoard();
-  Data.updateGameVars({"round": 0});
-  Render.renderRound();
-  Data.updateGameVars({"scores": [0, 0]});
-  Render.renderScores();
-  Data.updateGameVars({"piecesAvail": [Data.getRules().startingPieceCount, Data.getRules().startingPieceCount]});
-  Data.updateGameVars({"timers": [Data.getRules().startingTime, Data.getRules().startingTime]});
-  Render.renderPieces();
-  Data.updateGameVars({"gameOver": false});
+  Data.updateGameVars({"data": createEmptyData(),
+											 "round": 0,
+											 "scores": [0, 0],
+											 "piecesAvail": [Data.getRules().startingPieceCount, Data.getRules().startingPieceCount],
+											 "timers": [Data.getRules().startingTime, Data.getRules().startingTime],
+											 "gameOver": false
+										 });
+	Render.renderAll();
   Render.renderTimers();
   stopTimers();
   updateTimer();
@@ -91,12 +86,9 @@ const runRound = () => {
     });
   });
   Data.updateGameVars({"data": newData});
-  Render.renderBoard();
   updateScores();
-  Render.renderScores();
   updatePieces();
-  Render.renderPieces();
-  Render.renderRound();
+	Render.renderAll();
   //console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
   checkScoreLimit();
   Data.updateGameVars({"roundToggledCells": []});

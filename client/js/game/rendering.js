@@ -84,6 +84,12 @@ const renderTimers = () => {
     domObjs.timers[i].innerHTML = `${Math.floor(s/60)}:${pad2(s%60)}`;
   });
 }
+const renderAll = () => {
+  renderBoard();
+  renderPieces();
+  renderRound();
+  renderScores();
+}
 
 
 module.exports = {
@@ -93,5 +99,6 @@ module.exports = {
 	renderScores,
 	renderRound,
 	renderPieces,
-	renderTimers
+	renderTimers,
+  renderAll
 }
