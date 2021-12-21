@@ -7,6 +7,11 @@ socket.on('gameUpdate', (data) => {
 	handleGameUpdate(data);
 });
 
+socket.on('setPlayerId', (playerId) => {
+	console.log("setting player id: " + playerId);
+	Data.updateGameVars({ playerId });
+})
+
 const sendMove = () => {
 	socket.emit('playerMove', {
 		'data': Data.getGameVars().data,
@@ -172,6 +177,8 @@ const updatePieces = () => {
   Data.updateGameVars(gv);
 }
 const toggleCell = (cellObj, playerId) => {
+	if (Data.getGameVars().mode === 'gt_online' && Data.getGameVars().playerId != playerId-1)
+		return;
   //this.roundToggledCells = [];
   // Lol I don't know regex
   let num = -Number(cellObj.id.match(/\-[0-9a-z]+$/i)[0]);

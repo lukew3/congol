@@ -33,32 +33,36 @@ let game = {
 	switchPos: false,
 	scores: [0,0]
 }
+const sendGameUpdate = (socket) => {
+	// send update to move sender
+	socket.emit('gameUpdate', game);
+	// send update to all other connections
+	socket.broadcast.emit('gameUpdate', game);
+};
+const receiveMove = (socket, moveData) => {
+	//if (game.playerId !== (game.switchPos ? 1 : 0)) return;
+	game.data = moveData.data;
+	game.piecesAvail = moveData.piecesAvail;
+	game.scores = moveData.scores;
+	game.round++;
+	game.switchPos = !game.switchPos;
+	sendGameUpdate(socket);
+};
 
 io.on('connection', (socket) => {
 	console.log('New WS Connection...');
+	socket.join('game-1');
 
-	const sendGameUpdate = () => {
-		// send update to move sender
-		socket.emit('gameUpdate', game);
-		// send update to all other connections
-		socket.broadcast.emit('gameUpdate', game);
-	};
-
-	const receiveMove = (moveData) => {
-		//if (game.playerId !== (game.switchPos ? 1 : 0)) return;
-		game.data = moveData.data;
-		game.piecesAvail = moveData.piecesAvail;
-		game.scores = moveData.scores;
-		game.round++;
-		game.switchPos = !game.switchPos;
-		sendGameUpdate();
-	};
+	// emit the users playerId, -1 if observing
+	let playerId = io.sockets.adapter.rooms.get('game-1').size - 1;
+	if (playerId > 2) playerId = -1;
+	socket.emit('setPlayerId', playerId)
 
 	// send game update when the user connects
-	sendGameUpdate();
+	sendGameUpdate(socket);
 
 	socket.on('playerMove', (data) => {
-		receiveMove(data);
+		receiveMove(socket, data);
 	});
 	socket.on('disconnect', () => {
 		console.log('User disconnected');
