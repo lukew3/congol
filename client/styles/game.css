@@ -20,11 +20,11 @@
 }
 
 #roundCtrCont {
-        display: flex;                                                                                  
-        width: 100%;                                                                                    
-        justify-content: center;                                                                        
-        margin-top: 5px;                                                                                
-}                                                                                                       
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        margin-top: 5px;
+}
 
 #scoreboard {
         margin: 15px 0px;
@@ -58,6 +58,9 @@
         height: 30px;
         background-color: #C4C4C4;
         border-radius: 30px;
+        position: absolute;
+        margin-left: 50%;
+        transform: translate(-50%, 0);
 }
 
 #switchHandle {
@@ -80,9 +83,9 @@ input + label #switchHandle {
         background-color: blue;
         transition: 0.1s;
 }
- 
+
 #controls {
-        display: flex;    
+        display: flex;
         justify-content: center;
 }
 
@@ -128,4 +131,3 @@ input + label #switchHandle {
         font-size: 14pt;
         text-align: center;
 }
-
