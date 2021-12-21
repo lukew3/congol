@@ -10,7 +10,8 @@ let gameVars = {
   "roundTimeouts": [],
   "data": [],
   "roundToggledCells": [],
-  "timers": [rules.startingTime, rules.startingTime]
+  "timers": [rules.startingTime, rules.startingTime],
+  "nextUp": 0
 };
 const getRules = () => {
 	return rules;

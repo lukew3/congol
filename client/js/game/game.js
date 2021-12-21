@@ -1,6 +1,30 @@
 const Data = require("./data.js");
 const Render = require("./rendering.js");
 const { local2pConfig, soloConfig } = require("./config.js");
+const socket = io();
+
+socket.on('gameUpdate', (data) => {
+	handleGameUpdate(data);
+});
+
+const sendMove = () => {
+	socket.emit('playerMove', {
+		'data': Data.getGameVars().data,
+		'piecesAvail': Data.getGameVars().piecesAvail,
+		'scores': Data.getGameVars().scores
+	});
+}
+
+const handleGameUpdate = (sdata) => {
+	console.log("New update:")
+	Data.updateGameVars(sdata);
+	Render.domObjs.playerSwitch.checked = sdata.switchPos;
+	// May require more than renderBoard
+	Render.renderBoard();
+	Render.renderRound();
+	Render.renderPieces();
+	Render.renderScores();
+}
 
 //rules and gameVars are separated so that rules can be modifiable in its entirety while gameVars cannot
 const createEmptyData = () => {
@@ -76,6 +100,10 @@ const runRound = () => {
   //console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
   checkScoreLimit();
   Data.updateGameVars({"roundToggledCells": []});
+	if (Data.getRules().speciesCount === 2) {
+		Render.domObjs.playerSwitch.checked = !Render.domObjs.playerSwitch.checked;
+	}
+	sendMove();
 }
 const checkScoreLimit = () => {
   if (Data.getRules().scoreLimit == -1) return;
@@ -240,8 +268,6 @@ document.addEventListener('click', (e) => {
 });
 
 document.getElementById('submitMoveButton').addEventListener('click', (e) => {
-  if (Data.getRules().speciesCount === 2)
-    Render.domObjs.playerSwitch.checked = !Render.domObjs.playerSwitch.checked;
   runRound();
 });
 

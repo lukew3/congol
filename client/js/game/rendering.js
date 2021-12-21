@@ -41,6 +41,7 @@ const initBoard = () => {
 }
 const renderBoard = () => {
   let data = Data.getGameVars().data;
+  console.log(data);
   let colors = Data.getRules().colors;
   let boardSize = Data.getRules().boardSize;
   let cell, cellObj;
