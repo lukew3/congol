@@ -11,7 +11,8 @@ let gameVars = {
   "data": [],
   "roundToggledCells": [],
   "timers": [rules.startingTime, rules.startingTime],
-  "nextUp": 0
+  "nextUp": 0,
+  "mode": 'gt_online'
 };
 const getRules = () => {
 	return rules;

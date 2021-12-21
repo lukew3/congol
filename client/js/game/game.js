@@ -10,6 +10,10 @@ socket.on('gameUpdate', (data) => {
 socket.on('setPlayerId', (playerId) => {
 	console.log("setting player id: " + playerId);
 	Data.updateGameVars({ playerId });
+	document.getElementById(`p1Username`).innerHTML = "Anonymous";
+	document.getElementById(`p2Username`).innerHTML = "Anonymous";
+	if (playerId == -1) return;
+	document.getElementById(`p${playerId+1}Username`).innerHTML = "Me";
 })
 
 const sendMove = () => {
