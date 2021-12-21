@@ -97,6 +97,7 @@ input + label #switchHandle {
         margin-top: 10px;
         display: flex;
         justify-content: space-between;
+        margin-right: -2px;
 }
 
 .gameButton {
@@ -115,14 +116,12 @@ input + label #switchHandle {
 
 #roundGroup {
         display: flex;
-        margin: auto;
+        position: absolute;
+        margin-left: 50%;
+        transform: translate(-50%, 0);
 }
 .piecesAvail {
         display: flex;
-        width: calc(50% - 20px);
-}
-#p2PiecesAvail {
-        justify-content: right;
 }
 #winnerMessage {
         display: none;
