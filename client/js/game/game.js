@@ -272,6 +272,8 @@ document.addEventListener('click', (e) => {
 });
 
 document.getElementById('submitMoveButton').addEventListener('click', (e) => {
+	if (Data.getGameVars().mode === 'gt_online' && Data.getGameVars().playerId !== ((Render.domObjs.playerSwitch.checked) ? 1 : 0))
+		return;
   runRound();
 });
 
