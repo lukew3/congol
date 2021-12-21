@@ -16,10 +16,9 @@ const sendMove = () => {
 }
 
 const handleGameUpdate = (sdata) => {
-	console.log("New update:")
+	//if (Data.getGameVars().mode !== 'gt_online') return;
 	Data.updateGameVars(sdata);
 	Render.domObjs.playerSwitch.checked = sdata.switchPos;
-	// May require more than renderBoard
 	Render.renderAll();
 }
 
@@ -95,7 +94,8 @@ const runRound = () => {
 	if (Data.getRules().speciesCount === 2) {
 		Render.domObjs.playerSwitch.checked = !Render.domObjs.playerSwitch.checked;
 	}
-	sendMove();
+	if (Data.getGameVars().mode === 'gt_online')
+		sendMove();
 }
 const checkScoreLimit = () => {
   if (Data.getRules().scoreLimit == -1) return;
@@ -211,13 +211,14 @@ const isRunning = () => {
   return Data.getGameVars().running;
 }
 const setGameMode = (mode) => {
-        switch(mode) {
-                case 'gt_online':
+	Data.updateGameVars({ mode });
+	switch(mode) {
+  	case 'gt_online':
 			// Restrict user to only use one color
 			// Should the user always have the right or left player?
 			Data.updateRules({});
-                        break;
-                case 'gt_local':
+      break;
+  	case 'gt_local':
 			// Remove player groups
 			document.getElementById('underBoardLower').style.display = "flex";
 			document.getElementById('p2PiecesAvail').style.display = "flex";
@@ -226,7 +227,7 @@ const setGameMode = (mode) => {
 			document.getElementById('local2pButtons').style.display = 'flex';
 			document.getElementById('soloButtons').style.display = 'none';
 			Data.updateRules(local2pConfig);
-                        break;
+      break;
 		case 'gt_solo':
 			// Remove player groups
 			document.getElementById('underBoardLower').style.display = "none";
@@ -239,10 +240,10 @@ const setGameMode = (mode) => {
 			Render.domObjs.playerSwitch.checked = false;
 			// Later: Remove timer
 			Data.updateRules(soloConfig);
-                        break;
-                default:
-                        console.log*("Game mode not recognized");
-        }
+      break;
+    default:
+      console.log*("Game mode not recognized");
+  }
 };
 
 
