@@ -1,0 +1,63 @@
+* {
+	margin: 0; padding: 0; font-family: 'Roboto', sans-serif;
+}
+html {
+	background-color: #E0E0E0;
+}
+nav {
+	width: 100%;
+	background-color: #D2D2D2;
+	display: flex;
+	justify-content: space-between;
+}
+#navTitle {
+	font-size: 18px;
+	padding: 20px;
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
+#navRight {
+	display: flex;
+	padding-right: 15px; /* Not sure why the 15 looks more even than 10 */
+}
+#navRight p {
+	font-size: 16px;
+	padding: 20px 10px;
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
+footer {
+	width: calc(100% - 40px);
+	padding: 20px;
+	position: absolute;
+	bottom: 0;
+}
+footer a {
+	padding: 0 10px;
+	text-decoration: none;
+	color: black;
+}
+footer a:hover {
+	color: #424242;
+}
+.centeredCont {
+	margin: auto;
+	margin-top: 10px;
+	padding: 15px;
+	max-width: 800px;
+}
+.page {
+	display: none;
+}
+.button {
+        background-color: #C4C4C4;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 2px;
+        text-align: center;
+        min-width: 60px;
+}
+

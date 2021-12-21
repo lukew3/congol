@@ -2,6 +2,7 @@ const gulp = require('gulp');
 const pug = require('gulp-pug');
 //const browserify = require('gulp-browserify');
 const browserify = require('browserify');
+const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
@@ -16,7 +17,8 @@ gulp.task('pug', () => {
 });
 
 gulp.task('css', () => {
-	return gulp.src('client/styles/styles.css')
+	return gulp.src('client/styles/*.css')
+		.pipe(concat('styles.css'))
 		.pipe(autoprefixer())
 		.pipe(csso())
 		.pipe(gulp.dest('dist'));
