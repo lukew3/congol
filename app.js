@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
 
 	// emit the users playerId, -1 if observing
 	let playerId = io.sockets.adapter.rooms.get('game-1').size - 1;
-	if (playerId > 2) playerId = -1;
+	if (playerId > 1) playerId = -1;
 	socket.emit('setPlayerId', playerId)
 
 	// send game update when the user connects
