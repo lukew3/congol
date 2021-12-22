@@ -31,6 +31,7 @@ document.getElementById('newGameStartButton').addEventListener('click', () => {
 	Data.updateRules({"boardSize": Number(bsSelected.slice(3, 5))});
 	Render.initBoard();
 	Game.resetBoard();
+	Game.requestGame();
 });
 
 document.addEventListener('click', (e) => {

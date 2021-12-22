@@ -18,6 +18,7 @@ socket.on('setPlayerId', (playerId) => {
 })
 
 socket.on('setRoomId', (roomId) => {
+	console.log("received room id: " + roomId);
 	Router.setPath(`game/${roomId}`);
 })
 
@@ -324,10 +325,10 @@ document.getElementById('resetButton').addEventListener('click', (e) => {
 // Stuff that runs on load
 Data.updateGameVars({"data": createEmptyData()})
 Render.initBoard();
-requestGame();
 
 
 module.exports = {
 	setGameMode,
-  resetBoard
+  resetBoard,
+	requestGame
 }
