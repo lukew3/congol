@@ -194,7 +194,8 @@ const updatePieces = () => {
   Data.updateGameVars(gv);
 }
 const toggleCell = (cellObj, playerId) => {
-	if (Data.getGameVars().mode === 'gt_online' && Data.getGameVars().playerId != playerId-1)
+	if (!Data.getGameVars().inProgress ||
+	(Data.getGameVars().mode === 'gt_online' && Data.getGameVars().playerId != playerId-1))
 		return;
   //this.roundToggledCells = [];
   // Lol I don't know regex
