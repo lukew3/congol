@@ -62,7 +62,7 @@ const resetBoard = () => {
 											 "scores": [0, 0],
 											 "piecesAvail": [Data.getRules().startingPieceCount, Data.getRules().startingPieceCount],
 											 "timers": [Data.getRules().startingTime, Data.getRules().startingTime],
-											 "gameOver": false
+											 "inProgress": true
 										 });
 	Render.renderAll();
   Render.renderTimers();
@@ -155,7 +155,7 @@ const updateTimer = () => {
     Data.updateGameVars(gv);
     Render.domObjs.timers[activePlayer].innerHTML = `${Math.floor(s/60)}:${pad2(s%60)}`;
     checkTimerEnd();
-    if (!Data.getGameVars().gameOver)
+    if (Data.getGameVars().inProgress)
       updateTimer();
   }, 1000); // every second
 }
@@ -222,7 +222,7 @@ const toggleCell = (cellObj, playerId) => {
   Render.renderPieces();
 }
 const endGame = (winner) => {
-  Data.updateGameVars({"gameOver": true})
+  Data.updateGameVars({"inProgress": false})
   stopTimers();
   // Should not use document.getElementById
   document.getElementById('winnerMessage').style.display = 'block';
@@ -230,9 +230,6 @@ const endGame = (winner) => {
   document.getElementById('winnerMessage').innerHTML = `Player ${winner+1} wins!`;
   document.getElementById('submitMoveButton').style.display = 'none';
   document.getElementById('resetGame2pButton').style.display = 'block';
-}
-const isRunning = () => {
-  return Data.getGameVars().running;
 }
 const setGameMode = (mode) => {
 	Data.updateGameVars({ mode });
@@ -302,7 +299,7 @@ document.getElementById('resetGameButton').addEventListener('click', (e) => {
 
 // 2pPlayground Buttons
 document.getElementById('startStopButton').addEventListener('click', (e) => {
-  if (isRunning()) {
+  if (Data.getGameVars().running) {
     stopGame();
     document.getElementById('startStopButton').innerHTML = "Start";
   } else {
