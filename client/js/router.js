@@ -19,7 +19,7 @@ const handlePath = () => {
 		setPage('newGamePage');
 	} else if (path === '/rules') {
 		setPage('rulesPage');
-	} else if (path === '/game') {
+	} else if (path.substring(0, 5) == '/game') {
 		setPage('gamePage');
 	} else {
 		setPage('err404Page');

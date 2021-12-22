@@ -1,5 +1,6 @@
 const Data = require("./data.js");
 const Render = require("./rendering.js");
+const Router = require("../router.js");
 const { local2pConfig, soloConfig } = require("./config.js");
 const socket = io();
 
@@ -16,12 +17,23 @@ socket.on('setPlayerId', (playerId) => {
 	document.getElementById(`p${playerId+1}Username`).innerHTML = "Me";
 })
 
+socket.on('setRoomId', (roomId) => {
+	Router.setPath(`game/${roomId}`);
+})
+
 const sendMove = () => {
 	socket.emit('playerMove', {
 		'data': Data.getGameVars().data,
 		'piecesAvail': Data.getGameVars().piecesAvail,
 		'scores': Data.getGameVars().scores
 	});
+}
+const requestGame = () => {
+	let roomId = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+	if (roomId === '' || isNaN(roomId))
+		roomId = -1
+	console.log("room from path: " + roomId);
+	socket.emit('gameRequest', roomId);
 }
 
 const handleGameUpdate = (sdata) => {
@@ -312,6 +324,7 @@ document.getElementById('resetButton').addEventListener('click', (e) => {
 // Stuff that runs on load
 Data.updateGameVars({"data": createEmptyData()})
 Render.initBoard();
+requestGame();
 
 
 module.exports = {

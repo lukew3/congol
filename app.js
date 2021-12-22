@@ -26,6 +26,15 @@ const createEmptyData = () => {
   }
   return myarr;
 }
+const gameTemplate = {
+	data: createEmptyData(),
+	piecesAvail: [3,3],
+	round: 0,
+	switchPos: false,
+	scores: [0,0]
+}
+let games = [
+]
 let game = {
 	data: createEmptyData(),
 	piecesAvail: [3,3],
@@ -33,36 +42,56 @@ let game = {
 	switchPos: false,
 	scores: [0,0]
 }
-const sendGameUpdate = (socket) => {
+const sendGameUpdate = (socket, roomId) => {
 	// send update to move sender
-	socket.emit('gameUpdate', game);
+	socket.emit('gameUpdate', games[roomId]);
 	// send update to all other connections
-	socket.broadcast.emit('gameUpdate', game);
+	io.sockets.in(`game-${roomId}`).emit('gameUpdate', games[roomId]);
 };
-const receiveMove = (socket, moveData) => {
+const receiveMove = (socket, moveData, roomId) => {
 	//if (game.playerId !== (game.switchPos ? 1 : 0)) return;
-	game.data = moveData.data;
-	game.piecesAvail = moveData.piecesAvail;
-	game.scores = moveData.scores;
-	game.round++;
-	game.switchPos = !game.switchPos;
-	sendGameUpdate(socket);
+	games[roomId].data = moveData.data;//
+	games[roomId].piecesAvail = moveData.piecesAvail;
+	games[roomId].scores = moveData.scores;
+	games[roomId].round++;
+	games[roomId].switchPos = !games[roomId].switchPos;
+	sendGameUpdate(socket, roomId);
 };
-
+const getRoomId = () => {
+  // Should take arguments like boardSize, time, and rating
+  let n = 0;
+  // Should get the roomsize from game object, and game object should be updated when a user joins
+  while (io.sockets.adapter.rooms.get(`game-${n}`) != undefined && io.sockets.adapter.rooms.get(`game-${n}`).size >= 2) {
+    n++;
+  }
+  if (games.length-1 < n)
+    games[n] = gameTemplate;
+  return n;
+}
 io.on('connection', (socket) => {
-	console.log('New WS Connection...');
-	socket.join('game-1');
+	//console.log('New WS Connection...');
+  let roomId, playerId; // maybe should be playerRole instead of playerId
 
-	// emit the users playerId, -1 if observing
-	let playerId = io.sockets.adapter.rooms.get('game-1').size - 1;
-	if (playerId > 1) playerId = -1;
-	socket.emit('setPlayerId', playerId)
-
-	// send game update when the user connects
-	sendGameUpdate(socket);
+  socket.on('gameRequest', (reqRoomId) => {
+    console.log("Requested room: " + reqRoomId)
+    if (reqRoomId !== -1) {
+      roomId = reqRoomId;
+    } else {
+      roomId = getRoomId();
+    }
+    socket.join(`game-${roomId}`);
+    socket.emit('setRoomId', roomId);
+    playerId = io.sockets.adapter.rooms.get(`game-${roomId}`).size - 1;
+  	if (playerId > 1) playerId = -1;
+    // emit the users playerId, -1 if observing
+  	socket.emit('setPlayerId', playerId);
+    console.log(`Player ${playerId} joined room ${roomId}`);
+    // send game update when the user connects
+    sendGameUpdate(socket, roomId);
+  })
 
 	socket.on('playerMove', (data) => {
-		receiveMove(socket, data);
+		receiveMove(socket, data, roomId);
 	});
 	socket.on('disconnect', () => {
 		console.log('User disconnected');
