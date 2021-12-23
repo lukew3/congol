@@ -28,13 +28,6 @@ const createEmptyData = () => {
 }
 let games = [
 ]
-let game = {
-	data: createEmptyData(),
-	piecesAvail: [3,3],
-	round: 0,
-	switchPos: false,
-	scores: [0,0]
-}
 const sendGameUpdate = (socket, roomId) => {
 	// send update to move sender
 	socket.emit('gameUpdate', games[roomId]);
