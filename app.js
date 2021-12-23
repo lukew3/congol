@@ -31,7 +31,10 @@ const gameTemplate = {
 	piecesAvail: [3,3],
 	round: 0,
 	switchPos: false,
-	scores: [0,0]
+	scores: [0,0],
+  inProgress: false,
+  p1Username: 'waiting',
+  p2Username: 'waiting'
 }
 let games = [
 ]
@@ -57,7 +60,7 @@ const receiveMove = (socket, moveData, roomId) => {
 	games[roomId].switchPos = !games[roomId].switchPos;
 	sendGameUpdate(socket, roomId);
 };
-const getRoomId = () => {
+const newGameId = () => {
   // Should take arguments like boardSize, time, and rating
   let n = 0;
   // Should get the roomsize from game object, and game object should be updated when a user joins
@@ -77,7 +80,7 @@ io.on('connection', (socket) => {
     if (reqRoomId !== -1) {
       roomId = reqRoomId;
     } else {
-      roomId = getRoomId();
+      roomId = newGameId();
     }
     socket.join(`game-${roomId}`);
     socket.emit('setRoomId', roomId);
@@ -85,7 +88,12 @@ io.on('connection', (socket) => {
   	if (playerId > 1) playerId = -1;
     // emit the users playerId, -1 if observing
   	socket.emit('setPlayerId', playerId);
+    // Set player username
+    if (playerId !== -1)
+      games[roomId][`p${playerId+1}Username`] = 'Anonymous';
     console.log(`Player ${playerId} joined room ${roomId}`);
+    if (playerId === 1)
+      games[roomId].inProgress = true;
     // send game update when the user connects
     sendGameUpdate(socket, roomId);
   })

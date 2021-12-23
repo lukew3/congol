@@ -9,12 +9,7 @@ socket.on('gameUpdate', (data) => {
 });
 
 socket.on('setPlayerId', (playerId) => {
-	console.log("setting player id: " + playerId);
 	Data.updateGameVars({ playerId });
-	document.getElementById(`p1Username`).innerHTML = "Anonymous";
-	document.getElementById(`p2Username`).innerHTML = "Anonymous";
-	if (playerId == -1) return;
-	document.getElementById(`p${playerId+1}Username`).innerHTML = "Me";
 })
 
 socket.on('setRoomId', (roomId) => {
@@ -42,6 +37,10 @@ const handleGameUpdate = (sdata) => {
 	Data.updateGameVars(sdata);
 	Render.domObjs.playerSwitch.checked = sdata.switchPos;
 	Render.renderAll();
+	// This doesn't need to  be updated every time
+	document.getElementById(`p1Username`).innerHTML = sdata.p1Username;
+	document.getElementById(`p2Username`).innerHTML = sdata.p2Username;
+	document.getElementById(`p${Data.getGameVars().playerId+1}Username`).innerHTML = "Me";
 }
 
 //rules and gameVars are separated so that rules can be modifiable in its entirety while gameVars cannot
