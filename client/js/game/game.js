@@ -40,7 +40,8 @@ const handleGameUpdate = (sdata) => {
 	// This doesn't need to  be updated every time
 	document.getElementById(`p1Username`).innerHTML = sdata.p1Username;
 	document.getElementById(`p2Username`).innerHTML = sdata.p2Username;
-	document.getElementById(`p${Data.getGameVars().playerId+1}Username`).innerHTML = "Me";
+	if (Data.getGameVars().playerId !== -1)
+		document.getElementById(`p${Data.getGameVars().playerId+1}Username`).innerHTML = "Me";
 }
 
 //rules and gameVars are separated so that rules can be modifiable in its entirety while gameVars cannot
@@ -322,6 +323,7 @@ document.getElementById('resetButton').addEventListener('click', (e) => {
 // Stuff that runs on load
 Data.updateGameVars({"data": createEmptyData()})
 Render.initBoard();
+if (window.location.pathname.substring(0, 6) === '/game/') requestGame();
 
 
 module.exports = {
