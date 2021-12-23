@@ -26,16 +26,6 @@ const createEmptyData = () => {
   }
   return myarr;
 }
-const gameTemplate = {
-	data: createEmptyData(),
-	piecesAvail: [3,3],
-	round: 0,
-	switchPos: false,
-	scores: [0,0],
-  inProgress: false,
-  p1Username: 'waiting',
-  p2Username: 'waiting'
-}
 let games = [
 ]
 let game = {
@@ -68,7 +58,16 @@ const newGameId = () => {
     n++;
   }
   if (games.length-1 < n)
-    games[n] = gameTemplate;
+    games[n] = {
+    	data: createEmptyData(),
+    	piecesAvail: [3,3],
+    	round: 0,
+    	switchPos: false,
+    	scores: [0,0],
+      inProgress: false,
+      p1Username: 'waiting',
+      p2Username: 'waiting'
+    };
   return n;
 }
 io.on('connection', (socket) => {
