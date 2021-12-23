@@ -26,8 +26,7 @@ const createEmptyData = () => {
   }
   return myarr;
 }
-let games = [
-]
+let games = [];
 const sendGameUpdate = (socket, roomId) => {
 	// send update to move sender
 	socket.emit('gameUpdate', games[roomId]);
@@ -47,20 +46,23 @@ const newGameId = () => {
   // Should take arguments like boardSize, time, and rating
   let n = 0;
   // Should get the roomsize from game object, and game object should be updated when a user joins
-  while (io.sockets.adapter.rooms.get(`game-${n}`) != undefined && io.sockets.adapter.rooms.get(`game-${n}`).size >= 2) {
+  //Search for open game first
+  while (games[n] !== undefined) {
+    if (games[n].p2Username === 'waiting')
+      return n;
     n++;
   }
-  if (games.length-1 < n)
-    games[n] = {
-    	data: createEmptyData(),
-    	piecesAvail: [3,3],
-    	round: 0,
-    	switchPos: false,
-    	scores: [0,0],
-      inProgress: false,
-      p1Username: 'waiting',
-      p2Username: 'waiting'
-    };
+  // Create new game if no open game found
+  games[n] = {
+  	data: createEmptyData(),
+  	piecesAvail: [3,3],
+  	round: 0,
+  	switchPos: false,
+  	scores: [0,0],
+    inProgress: false,
+    p1Username: 'waiting',
+    p2Username: 'waiting'
+  };
   return n;
 }
 io.on('connection', (socket) => {
