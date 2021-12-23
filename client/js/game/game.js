@@ -323,8 +323,13 @@ document.getElementById('resetButton').addEventListener('click', (e) => {
 // Stuff that runs on load
 Data.updateGameVars({"data": createEmptyData()})
 Render.initBoard();
-if (window.location.pathname.substring(0, 6) === '/game/') requestGame();
-
+// Handling if the game is online or not
+if (window.location.pathname.substring(0, 6) === '/game/') {
+	requestGame();
+} else {
+	Data.updateGameVars({"inProgress": true})
+	setGameMode('gt_local');
+}
 
 module.exports = {
 	setGameMode,
