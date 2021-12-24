@@ -9,6 +9,7 @@ socket.on('gameUpdate', (data) => {
 });
 
 socket.on('setPlayerId', (playerId) => {
+	console.log('received Player id: ' + playerId)
 	Data.updateGameVars({ playerId });
 })
 
@@ -21,7 +22,8 @@ const sendMove = () => {
 	socket.emit('playerMove', {
 		'data': Data.getGameVars().data,
 		'piecesAvail': Data.getGameVars().piecesAvail,
-		'scores': Data.getGameVars().scores
+		'scores': Data.getGameVars().scores,
+		'inProgress': Data.getGameVars().inProgress
 	});
 }
 const requestGame = () => {
