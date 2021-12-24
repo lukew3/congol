@@ -3,13 +3,11 @@ const http = require('http');
 const path = require('path');
 const dotenv = require('dotenv');
 const socketio = require('socket.io');
-const { MongoClient } = require('mongodb');
+const { connectDB, mongoDB } = require("./mongodb");
 const nanoid = require('nanoid');
 
 async function main() {
-  const mongoClient = new MongoClient('mongodb://localhost:27017');
-  await mongoClient.connect();
-  let db = mongoClient.db('congol');
+  await connectDB();
   const app = express();
   const server = http.createServer(app);
   const io = socketio(server);
@@ -49,40 +47,41 @@ async function main() {
   	games[roomId].switchPos = !games[roomId].switchPos;
   	sendGameUpdate(socket, roomId);
   };
-  const newGameId = () => {
+  const newGameId = async () => {
     // Should take arguments like boardSize, time, and rating
-    let n = 0;
     // Should get the roomsize from game object, and game object should be updated when a user joins
     //Search for open game first
-    while (games[n] !== undefined) {
-      if (games[n].p2Username === 'waiting')
-        return n;
-      n++;
-    }
+    let game = await mongoDB().collection('games').findOne({'p2Username': 'waiting'});
     // Create new game if no open game found
-    games[n] = {
-    	data: createEmptyData(),
-    	piecesAvail: [3,3],
-    	round: 0,
-    	switchPos: false,
-      scores: [0,0],
-  	  inProgress: false,
-  	  p1Username: 'waiting',
-  	  p2Username: 'waiting',
-  	  winner: undefined
+    if (game === undefined) {
+      game = await mongoDB().collection('games').insertOne({
+        data: createEmptyData(),
+      	piecesAvail: [3,3],
+      	round: 0,
+      	switchPos: false,
+        scores: [0,0],
+  	    inProgress: false,
+  	    p1Username: 'waiting',
+  	    p2Username: 'waiting',
+  	    winner: undefined,
+        shortId: nanoid()
+      })
     };
-    return n;
+    console.log(game);
+    if (game === undefined)
+      return -1
+    return game.shortId;
   }
-  io.on('connection', (socket) => {
+  io.on('connection', async (socket) => {
   	//console.log('New WS Connection...');
     let roomId, playerId; // maybe should be playerRole instead of playerId
 
-    socket.on('gameRequest', (reqRoomId) => {
+    socket.on('gameRequest', async (reqRoomId) => {
       console.log("Requested room: " + reqRoomId)
       if (reqRoomId !== -1) {
         roomId = reqRoomId;
       } else {
-        roomId = newGameId();
+        roomId = await newGameId();
       }
       socket.join(`game-${roomId}`);
       socket.emit('setRoomId', roomId);
