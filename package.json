@@ -23,6 +23,7 @@
   "homepage": "https://github.com/lukew3/congol#readme",
   "devDependencies": {
     "browserify": "^17.0.0",
+    "concurrently": "^6.5.1",
     "gh-pages": "^3.2.3",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^8.0.0",

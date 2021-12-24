@@ -42,6 +42,7 @@ const handleGameUpdate = (sdata) => {
 	document.getElementById(`p2Username`).innerHTML = sdata.p2Username;
 	if (Data.getGameVars().playerId !== -1)
 		document.getElementById(`p${Data.getGameVars().playerId+1}Username`).innerHTML = "Me";
+	checkScoreLimit();
 }
 
 //rules and gameVars are separated so that rules can be modifiable in its entirety while gameVars cannot

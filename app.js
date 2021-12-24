@@ -38,6 +38,7 @@ const receiveMove = (socket, moveData, roomId) => {
 	games[roomId].data = moveData.data;//
 	games[roomId].piecesAvail = moveData.piecesAvail;
 	games[roomId].scores = moveData.scores;
+	games[roomId].inProgress = moveData.inProgress;
 	games[roomId].round++;
 	games[roomId].switchPos = !games[roomId].switchPos;
 	sendGameUpdate(socket, roomId);
@@ -58,10 +59,11 @@ const newGameId = () => {
   	piecesAvail: [3,3],
   	round: 0,
   	switchPos: false,
-  	scores: [0,0],
-    inProgress: false,
-    p1Username: 'waiting',
-    p2Username: 'waiting'
+    scores: [0,0],
+	  inProgress: false,
+	  p1Username: 'waiting',
+	  p2Username: 'waiting',
+	  winner: undefined
   };
   return n;
 }
