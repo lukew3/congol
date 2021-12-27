@@ -12,9 +12,9 @@ const io = socketio(server);
 
 dotenv.config();
 const port = process.env.port || 3000;
-const indexPg = path.join(__dirname, './dist/index.html');
+const indexPg = path.join(__dirname, '../dist/index.html');
 
-app.use(express.static('dist'));
+app.use(express.static(path.join(__dirname, '../dist')));
 
 async function main() {
   await connectDB();
