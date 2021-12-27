@@ -24,11 +24,6 @@ gulp.task('css', () => {
 		.pipe(gulp.dest('dist'));
 });
 
-gulp.task('img', () => {
-	return gulp.src('client/img/*')
-		.pipe(gulp.dest('dist/img'));
-});
-
 gulp.task('browserify', () => {
 	return browserify('./client/js/main.js')
 		.bundle()
@@ -38,7 +33,16 @@ gulp.task('browserify', () => {
 		.pipe(gulp.dest('./dist'));
 });
 
-gulp.task('build', gulp.parallel('pug', 'css', 'img', 'browserify'));
+gulp.task('copyStatic', () => {
+	gulp.src('client/img/*')
+		.pipe(gulp.dest('dist/img'));
+	gulp.src('client/manifest.webmanifest')
+		.pipe(gulp.dest('dist'));
+	return gulp.src('client/sw.js')
+		.pipe(gulp.dest('dist'));
+});
+
+gulp.task('build', gulp.parallel('pug', 'css', 'browserify', 'copyStatic'));
 
 
 gulp.task('watch', () => {

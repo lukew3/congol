@@ -1,0 +1,15 @@
+{
+	"name": "Congol: Multiplayer Conway's Game of Life",
+	"short_name": "Congol",
+	"start_url": "/",
+	"background_color": "#e0e0e0",
+	"display": "standalone",
+	"theme_color": "#ffffff",
+	"icons": [
+		{
+			"src": "img/android-chrome-512x512.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		}
+	]
+}
