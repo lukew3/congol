@@ -14,7 +14,7 @@ const createEmptyData = () => {
       myarr.push(row);
   }
   return myarr;
-}
+};
 const resetBoard = () => {
   stopGame();
   Data.updateGameVars({"data": createEmptyData(),
@@ -29,14 +29,14 @@ const resetBoard = () => {
   stopTimers();
   updateTimer();
   Render.domObjs.playerSwitch.checked = false;
-}
+};
 const stopGame = () => {
   // for each to in roundTimeouts, clear timeout
   Data.getGameVars().roundTimeouts.forEach((id) => {
     clearTimeout(id);
   });
   Data.updateGameVars({"running": false});
-}
+};
 const runGame = () => {
   for (let r = 0; r < Data.getRules().totalRounds; r++) {
     Data.getGameVars().roundTimeouts.push(
@@ -46,7 +46,7 @@ const runGame = () => {
     );
   }
   Data.updateGameVars({"running": true});
-}
+};
 const runRound = () => {
   let startTime = performance.now();
   let nvalues, n, dominant;
@@ -78,14 +78,14 @@ const runRound = () => {
 	}
 	if (Data.getGameVars().mode === 'gt_online')
 		OnlineGame.sendMove();
-}
+};
 const checkScoreLimit = () => {
   if (Data.getRules().scoreLimit == -1) return;
   if (Data.getGameVars().scores[0] >= Data.getRules().scoreLimit)
     endGame(0);
   else if (Data.getGameVars().scores[1] >= Data.getRules().scoreLimit)
     endGame(1);
-}
+};
 const countNeighbors = (y, x) => {
   let count = [0, 0];
   let cell;
@@ -105,7 +105,7 @@ const countNeighbors = (y, x) => {
     count[cell - 1] -= 1;
   let dominant = count[0] > count[1] ? 1 : 2;
   return [count[0] + count[1], dominant];
-}
+};
 const updateTimer = () => {
   //update the timer of the id of the user who is playing now
   Data.getGameVars().timerTimeout = setTimeout(() => {
@@ -118,18 +118,18 @@ const updateTimer = () => {
     if (Data.getGameVars().inProgress)
       updateTimer();
   }, 1000); // every second
-}
+};
 const stopTimers = () => {
   clearTimeout(Data.getGameVars().timerTimeout);
-}
+};
 const pad2 = (num) => {
   return (num < 10 ? '0' : '') + num;
-}
+};
 const checkTimerEnd = () => {
   Data.getGameVars().timers.forEach((s, i) => {
     if (s === 0) endGame(Math.abs(1-i));
   });
-}
+};
 const updateScores = () => {
   let cellCounts = [0, 0];
   Data.getGameVars().data.forEach((row, y) => {
@@ -143,7 +143,7 @@ const updateScores = () => {
   gv.scores[winner] += Math.abs(cellCounts[0] - cellCounts[1]);
   Data.updateGameVars(gv);
   Render.renderScores();
-}
+};
 const updatePieces = () => {
   if (Data.getRules().startingPieceCount == -1) return;
   let gv = Data.getGameVars();
@@ -152,7 +152,7 @@ const updatePieces = () => {
   if (Data.getGameVars().piecesAvail[1] < Data.getRules().maxPieceCount)
     gv.piecesAvail[1]++;
   Data.updateGameVars(gv);
-}
+};
 const toggleCell = (cellObj, playerId) => {
 	if (!Data.getGameVars().inProgress ||
 	(Data.getGameVars().mode === 'gt_online' && Data.getGameVars().playerId != playerId-1))
@@ -181,7 +181,7 @@ const toggleCell = (cellObj, playerId) => {
   }
   Data.updateGameVars(gv);
   Render.renderPieces();
-}
+};
 const endGame = (winner) => {
   Data.updateGameVars({"inProgress": false})
   stopTimers();
@@ -191,7 +191,7 @@ const endGame = (winner) => {
   document.getElementById('winnerMessage').innerHTML = `Player ${winner+1} wins!`;
   document.getElementById('submitMoveButton').style.display = 'none';
   document.getElementById('resetGame2pButton').style.display = 'block';
-}
+};
 const setGameMode = (mode) => {
 	Data.updateGameVars({ mode });
 	switch(mode) {

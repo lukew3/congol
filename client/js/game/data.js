@@ -14,23 +14,27 @@ let gameVars = {
   "nextUp": 0,
   "mode": 'gt_online'
 };
+
 const getRules = () => {
 	return rules;
-}
+};
+
 const getGameVars = () => {
 	return gameVars;
-}
+};
+
 const updateRules = (addedRulesObj) => {
         Object.keys(addedRulesObj).forEach((key) => {
                 rules[key] = addedRulesObj[key];
         });
         //rules = initBoard(rules, gameVars.piecesAvail);
-}
+};
+
 const updateGameVars = (addedGameVarsObj) => {
         Object.keys(addedGameVarsObj).forEach((key) => {
                 gameVars[key] = addedGameVarsObj[key];
         });
-}
+};
 
 module.exports = {
 	getRules,

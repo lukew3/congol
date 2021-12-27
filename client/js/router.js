@@ -8,11 +8,13 @@ const setPage = (pageId) => {
 		pageDiv.style = 'display: none;';
 	});
 	document.getElementById(pageId).style = 'display: block;';
-}
+};
+
 const setPath = (path) => {
 	window.history.pushState({ id: path }, `Congol - ${path}`, '/'+path);
 	handlePath();
-}
+};
+
 const handlePath = () => {
 	const path = window.location.pathname;
 	if (path === '/') {
@@ -24,7 +26,7 @@ const handlePath = () => {
 	} else {
 		setPage('err404Page');
 	}
-}
+};
 
 window.addEventListener('popstate', (e) => {
 	// When back button is pressed

@@ -17,7 +17,7 @@ let domObjs = {
       document.getElementById('p1Timer'),
       document.getElementById('p2Timer')
   ]
-}
+};
 
 const initBoard = () => {
   let rules = Data.getRules();
@@ -38,7 +38,8 @@ const initBoard = () => {
   renderPieces(rules, piecesAvail);
   domObjs.playerSwitch.checked = false;
   Data.updateRules(rules);
-}
+};
+
 const renderBoard = () => {
   let data = Data.getGameVars().data;
   let colors = Data.getRules().colors;
@@ -50,16 +51,19 @@ const renderBoard = () => {
       cellObj.style.backgroundColor = colors[cell];
     });
   });
-}
+};
+
 const renderScores = () => {
   let scores = Data.getGameVars().scores;
   domObjs.scoreObjs[0].innerHTML = scores[0];
   domObjs.scoreObjs[1].innerHTML = scores[1];
-}
+};
+
 const renderRound = () => {
   let round = Data.getGameVars().round;
   domObjs.roundCtr.innerHTML = round;
-}
+};
+
 const renderPieces = () => {
   let gameRules = Data.getRules();
   let piecesAvail = Data.getGameVars().piecesAvail;
@@ -74,21 +78,24 @@ const renderPieces = () => {
       domObjs.piecesObjs[p].append(newCell);
     }
   }
-}
+};
+
 const pad2 = (num) => {
   return (num < 10 ? '0' : '') + num;
-}
+};
+
 const renderTimers = () => {
   Data.getGameVars().timers.forEach((s, i) => {
     domObjs.timers[i].innerHTML = `${Math.floor(s/60)}:${pad2(s%60)}`;
   });
-}
+};
+
 const renderAll = () => {
   renderBoard();
   renderPieces();
   renderRound();
   renderScores();
-}
+};
 
 
 module.exports = {

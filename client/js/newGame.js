@@ -20,7 +20,7 @@ const setNewGameSelections = () => {
 	});
 	document.getElementById(gtSelected).style.border = "1px solid black";
 	document.getElementById(bsSelected).style.border = "1px solid black";
-}
+};
 
 document.getElementById('newGameStartButton').addEventListener('click', () => {
 	Router.setPath('game');

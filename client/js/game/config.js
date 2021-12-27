@@ -10,7 +10,7 @@ const baseConfig = {
 		"blue",
 		"red"
 	],
-}
+};
 
 const local2pConfig = {
 	"boardSize": 15,
@@ -26,7 +26,7 @@ const local2pConfig = {
 	],
 	"speciesCount": 2,
 	"startingTime": 3*60,
-}
+};
 
 const soloConfig = {
 	"boardSize": 15,
@@ -39,7 +39,7 @@ const soloConfig = {
 		"#EDEDED",
 		"black"
 	],
-}
+};
 
 module.exports = {
 	baseConfig,

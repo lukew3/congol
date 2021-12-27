@@ -20,12 +20,12 @@ socket.on('gameUpdate', (data) => {
 socket.on('setPlayerId', (playerId) => {
 	console.log('received Player id: ' + playerId)
 	Data.updateGameVars({ playerId });
-})
+});
 
 socket.on('setRoomId', (roomId) => {
 	console.log("received room id: " + roomId);
 	Router.setPath(`game/${roomId}`);
-})
+});
 
 const requestGame = () => {
 	let roomId = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
@@ -33,7 +33,7 @@ const requestGame = () => {
 		roomId = -1
 	console.log("room from path: " + roomId);
 	socket.emit('gameRequest', roomId);
-}
+};
 
 const sendMove = () => {
 	socket.emit('playerMove', {
@@ -42,7 +42,7 @@ const sendMove = () => {
 		'scores': Data.getGameVars().scores,
 		'inProgress': Data.getGameVars().inProgress
 	});
-}
+};
 
 module.exports = {
   requestGame,
