@@ -1,4 +1,5 @@
 const Game = require('./game/game.js');
+const OnlineGame = require('./game/onlineGame.js');
 const Data = require('./game/data.js');
 const Render = require('./game/rendering.js');
 const Router = require('./router.js');
@@ -13,7 +14,7 @@ const bs50 = document.getElementById("bs_40");
 let gtSelected = "gt_local";
 let bsSelected = "bs_15";
 
-const updateNewGameSelections = () => {
+const setNewGameSelections = () => {
 	[gtOnline, gtLocal, gtSolo, bs10, bs25, bs50].forEach((newGameButton) => {
 		newGameButton.style.border = "none";
 	});
@@ -23,16 +24,13 @@ const updateNewGameSelections = () => {
 
 document.getElementById('newGameStartButton').addEventListener('click', () => {
 	Router.setPath('game');
-	// Find a better way to do this, this only works because the game is required before newGame.js
-	// Maybe you should just make the gameObj right away and then allow it to be accessed by all
-	// Actually this doesn't work at all
 	//gameObj.boardSize = Number(bsSelected.splice(3, 5));
 	Game.setGameMode(gtSelected);
 	Data.updateRules({"boardSize": Number(bsSelected.slice(3, 5))});
 	Render.initBoard();
 	Game.resetBoard();
 	if (gtSelected === 'gt_online')
-		Game.requestGame();
+		OnlineGame.requestGame();
 });
 
 document.addEventListener('click', (e) => {
@@ -42,7 +40,7 @@ document.addEventListener('click', (e) => {
 	} else if (element.id.slice(0, 3) == 'bs_') {
 		bsSelected = element.id;
 	}
-	updateNewGameSelections();
+	setNewGameSelections();
 });
 
-updateNewGameSelections();
+setNewGameSelections();

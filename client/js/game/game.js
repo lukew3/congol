@@ -1,51 +1,8 @@
 const Data = require("./data.js");
 const Render = require("./rendering.js");
 const Router = require("../router.js");
+const OnlineGame = require("./onlineGame.js");
 const { local2pConfig, soloConfig } = require("./config.js");
-const socket = io();
-
-socket.on('gameUpdate', (data) => {
-	handleGameUpdate(data);
-});
-
-socket.on('setPlayerId', (playerId) => {
-	console.log('received Player id: ' + playerId)
-	Data.updateGameVars({ playerId });
-})
-
-socket.on('setRoomId', (roomId) => {
-	console.log("received room id: " + roomId);
-	Router.setPath(`game/${roomId}`);
-})
-
-const sendMove = () => {
-	socket.emit('playerMove', {
-		'data': Data.getGameVars().data,
-		'piecesAvail': Data.getGameVars().piecesAvail,
-		'scores': Data.getGameVars().scores,
-		'inProgress': Data.getGameVars().inProgress
-	});
-}
-const requestGame = () => {
-	let roomId = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
-	if (roomId === '' || roomId === 'game')
-		roomId = -1
-	console.log("room from path: " + roomId);
-	socket.emit('gameRequest', roomId);
-}
-
-const handleGameUpdate = (sdata) => {
-	//if (Data.getGameVars().mode !== 'gt_online') return;
-	Data.updateGameVars(sdata);
-	Render.domObjs.playerSwitch.checked = sdata.switchPos;
-	Render.renderAll();
-	// This doesn't need to  be updated every time
-	document.getElementById(`p1Username`).innerHTML = sdata.p1Username;
-	document.getElementById(`p2Username`).innerHTML = sdata.p2Username;
-	if (Data.getGameVars().playerId !== -1)
-		document.getElementById(`p${Data.getGameVars().playerId+1}Username`).innerHTML = "Me";
-	checkScoreLimit();
-}
 
 //rules and gameVars are separated so that rules can be modifiable in its entirety while gameVars cannot
 const createEmptyData = () => {
@@ -120,7 +77,7 @@ const runRound = () => {
 		Render.domObjs.playerSwitch.checked = !Render.domObjs.playerSwitch.checked;
 	}
 	if (Data.getGameVars().mode === 'gt_online')
-		sendMove();
+		OnlineGame.sendMove();
 }
 const checkScoreLimit = () => {
   if (Data.getRules().scoreLimit == -1) return;
@@ -328,7 +285,7 @@ Data.updateGameVars({"data": createEmptyData()})
 Render.initBoard();
 // Handling if the game is online or not
 if (window.location.pathname.substring(0, 6) === '/game/') {
-	requestGame();
+	OnlineGame.requestGame();
 } else {
 	Data.updateGameVars({"inProgress": true})
 	setGameMode('gt_local');
@@ -336,6 +293,5 @@ if (window.location.pathname.substring(0, 6) === '/game/') {
 
 module.exports = {
 	setGameMode,
-  resetBoard,
-	requestGame
+  resetBoard
 }
