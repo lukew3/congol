@@ -11,7 +11,7 @@ const bs10 = document.getElementById("bs_15");
 const bs25 = document.getElementById("bs_25");
 const bs50 = document.getElementById("bs_40");
 
-let gtSelected = "gt_local";
+let gtSelected = "gt_online";
 let bsSelected = "bs_15";
 
 const setNewGameSelections = () => {
