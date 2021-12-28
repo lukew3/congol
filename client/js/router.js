@@ -38,5 +38,6 @@ document.getElementById('err404Button').addEventListener('click', (e) => { setPa
 handlePath();
 
 module.exports = {
-	setPath
+	setPath,
+	setPage
 }

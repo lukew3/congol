@@ -35,6 +35,9 @@ async function main() {
     // Send game to the user who requested it
     socket.emit('setGame', gameData);
   };
+  const sendGameNotFound = (socket) => {
+    socket.emit('setGame', false);
+  }
 
   // Send last move to all users in room
   const broadcastMove = async (socket, roomId, move) => {
@@ -96,7 +99,8 @@ async function main() {
       }
       socket.join(`game-${roomId}`);
       socket.emit('setRoomId', roomId);
-      let game = await mongoDB().collection('games').findOne({'shortId': roomId})
+      let game = await mongoDB().collection('games').findOne({'shortId': roomId});
+      if (game === null) sendGameNotFound(socket);
       if (game.p1Username === 'waiting') {
         playerId = 0;
       } else if (game.p2Username === 'waiting') {

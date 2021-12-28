@@ -13,6 +13,8 @@ socket.on('gameStart', (data) => {
 
 socket.on('setGame', (data) => {
   if (Data.getGameVars().mode !== 'gt_online') return;
+  if (!data)
+    Router.setPage('err404Page');
   setUsernames(data);
 	runMoves(data.moves);
 });
