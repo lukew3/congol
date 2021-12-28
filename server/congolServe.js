@@ -27,14 +27,14 @@ async function main() {
     // Check that move doesn't overlap existing pieces?
       // Don't want too many intensive processes, so this might not be necessary
         // or check client-side
-  }
+  };
 
   // Send entire game
   const sendGame = async (socket, roomId) => {
     let gameData = await mongoDB().collection('games').findOne({'shortId': roomId});
     // Send game to the user who requested it
     socket.emit('setGame', gameData);
-  }
+  };
 
   // Send last move to all users in room
   const broadcastMove = async (socket, roomId, move) => {
@@ -74,7 +74,7 @@ async function main() {
       game = await mongoDB().collection('games').findOne({'_id': insertData.insertedId});
     };
     return game.shortId;
-  }
+  };
   const startGame = async (socket, roomId) => {
     // should also set the time that the game starts at to mongo
     await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$set': {
@@ -83,7 +83,7 @@ async function main() {
     }});
     let gameData = await mongoDB().collection('games').findOne({'shortId': roomId});
     io.sockets.in(`game-${roomId}`).emit('gameStart', gameData);
-  }
+  };
   io.on('connection', async (socket) => {
     let roomId, playerId; // maybe should be playerRole instead of playerId
 
@@ -116,7 +116,7 @@ async function main() {
         //games[roomId].inProgress = true;
       // send game update when the user connects
       sendGame(socket, roomId); // Could add playerId to this data so that playerId wouldn't be sent separate
-    })
+    });
 
   	socket.on('playerMove', (moveData) => {
   		receiveMove(socket, moveData, roomId);
