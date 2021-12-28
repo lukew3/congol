@@ -19,12 +19,10 @@ socket.on('gameUpdate', (data) => {
 });
 
 socket.on('setPlayerId', (playerId) => {
-	console.log('received Player id: ' + playerId)
 	Data.updateGameVars({ playerId });
 });
 
 socket.on('setRoomId', (roomId) => {
-	console.log("received room id: " + roomId);
 	Router.setPath(`game/${roomId}`);
 });
 
@@ -36,7 +34,6 @@ const requestGame = () => {
 	let roomId = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
 	if (roomId === '' || roomId === 'game')
 		roomId = -1
-	console.log("room from path: " + roomId);
 	socket.emit('gameRequest', roomId);
 };
 
@@ -47,13 +44,9 @@ const sendMove = () => {
 const runMove = (move) => {
 	let playerId = (Render.domObjs.playerSwitch.checked) ? 2 : 1;
 	// only toggle cells if current user wasn't the one who toggled them
-  console.log('running move aa');
-  console.log(move);
 	if (Data.getGameVars().playerId !== playerId-1) {
-    console.log('toggling')
     let tempPlayerId = Data.getGameVars().playerId;
 		Data.updateGameVars({"playerId": playerId-1})
-    console.log(Data.getGameVars().playerId);
 		move.forEach((cellNum) => {
 			GameCore.toggleCell(cellNum, playerId);
 		});
@@ -66,7 +59,6 @@ const runMove = (move) => {
 const runMoves = (moves) => {
 	moves.forEach((move) => {
 		runMove(move);
-    console.log(Data.getGameVars().data);
 	});
 };
 
