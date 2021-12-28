@@ -121,6 +121,13 @@ async function main() {
   	socket.on('playerMove', (moveData) => {
   		receiveMove(socket, moveData, roomId);
   	});
+    socket.on('endGame', async (winner) => {
+      // should winner be set to the username of the winner instead of the playerId?
+      await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$set': {
+        'inProgress': false,
+        'winner': winner
+      }});
+    });
   	socket.on('disconnect', () => {
       return;
   	});

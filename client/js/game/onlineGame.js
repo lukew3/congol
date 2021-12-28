@@ -59,7 +59,8 @@ const runMove = (move) => {
 		Data.updateGameVars({"playerId": tempPlayerId})
 	}
 	GameCore.runRound();
-	//Render.domObjs.playerSwitch.checked = !Render.domObjs.playerSwitch.checked;
+  if (!Data.getGameVars().inProgress)
+    socket.emit('endGame', Data.getGameVars().winner);
 };
 
 const runMoves = (moves) => {

@@ -179,7 +179,7 @@ const toggleCell = (cellNum, playerId) => {
   Render.renderPieces();
 };
 const endGame = (winner) => {
-  Data.updateGameVars({"inProgress": false})
+  Data.updateGameVars({'inProgress': false, 'winner': winner})
   stopTimers();
   // Should not use document.getElementById
   document.getElementById('winnerMessage').style.display = 'block';
