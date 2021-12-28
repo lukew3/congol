@@ -29,10 +29,13 @@ document.getElementById('submitMoveButton').addEventListener('click', (e) => {
   }
 });
 
-document.getElementById('resetGame2pButton').addEventListener('click', (e) => {
-	GameCore.resetBoard();
+document.getElementById('newGame2pButton').addEventListener('click', (e) => {
+  GameCore.resetBoard();
+  if (Data.getGameVars().mode === 'gt_online') {
+    OnlineGame.requestGame(-1);
+  }
 	document.getElementById('submitMoveButton').style.display = 'block';
-	document.getElementById('resetGame2pButton').style.display = 'none';
+	document.getElementById('newGame2pButton').style.display = 'none';
 	document.getElementById('winnerMessage').style.display = 'none';
 });
 

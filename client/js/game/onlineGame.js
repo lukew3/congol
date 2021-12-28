@@ -39,8 +39,9 @@ socket.on('broadcastMove', (move) => {
 	runMove(move);
 })
 
-const requestGame = () => {
-	let roomId = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+const requestGame = (roomId=undefined) => {
+  if (!roomId)
+	 roomId = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
 	if (roomId === '' || roomId === 'game')
 		roomId = -1
 	socket.emit('gameRequest', roomId);

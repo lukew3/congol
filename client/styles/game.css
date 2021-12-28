@@ -106,8 +106,9 @@ input + label #switchHandle {
         margin-top: 15px;
 }
 
-#resetGame2pButton {
+#newGame2pButton {
         display: none;
+        width: 80px;
 }
 
 #soloButtons {

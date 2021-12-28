@@ -187,7 +187,7 @@ const endGame = (winner) => {
   // Set this to the actual winner of the game
   document.getElementById('winnerMessage').innerHTML = `Player ${winner+1} wins!`;
   document.getElementById('submitMoveButton').style.display = 'none';
-  document.getElementById('resetGame2pButton').style.display = 'block';
+  document.getElementById('newGame2pButton').style.display = 'block';
 };
 const setGameMode = (mode) => {
 	Data.updateGameVars({ mode });
