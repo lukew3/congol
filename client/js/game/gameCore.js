@@ -73,7 +73,6 @@ const runRound = () => {
   checkScoreLimit();
   Data.updateGameVars({"roundToggledCells": []});
 	if (Data.getRules().speciesCount === 2) {
-    console.log("switched due to species")
 		Render.domObjs.playerSwitch.checked = !Render.domObjs.playerSwitch.checked;
 	}
 };
