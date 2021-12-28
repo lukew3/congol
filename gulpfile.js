@@ -34,12 +34,14 @@ gulp.task('browserify', () => {
 });
 
 gulp.task('copyStatic', () => {
-	gulp.src('client/img/*')
-		.pipe(gulp.dest('dist/img'));
+	/*
 	gulp.src('client/manifest.webmanifest')
 		.pipe(gulp.dest('dist'));
-	return gulp.src('client/sw.js')
+	gulp.src('client/sw.js')
 		.pipe(gulp.dest('dist'));
+	*/
+	return gulp.src('client/img/*')
+		.pipe(gulp.dest('dist/img'));
 });
 
 gulp.task('build', gulp.parallel('pug', 'css', 'browserify', 'copyStatic'));
