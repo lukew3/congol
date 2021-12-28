@@ -68,9 +68,12 @@ const runMove = (move) => {
 };
 
 const runMoves = (moves) => {
+  let tempProgress = Data.getGameVars().inProgress;
+  Data.updateGameVars({'inProgress': true});
 	moves.forEach((move) => {
 		runMove(move);
 	});
+  Data.updateGameVars({'inProgress': tempProgress});
 };
 
 module.exports = {
