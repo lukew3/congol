@@ -1,0 +1,305 @@
+const Data = require("./data.js");
+const Render = require("./rendering.js");
+const Router = require("../router.js");
+const { local2pConfig, soloConfig } = require("./config.js");
+const socket = io();
+
+
+socket.on('gameUpdate', (data) => {
+  if (Data.getGameVars().mode !== 'gt_online') return;
+	runMoves(data.moves);
+	//Data.updateGameVars(data);
+	//Render.domObjs.playerSwitch.checked = data.switchPos;
+	//Render.renderAll();
+	// This doesn't need to  be updated every time
+	document.getElementById(`p1Username`).innerHTML = data.p1Username;
+	document.getElementById(`p2Username`).innerHTML = data.p2Username;
+	if (Data.getGameVars().playerId !== -1)
+		document.getElementById(`p${Data.getGameVars().playerId+1}Username`).innerHTML = "Me";
+	//checkScoreLimit();
+});
+
+socket.on('setPlayerId', (playerId) => {
+	console.log('received Player id: ' + playerId)
+	Data.updateGameVars({ playerId });
+});
+
+socket.on('setRoomId', (roomId) => {
+	console.log("received room id: " + roomId);
+	Router.setPath(`game/${roomId}`);
+});
+
+socket.on('broadcastMove', (move) => {
+	runMove(move);
+})
+
+const requestGame = () => {
+	let roomId = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+	if (roomId === '' || roomId === 'game')
+		roomId = -1
+	console.log("room from path: " + roomId);
+	socket.emit('gameRequest', roomId);
+};
+
+const sendMove = () => {
+	socket.emit('playerMove', Data.getGameVars().roundToggledCells);
+};
+
+const runMove = (move) => {
+	let playerId = (Render.domObjs.playerSwitch.checked) ? 2 : 1;
+	// only toggle cells if current user wasn't the one who toggled them
+  console.log('running move aa');
+  console.log(move);
+	if (Data.getGameVars().playerId !== playerId-1) {
+    console.log('toggling')
+    let tempPlayerId = Data.getGameVars().playerId;
+		Data.updateGameVars({"playerId": playerId-1})
+    console.log(Data.getGameVars().playerId);
+		move.forEach((cellNum) => {
+			toggleCell(cellNum, playerId);
+		});
+		Data.updateGameVars({"playerId": tempPlayerId})
+	}
+	runRound();
+	//Render.domObjs.playerSwitch.checked = !Render.domObjs.playerSwitch.checked;
+};
+
+const runMoves = (moves) => {
+	moves.forEach((move) => {
+		runMove(move);
+    console.log(Data.getGameVars().data);
+	});
+};
+
+//rules and gameVars are separated so that rules can be modifiable in its entirety while gameVars cannot
+const createEmptyData = () => {
+  let myarr = [];
+  for (let y = 0; y < Data.getRules().boardSize; y++) {
+    let row = [];
+    for (let x = 0; x < Data.getRules().boardSize; x++)
+      row.push(0);
+      myarr.push(row);
+  }
+  return myarr;
+};
+const resetBoard = () => {
+  stopGame();
+  Data.updateGameVars({"data": createEmptyData(),
+											 "round": 0,
+											 "scores": [0, 0],
+											 "piecesAvail": [Data.getRules().startingPieceCount, Data.getRules().startingPieceCount],
+											 "timers": [Data.getRules().startingTime, Data.getRules().startingTime],
+											 "inProgress": true
+										 });
+	Render.renderAll();
+  Render.renderTimers();
+  stopTimers();
+  updateTimer();
+  Render.domObjs.playerSwitch.checked = false;
+};
+const stopGame = () => {
+  // for each to in roundTimeouts, clear timeout
+  Data.getGameVars().roundTimeouts.forEach((id) => {
+    clearTimeout(id);
+  });
+  Data.updateGameVars({"running": false});
+};
+const runGame = () => {
+  for (let r = 0; r < Data.getRules().totalRounds; r++) {
+    Data.getGameVars().roundTimeouts.push(
+      setTimeout(() => {
+        runRound();
+      }, r * Data.getRules().roundTime)
+    );
+  }
+  Data.updateGameVars({"running": true});
+};
+const runRound = () => {
+  let startTime = performance.now();
+  let nvalues, n, dominant;
+  Data.updateGameVars({"round": Data.getGameVars().round + 1});
+  let newData = createEmptyData();
+  Data.getGameVars().data.forEach((row, y) => {
+    row.forEach((cell, x) => {
+      nvalues = countNeighbors(y, x);
+      n = nvalues[0];
+      dominant = nvalues[1];
+      if (cell != 0 && (n < 2 || n > 3)) {
+        newData[y][x] = 0;
+      } else if (cell == 0 && n === 3) {
+        newData[y][x] = dominant;
+      } else {
+        newData[y][x] = cell;
+      }
+    });
+  });
+  Data.updateGameVars({"data": newData});
+  updateScores();
+  updatePieces();
+	Render.renderAll();
+  //console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
+  checkScoreLimit();
+  Data.updateGameVars({"roundToggledCells": []});
+	if (Data.getRules().speciesCount === 2) {
+    console.log("switched due to species")
+		Render.domObjs.playerSwitch.checked = !Render.domObjs.playerSwitch.checked;
+	}
+};
+const checkScoreLimit = () => {
+  if (Data.getRules().scoreLimit == -1) return;
+  if (Data.getGameVars().scores[0] >= Data.getRules().scoreLimit)
+    endGame(0);
+  else if (Data.getGameVars().scores[1] >= Data.getRules().scoreLimit)
+    endGame(1);
+};
+const countNeighbors = (y, x) => {
+  let count = [0, 0];
+  let cell;
+  let ymin = (y === 0) ? y : y - 1;
+  let xmin = (x === 0) ? x : x - 1;
+  let ymax = (y === Data.getRules().boardSize - 1) ? y : y + 1;
+  let xmax = (x === Data.getRules().boardSize - 1) ? x : x + 1;
+  for (let yc = ymin; yc < ymax + 1; yc++) {
+    for (let xc = xmin; xc < xmax + 1; xc++) {
+      cell = Data.getGameVars().data[yc][xc];
+      if (cell != 0)
+        count[cell - 1] += 1;
+    }
+  }
+  cell = Data.getGameVars().data[y][x];
+  if (cell != 0)
+    count[cell - 1] -= 1;
+  let dominant = count[0] > count[1] ? 1 : 2;
+  return [count[0] + count[1], dominant];
+};
+const updateTimer = () => {
+  //update the timer of the id of the user who is playing now
+  Data.getGameVars().timerTimeout = setTimeout(() => {
+    let activePlayer = (Render.domObjs.playerSwitch.checked) ? 1 : 0;
+    let gv = Data.getGameVars();
+    let s = --gv.timers[activePlayer];
+    Data.updateGameVars(gv);
+    Render.domObjs.timers[activePlayer].innerHTML = `${Math.floor(s/60)}:${pad2(s%60)}`;
+    checkTimerEnd();
+    if (Data.getGameVars().inProgress)
+      updateTimer();
+  }, 1000); // every second
+};
+const stopTimers = () => {
+  clearTimeout(Data.getGameVars().timerTimeout);
+};
+const pad2 = (num) => {
+  return (num < 10 ? '0' : '') + num;
+};
+const checkTimerEnd = () => {
+  Data.getGameVars().timers.forEach((s, i) => {
+    if (s === 0) endGame(Math.abs(1-i));
+  });
+};
+const updateScores = () => {
+  let cellCounts = [0, 0];
+  Data.getGameVars().data.forEach((row, y) => {
+    row.forEach((cell, x) => {
+      if (cell != 0)
+        cellCounts[cell - 1] += 1;
+    });
+  });
+  let winner = (cellCounts[0] > cellCounts[1]) ? 0 : 1;
+  let gv = Data.getGameVars();
+  gv.scores[winner] += Math.abs(cellCounts[0] - cellCounts[1]);
+  Data.updateGameVars(gv);
+  Render.renderScores();
+};
+const updatePieces = () => {
+  if (Data.getRules().startingPieceCount == -1) return;
+  let gv = Data.getGameVars();
+  if (Data.getGameVars().piecesAvail[0] < Data.getRules().maxPieceCount)
+    gv.piecesAvail[0]++;
+  if (Data.getGameVars().piecesAvail[1] < Data.getRules().maxPieceCount)
+    gv.piecesAvail[1]++;
+  Data.updateGameVars(gv);
+};
+const toggleCell = (cellNum, playerId) => {
+	if (!Data.getGameVars().inProgress ||
+	(Data.getGameVars().mode === 'gt_online' && Data.getGameVars().playerId != playerId-1))
+		return;
+  //this.roundToggledCells = [];
+  let cy = Math.floor(cellNum / Data.getRules().boardSize);
+  //console.log(`${cy} ${num%this.boardSize}`);
+  let gv = Data.getGameVars();
+  if (gv.data[cy][cellNum % Data.getRules().boardSize] == 0 && gv.piecesAvail[playerId - 1] != 0) {
+    // fill empty square
+    gv.data[cy][cellNum % Data.getRules().boardSize] = playerId;
+    document.getElementById(`cell-${cellNum}`).style.backgroundColor = Data.getRules().colors[playerId];
+    gv.piecesAvail[playerId - 1]--;
+    gv.roundToggledCells.push(cellNum);
+  } else if (Data.getGameVars().data[cy][cellNum % Data.getRules().boardSize] == playerId && Data.getGameVars().roundToggledCells.includes(cellNum)) {
+    // empty filled square
+    gv.data[cy][cellNum % Data.getRules().boardSize] = 0;
+    document.getElementById(`cell-${cellNum}`).style.backgroundColor = Data.getRules().colors[0];
+    gv.piecesAvail[playerId - 1]++;
+    // remove num from roundToggledCells, not sure if this is the best way to do this
+    gv.roundToggledCells = Data.getGameVars().roundToggledCells.filter((val) => {
+      return val != cellNum;
+    });
+  }
+  Data.updateGameVars(gv);
+  Render.renderPieces();
+};
+const endGame = (winner) => {
+  Data.updateGameVars({"inProgress": false})
+  stopTimers();
+  // Should not use document.getElementById
+  document.getElementById('winnerMessage').style.display = 'block';
+  // Set this to the actual winner of the game
+  document.getElementById('winnerMessage').innerHTML = `Player ${winner+1} wins!`;
+  document.getElementById('submitMoveButton').style.display = 'none';
+  document.getElementById('resetGame2pButton').style.display = 'block';
+};
+const setGameMode = (mode) => {
+	Data.updateGameVars({ mode });
+	switch(mode) {
+  	case 'gt_online':
+			// Restrict user to only use one color
+			// Should the user always have the right or left player?
+			Data.updateRules({});
+      break;
+  	case 'gt_local':
+			// Remove player groups
+			document.getElementById('underBoardLower').style.display = "flex";
+			document.getElementById('p2PiecesAvail').style.display = "flex";
+			document.getElementById('p1PiecesAvail').style.display = "flex";
+			// Switch buttons sets
+			document.getElementById('local2pButtons').style.display = 'flex';
+			document.getElementById('soloButtons').style.display = 'none';
+			Data.updateRules(local2pConfig);
+      break;
+		case 'gt_solo':
+			// Remove player groups
+			document.getElementById('underBoardLower').style.display = "none";
+			document.getElementById('p2PiecesAvail').style.display = "none";
+			document.getElementById('p1PiecesAvail').style.display = "none";
+			// Switch buttons sets
+			document.getElementById('local2pButtons').style.display = 'none';
+			document.getElementById('soloButtons').style.display = 'flex';
+			// Set player to player 1
+			Render.domObjs.playerSwitch.checked = false;
+			// Later: Remove timer
+			Data.updateRules(soloConfig);
+      break;
+    default:
+      console.log*("Game mode not recognized");
+  }
+};
+
+module.exports = {
+  toggleCell,
+  sendMove,
+  runRound,
+  resetBoard,
+  stopGame,
+  runGame,
+  requestGame,
+  setGameMode,
+  createEmptyData
+}

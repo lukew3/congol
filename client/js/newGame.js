@@ -1,4 +1,4 @@
-const Game = require('./game/game.js');
+const GameCore = require('./game/gameCore.js');
 const Data = require('./game/data.js');
 const Render = require('./game/rendering.js');
 const Router = require('./router.js');
@@ -24,12 +24,12 @@ const setNewGameSelections = () => {
 document.getElementById('newGameStartButton').addEventListener('click', () => {
 	Router.setPath('game');
 	//gameObj.boardSize = Number(bsSelected.splice(3, 5));
-	Game.setGameMode(gtSelected);
+	GameCore.setGameMode(gtSelected);
 	Data.updateRules({"boardSize": Number(bsSelected.slice(3, 5))});
 	Render.initBoard();
-	Game.resetBoard();
+	GameCore.resetBoard();
 	if (gtSelected === 'gt_online')
-		Game.requestGame();
+		GameCore.requestGame();
 });
 
 document.addEventListener('click', (e) => {
