@@ -49,10 +49,10 @@ async function main() {
   const receiveMove = async (socket, moveData, roomId) => {
   	//if (game.playerId !== (game.switchPos ? 1 : 0)) return;
     //let oldGameObj = await mongoDB().collection('games').findOne({'shortId': roomId});
+    broadcastMove(socket, roomId, moveData);
     await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$push': {
       'moves': moveData
     }});
-  	broadcastMove(socket, roomId, moveData);
   };
 
   const newGameId = async () => {
