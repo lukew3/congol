@@ -29,6 +29,6 @@ npm i -g pm2
 ```
 Then, clone the repo and run
 ```
-npm run deploy
+npm run deploy-local
 ```
 inside of the congol directory to run the production application. This can be proxied to nginx with `proxy_pass`.
