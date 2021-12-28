@@ -21,27 +21,14 @@ async function main() {
 
   // Gameplay
 
-  // Verify that a move is legal
-  const verifyMove = async () => {
-    // Check that each coordinate is within boardSize
-    // Check that move doesn't overlap existing pieces?
-      // Don't want too many intensive processes, so this might not be necessary
-        // or check client-side
-  };
-
-  // Send entire game
+  // Send entire game to the user who requested it
   const sendGame = async (socket, roomId) => {
     let gameData = await mongoDB().collection('games').findOne({'shortId': roomId});
-    // Send game to the user who requested it
     socket.emit('setGame', gameData);
   };
 
   // Send last move to all users in room
   const broadcastMove = async (socket, roomId, move) => {
-    //let gameData = await mongoDB().collection('games').findOne({'shortId': roomId});
-    // Don't think that the next line is necessary
-    //socket.emit('gameUpdate', gameData);
-  	// Send update to all other connections
   	io.sockets.in(`game-${roomId}`).emit('broadcastMove', move);
   };
 
@@ -62,7 +49,7 @@ async function main() {
     let game = await mongoDB().collection('games').findOne({'p2Username': 'waiting'});
     // Create new game if no open game found
     if (game === null) {
-      // creating doesn't return game object
+      // Creating doesn't return game object
       let insertData = await mongoDB().collection('games').insertOne({
         moves: [],
   	    inProgress: false,
@@ -76,7 +63,7 @@ async function main() {
     return game.shortId;
   };
   const startGame = async (socket, roomId) => {
-    // should also set the time that the game starts at to mongo
+    // Should also set the time that the game starts at to mongo
     await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$set': {
       'inProgress': true,
       'startTime': new Date()
@@ -88,7 +75,6 @@ async function main() {
     let roomId, playerId; // maybe should be playerRole instead of playerId
 
     socket.on('gameRequest', async (reqRoomId) => {
-      //receiveGameRequest(socket, reqRoomId)
       if (reqRoomId !== -1) {
         roomId = reqRoomId;
       } else {
@@ -97,7 +83,7 @@ async function main() {
       socket.join(`game-${roomId}`);
       socket.emit('setRoomId', roomId);
       let game = await mongoDB().collection('games').findOne({'shortId': roomId});
-      // if game is null, tell the user that the game was not found and exit function
+      // If game is null, tell the user that the game was not found and exit function
       if (game === null) {
         socket.emit('setGame', false);
         return;
@@ -109,7 +95,7 @@ async function main() {
       } else {
         playerId = -1;
       }
-      // emit the users playerId
+      // Emit the users playerId
     	socket.emit('setPlayerId', playerId);
       // Set player username
       if (playerId !== -1)
@@ -118,8 +104,7 @@ async function main() {
       if (playerId === 1) {
         startGame(socket, roomId);
       }
-        //games[roomId].inProgress = true;
-      // send game update when the user connects
+      // Send game when the user connects
       sendGame(socket, roomId); // Could add playerId to this data so that playerId wouldn't be sent separate
     });
 
@@ -127,7 +112,7 @@ async function main() {
   		receiveMove(socket, moveData, roomId);
   	});
     socket.on('endGame', async (winner) => {
-      // should winner be set to the username of the winner instead of the playerId?
+      // Should winner be set to the username of the winner instead of the playerId?
       await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$set': {
         'inProgress': false,
         'winner': winner
