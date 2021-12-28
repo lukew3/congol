@@ -20,39 +20,41 @@ async function main() {
   await connectDB();
 
   // Gameplay
-  const boardSize = 15;
-  const createEmptyData = () => {
-    let myarr = [];
-    for (let y = 0; y < boardSize; y++) {
-      let row = [];
-      for (let x = 0; x < boardSize; x++)
-        row.push(0);
-        myarr.push(row);
-    }
-    return myarr;
+
+  // Verify that a move is legal
+  const verifyMove = async () => {
+    // Check that each coordinate is within boardSize
+    // Check that move doesn't overlap existing pieces?
+      // Don't want too many intensive processes, so this might not be necessary
+        // or check client-side
   }
-  const sendGameUpdate = async (socket, roomId) => {
-  	// send update to move sender
+
+  // Send entire game
+  const sendGame = async (socket, roomId) => {
     let gameData = await mongoDB().collection('games').findOne({'shortId': roomId});
-  	socket.emit('gameUpdate', gameData);
-  	// send update to all other connections
-  	io.sockets.in(`game-${roomId}`).emit('gameUpdate', gameData);
+    // Send game to the user who requested it
+    socket.emit('gameUpdate', gameData);
+  }
+
+  // Send last move to all users in room
+  const broadcastMove = async (socket, roomId, move) => {
+    //let gameData = await mongoDB().collection('games').findOne({'shortId': roomId});
+    // Don't think that the next line is necessary
+    //socket.emit('gameUpdate', gameData);
+  	// Send update to all other connections
+  	io.sockets.in(`game-${roomId}`).emit('broadcastMove', move);
   };
+
+  // Receive move from player
   const receiveMove = async (socket, moveData, roomId) => {
   	//if (game.playerId !== (game.switchPos ? 1 : 0)) return;
-    let oldGameObj = await mongoDB().collection('games').findOne({'shortId': roomId});
-    await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$set': {
-      'data': moveData.data,
-      'piecesAvail': moveData.piecesAvail,
-      'scores': moveData.scores,
-      'inProgress': moveData.inProgress,
-      //opposite of switchPos
-      'switchPos': !oldGameObj.switchPos,
-      //increment round
-      'round': oldGameObj.round+1
+    //let oldGameObj = await mongoDB().collection('games').findOne({'shortId': roomId});
+    await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$push': {
+      'moves': moveData
     }});
-  	sendGameUpdate(socket, roomId);
+  	broadcastMove(socket, roomId, moveData);
   };
+
   const newGameId = async () => {
     // Should take arguments like boardSize, time, and rating
     // Should get the roomsize from game object, and game object should be updated when a user joins
@@ -62,16 +64,12 @@ async function main() {
     if (game === null) {
       // creating doesn't return game object
       let insertData = await mongoDB().collection('games').insertOne({
-        data: createEmptyData(),
-      	piecesAvail: [3,3],
-      	round: 0,
-      	switchPos: false,
-        scores: [0,0],
+        moves: [],
   	    inProgress: false,
   	    p1Username: 'waiting',
   	    p2Username: 'waiting',
   	    winner: undefined,
-        shortId: nanoid()
+        shortId: nanoid(3)
       })
       game = await mongoDB().collection('games').findOne({'_id': insertData.insertedId});
     };
@@ -83,6 +81,7 @@ async function main() {
     let roomId, playerId; // maybe should be playerRole instead of playerId
 
     socket.on('gameRequest', async (reqRoomId) => {
+      //receiveGameRequest(socket, reqRoomId)
       console.log("Requested room: " + reqRoomId)
       if (reqRoomId !== -1) {
         roomId = reqRoomId;
@@ -101,15 +100,18 @@ async function main() {
         await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$set': {[`p${playerId+1}Username`]: 'Anonymous'}});
         //games[roomId][`p${playerId+1}Username`] = 'Anonymous';
       console.log(`Player ${playerId} joined room ${roomId}`);
-      if (playerId === 1)
+      if (playerId === 1) {
         await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$set': {'inProgress': true}});
+        let gameData = await mongoDB().collection('games').findOne({'shortId': roomId});
+        io.sockets.in(`game-${roomId}`).emit('gameUpdate', gameData);
+      }
         //games[roomId].inProgress = true;
       // send game update when the user connects
-      sendGameUpdate(socket, roomId);
+      sendGame(socket, roomId); // Could add playerId to this data so that playerId wouldn't be sent separate
     })
 
-  	socket.on('playerMove', (data) => {
-  		receiveMove(socket, data, roomId);
+  	socket.on('playerMove', (moveData) => {
+  		receiveMove(socket, moveData, roomId);
   	});
   	socket.on('disconnect', () => {
   		console.log('User disconnected');

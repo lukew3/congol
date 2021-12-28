@@ -6,10 +6,11 @@ const socket = io();
 
 
 socket.on('gameUpdate', (data) => {
-  //if (Data.getGameVars().mode !== 'gt_online') return;
-	Data.updateGameVars(data);
-	Render.domObjs.playerSwitch.checked = data.switchPos;
-	Render.renderAll();
+  if (Data.getGameVars().mode !== 'gt_online') return;
+	runMoves(data.moves);
+	//Data.updateGameVars(data);
+	//Render.domObjs.playerSwitch.checked = data.switchPos;
+	//Render.renderAll();
 	// This doesn't need to  be updated every time
 	document.getElementById(`p1Username`).innerHTML = data.p1Username;
 	document.getElementById(`p2Username`).innerHTML = data.p2Username;
@@ -28,6 +29,10 @@ socket.on('setRoomId', (roomId) => {
 	Router.setPath(`game/${roomId}`);
 });
 
+socket.on('broadcastMove', (move) => {
+	runMove(move);
+})
+
 const requestGame = () => {
 	let roomId = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
 	if (roomId === '' || roomId === 'game')
@@ -37,11 +42,32 @@ const requestGame = () => {
 };
 
 const sendMove = () => {
-	socket.emit('playerMove', {
-		'data': Data.getGameVars().data,
-		'piecesAvail': Data.getGameVars().piecesAvail,
-		'scores': Data.getGameVars().scores,
-		'inProgress': Data.getGameVars().inProgress
+	socket.emit('playerMove', Data.getGameVars().roundToggledCells);
+};
+
+const runMove = (move) => {
+	let playerId = (Render.domObjs.playerSwitch.checked) ? 2 : 1;
+	// only toggle cells if current user wasn't the one who toggled them
+  console.log('running move aa');
+  console.log(move);
+	if (Data.getGameVars().playerId !== playerId-1) {
+    console.log('toggling')
+    let tempPlayerId = Data.getGameVars().playerId;
+		Data.updateGameVars({"playerId": playerId-1})
+    console.log(Data.getGameVars().playerId);
+		move.forEach((cellNum) => {
+			toggleCell(cellNum, playerId);
+		});
+		Data.updateGameVars({"playerId": tempPlayerId})
+	}
+	runRound();
+	//Render.domObjs.playerSwitch.checked = !Render.domObjs.playerSwitch.checked;
+};
+
+const runMoves = (moves) => {
+	moves.forEach((move) => {
+		runMove(move);
+    console.log(Data.getGameVars().data);
 	});
 };
 
@@ -115,10 +141,9 @@ const runRound = () => {
   checkScoreLimit();
   Data.updateGameVars({"roundToggledCells": []});
 	if (Data.getRules().speciesCount === 2) {
+    console.log("switched due to species")
 		Render.domObjs.playerSwitch.checked = !Render.domObjs.playerSwitch.checked;
 	}
-	if (Data.getGameVars().mode === 'gt_online')
-		sendMove();
 };
 const checkScoreLimit = () => {
   if (Data.getRules().scoreLimit == -1) return;
@@ -194,30 +219,28 @@ const updatePieces = () => {
     gv.piecesAvail[1]++;
   Data.updateGameVars(gv);
 };
-const toggleCell = (cellObj, playerId) => {
+const toggleCell = (cellNum, playerId) => {
 	if (!Data.getGameVars().inProgress ||
 	(Data.getGameVars().mode === 'gt_online' && Data.getGameVars().playerId != playerId-1))
 		return;
   //this.roundToggledCells = [];
-  // Lol I don't know regex
-  let num = -Number(cellObj.id.match(/\-[0-9a-z]+$/i)[0]);
-  let cy = Math.floor(num / Data.getRules().boardSize);
+  let cy = Math.floor(cellNum / Data.getRules().boardSize);
   //console.log(`${cy} ${num%this.boardSize}`);
   let gv = Data.getGameVars();
-  if (gv.data[cy][num % Data.getRules().boardSize] == 0 && gv.piecesAvail[playerId - 1] != 0) {
+  if (gv.data[cy][cellNum % Data.getRules().boardSize] == 0 && gv.piecesAvail[playerId - 1] != 0) {
     // fill empty square
-    gv.data[cy][num % Data.getRules().boardSize] = playerId;
-    cellObj.style.backgroundColor = Data.getRules().colors[playerId];
+    gv.data[cy][cellNum % Data.getRules().boardSize] = playerId;
+    document.getElementById(`cell-${cellNum}`).style.backgroundColor = Data.getRules().colors[playerId];
     gv.piecesAvail[playerId - 1]--;
-    gv.roundToggledCells.push(num);
-  } else if (Data.getGameVars().data[cy][num % Data.getRules().boardSize] == playerId && Data.getGameVars().roundToggledCells.includes(num)) {
+    gv.roundToggledCells.push(cellNum);
+  } else if (Data.getGameVars().data[cy][cellNum % Data.getRules().boardSize] == playerId && Data.getGameVars().roundToggledCells.includes(cellNum)) {
     // empty filled square
-    gv.data[cy][num % Data.getRules().boardSize] = 0;
-    cellObj.style.backgroundColor = Data.getRules().colors[0];
+    gv.data[cy][cellNum % Data.getRules().boardSize] = 0;
+    document.getElementById(`cell-${cellNum}`).style.backgroundColor = Data.getRules().colors[0];
     gv.piecesAvail[playerId - 1]++;
     // remove num from roundToggledCells, not sure if this is the best way to do this
     gv.roundToggledCells = Data.getGameVars().roundToggledCells.filter((val) => {
-      return val != num;
+      return val != cellNum;
     });
   }
   Data.updateGameVars(gv);
@@ -279,14 +302,21 @@ document.addEventListener('click', (e) => {
   else
     playerId = (Render.domObjs.playerSwitch.checked) ? 2 : 1;
   if (element.className === "cell") {
-    toggleCell(element, playerId);
+	  let num = -Number(element.id.match(/\-[0-9a-z]+$/i)[0]);
+    toggleCell(num, playerId);
   };
 });
 
 document.getElementById('submitMoveButton').addEventListener('click', (e) => {
-	if (Data.getGameVars().mode === 'gt_online' && Data.getGameVars().playerId !== ((Render.domObjs.playerSwitch.checked) ? 1 : 0))
-		return;
-  runRound();
+  if (Data.getGameVars().mode === 'gt_online') {
+    if (Data.getGameVars().playerId !== ((Render.domObjs.playerSwitch.checked) ? 1 : 0)) {
+      return;
+    } else {
+      sendMove();
+    }
+  } else {
+    runRound();
+  }
 });
 
 document.getElementById('resetGame2pButton').addEventListener('click', (e) => {
@@ -326,6 +356,9 @@ Data.updateGameVars({"data": createEmptyData()})
 Render.initBoard();
 // Handling if the game is online or not
 if (window.location.pathname.substring(0, 6) === '/game/') {
+  setGameMode('gt_online');
+  Data.updateRules({"boardSize": 15, "speciesCount": 2});
+	resetBoard();
 	requestGame();
 } else {
 	Data.updateGameVars({"inProgress": true})
