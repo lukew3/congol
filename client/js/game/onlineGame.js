@@ -59,7 +59,7 @@ const runMove = (move) => {
 		Data.updateGameVars({"playerId": tempPlayerId})
 	}
 	GameCore.runRound();
-  if (!Data.getGameVars().inProgress)
+  if (!Data.getGameVars().inProgress && Data.getGameVars().playerId !== -1)
     socket.emit('endGame', Data.getGameVars().winner);
 };
 
