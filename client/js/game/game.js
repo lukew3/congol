@@ -55,12 +55,6 @@ document.getElementById('nextButton').addEventListener('click', (e) => {
   GameCore.runRound();
 });
 
-/*
-document.getElementById('resetButton').addEventListener('click', (e) => {
-  resetBoard();
-  document.getElementById('startStopButton').innerHTML = "Start";
-});
-*/
 
 // Stuff that runs on load
 Data.updateGameVars({"data": GameCore.createEmptyData()})
@@ -74,7 +68,4 @@ if (window.location.pathname.substring(0, 6) === '/game/') {
 } else {
 	Data.updateGameVars({"inProgress": true})
 	GameCore.setGameMode('gt_local');
-}
-
-module.exports = {
 }
