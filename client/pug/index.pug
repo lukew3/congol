@@ -3,10 +3,10 @@ html
   include head.pug
   body
     nav
-      p#navTitle Congol
+      a#navTitle(href='/rules') Congol
       div#navRight
-        p#navPlay Play
-        p#navRules Rules
+        a#navPlay(href='/rules') Play
+        a#navRules(href='/rules') Rules
 
     include pages/game.pug
     include pages/rules.pug

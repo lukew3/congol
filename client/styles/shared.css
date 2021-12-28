@@ -21,7 +21,7 @@ nav {
 	display: flex;
 	padding-right: 15px; /* Not sure why the 15 looks more even than 10 */
 }
-#navRight p {
+#navRight a {
 	font-size: 16px;
 	padding: 20px 10px;
 	color: black;
@@ -60,4 +60,3 @@ footer a:hover {
         text-align: center;
         min-width: 60px;
 }
-
