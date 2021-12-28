@@ -6,6 +6,7 @@ const socket = io();
 
 socket.on('gameStart', (data) => {
   if (Data.getGameVars().mode !== 'gt_online') return;
+  Data.updateGameVars({'inProgress': true});
   setUsernames(data);
   // start timers
   GameCore.updateTimer();

@@ -16,12 +16,13 @@ const createEmptyData = () => {
 };
 const resetBoard = () => {
   stopGame();
+  let inProgress = (Data.getGameVars().mode === 'gt_online') ? false : true;
   Data.updateGameVars({"data": createEmptyData(),
 											 "round": 0,
 											 "scores": [0, 0],
 											 "piecesAvail": [Data.getRules().startingPieceCount, Data.getRules().startingPieceCount],
 											 "timers": [Data.getRules().startingTime, Data.getRules().startingTime],
-											 "inProgress": true
+											 "inProgress": inProgress
 										 });
 	Render.renderAll();
   Render.renderTimers();
