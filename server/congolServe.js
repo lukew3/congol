@@ -33,7 +33,7 @@ async function main() {
   const sendGame = async (socket, roomId) => {
     let gameData = await mongoDB().collection('games').findOne({'shortId': roomId});
     // Send game to the user who requested it
-    socket.emit('gameUpdate', gameData);
+    socket.emit('setGame', gameData);
   }
 
   // Send last move to all users in room

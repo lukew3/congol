@@ -11,20 +11,15 @@ socket.on('gameStart', (data) => {
   GameCore.updateTimer();
 })
 
-socket.on('gameUpdate', (data) => {
+socket.on('setGame', (data) => {
   if (Data.getGameVars().mode !== 'gt_online') return;
-	runMoves(data.moves);
-	//Data.updateGameVars(data);
-	//Render.domObjs.playerSwitch.checked = data.switchPos;
-	//Render.renderAll();
-	// This doesn't need to  be updated every time
   setUsernames(data);
-	//checkScoreLimit();
+	runMoves(data.moves);
 });
 
-const setUsernames = (unData) => {
-  document.getElementById(`p1Username`).innerHTML = unData.p1Username;
-	document.getElementById(`p2Username`).innerHTML = unData.p2Username;
+const setUsernames = (uData) => {
+  document.getElementById(`p1Username`).innerHTML = uData.p1Username;
+	document.getElementById(`p2Username`).innerHTML = uData.p2Username;
 	if (Data.getGameVars().playerId !== -1)
 		document.getElementById(`p${Data.getGameVars().playerId+1}Username`).innerHTML = "Me";
 }
