@@ -91,9 +91,15 @@ async function main() {
       }
       socket.join(`game-${roomId}`);
       socket.emit('setRoomId', roomId);
-      playerId = io.sockets.adapter.rooms.get(`game-${roomId}`).size - 1;
-    	if (playerId > 1) playerId = -1;
-      // emit the users playerId, -1 if observing
+      let game = await mongoDB().collection('games').findOne({'shortId': roomId})
+      if (game.p1Username === 'waiting') {
+        playerId = 0;
+      } else if (game.p2Username === 'waiting') {
+        playerId = 1
+      } else {
+        playerId = -1;
+      }
+      // emit the users playerId
     	socket.emit('setPlayerId', playerId);
       // Set player username
       if (playerId !== -1)
@@ -101,6 +107,7 @@ async function main() {
         //games[roomId][`p${playerId+1}Username`] = 'Anonymous';
       console.log(`Player ${playerId} joined room ${roomId}`);
       if (playerId === 1) {
+        // Start game
         await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$set': {'inProgress': true}});
         let gameData = await mongoDB().collection('games').findOne({'shortId': roomId});
         io.sockets.in(`game-${roomId}`).emit('gameUpdate', gameData);
