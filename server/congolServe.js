@@ -73,21 +73,17 @@ async function main() {
       })
       game = await mongoDB().collection('games').findOne({'_id': insertData.insertedId});
     };
-    console.log(game);
     return game.shortId;
   }
   io.on('connection', async (socket) => {
-  	//console.log('New WS Connection...');
     let roomId, playerId; // maybe should be playerRole instead of playerId
 
     socket.on('gameRequest', async (reqRoomId) => {
       //receiveGameRequest(socket, reqRoomId)
-      console.log("Requested room: " + reqRoomId)
       if (reqRoomId !== -1) {
         roomId = reqRoomId;
       } else {
         roomId = await newGameId();
-        console.log(roomId)
       }
       socket.join(`game-${roomId}`);
       socket.emit('setRoomId', roomId);
@@ -105,7 +101,6 @@ async function main() {
       if (playerId !== -1)
         await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$set': {[`p${playerId+1}Username`]: 'Anonymous'}});
         //games[roomId][`p${playerId+1}Username`] = 'Anonymous';
-      console.log(`Player ${playerId} joined room ${roomId}`);
       if (playerId === 1) {
         // Start game
         await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$set': {'inProgress': true}});
@@ -121,7 +116,7 @@ async function main() {
   		receiveMove(socket, moveData, roomId);
   	});
   	socket.on('disconnect', () => {
-  		console.log('User disconnected');
+      return;
   	});
   });
 
