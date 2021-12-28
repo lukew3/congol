@@ -121,7 +121,7 @@ async function main() {
   	socket.on('disconnect', async () => {
       let gameData = await mongoDB().collection('games').findOne({'shortId': roomId});
       // Delete game if player 2 didn't join
-      if (gameData.p2Username === 'waiting') {
+      if (gameData !== null && gameData.p2Username === 'waiting') {
         await mongoDB().collection('games').deleteOne({'shortId': roomId});
       }
   	});
