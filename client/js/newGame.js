@@ -1,4 +1,5 @@
 const GameCore = require('./game/gameCore.js');
+const OnlineGame = require('./game/onlineGame.js');
 const Data = require('./game/data.js');
 const Render = require('./game/rendering.js');
 const Router = require('./router.js');
@@ -29,7 +30,7 @@ document.getElementById('newGameStartButton').addEventListener('click', () => {
 	Render.initBoard();
 	GameCore.resetBoard();
 	if (gtSelected === 'gt_online')
-		GameCore.requestGame();
+		OnlineGame.requestGame();
 });
 
 document.addEventListener('click', (e) => {

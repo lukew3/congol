@@ -1,6 +1,7 @@
 const Data = require('./data.js');
 const Render = require('./rendering.js');
 const GameCore = require('./gameCore.js');
+const OnlineGame = require('./onlineGame.js');
 
 // Event listeners
 document.addEventListener('click', (e) => {
@@ -21,7 +22,7 @@ document.getElementById('submitMoveButton').addEventListener('click', (e) => {
     if (Data.getGameVars().playerId !== ((Render.domObjs.playerSwitch.checked) ? 1 : 0)) {
       return;
     } else {
-      GameCore.sendMove();
+      OnlineGame.sendMove();
     }
   } else {
     GameCore.runRound();
@@ -69,7 +70,7 @@ if (window.location.pathname.substring(0, 6) === '/game/') {
   GameCore.setGameMode('gt_online');
   Data.updateRules({"boardSize": 15, "speciesCount": 2});
 	GameCore.resetBoard();
-	GameCore.requestGame();
+	OnlineGame.requestGame();
 } else {
 	Data.updateGameVars({"inProgress": true})
 	GameCore.setGameMode('gt_local');
