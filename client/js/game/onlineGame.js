@@ -4,6 +4,13 @@ const Render = require('./rendering.js');
 const Router = require('../router.js');
 const socket = io();
 
+socket.on('gameStart', (data) => {
+  if (Data.getGameVars().mode !== 'gt_online') return;
+  setUsernames(data);
+  // start timers
+  GameCore.updateTimer();
+})
+
 socket.on('gameUpdate', (data) => {
   if (Data.getGameVars().mode !== 'gt_online') return;
 	runMoves(data.moves);
@@ -11,12 +18,16 @@ socket.on('gameUpdate', (data) => {
 	//Render.domObjs.playerSwitch.checked = data.switchPos;
 	//Render.renderAll();
 	// This doesn't need to  be updated every time
-	document.getElementById(`p1Username`).innerHTML = data.p1Username;
-	document.getElementById(`p2Username`).innerHTML = data.p2Username;
-	if (Data.getGameVars().playerId !== -1)
-		document.getElementById(`p${Data.getGameVars().playerId+1}Username`).innerHTML = "Me";
+  setUsernames(data);
 	//checkScoreLimit();
 });
+
+const setUsernames = (unData) => {
+  document.getElementById(`p1Username`).innerHTML = unData.p1Username;
+	document.getElementById(`p2Username`).innerHTML = unData.p2Username;
+	if (Data.getGameVars().playerId !== -1)
+		document.getElementById(`p${Data.getGameVars().playerId+1}Username`).innerHTML = "Me";
+}
 
 socket.on('setPlayerId', (playerId) => {
 	Data.updateGameVars({ playerId });

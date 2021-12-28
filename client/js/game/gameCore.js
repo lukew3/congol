@@ -26,7 +26,8 @@ const resetBoard = () => {
 	Render.renderAll();
   Render.renderTimers();
   stopTimers();
-  updateTimer();
+  if (Data.getGameVars().mode !== 'gt_online')
+    updateTimer();
   Render.domObjs.playerSwitch.checked = false;
 };
 const stopGame = () => {
@@ -230,5 +231,6 @@ module.exports = {
   stopGame,
   runGame,
   setGameMode,
-  createEmptyData
+  createEmptyData,
+  updateTimer
 }

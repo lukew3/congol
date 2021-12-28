@@ -75,6 +75,12 @@ async function main() {
     };
     return game.shortId;
   }
+  const startGame = async (socket, roomId) => {
+    // should also set the time that the game starts at to mongo
+    await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$set': {'inProgress': true}});
+    let gameData = await mongoDB().collection('games').findOne({'shortId': roomId});
+    io.sockets.in(`game-${roomId}`).emit('gameStart', gameData);
+  }
   io.on('connection', async (socket) => {
     let roomId, playerId; // maybe should be playerRole instead of playerId
 
@@ -102,10 +108,7 @@ async function main() {
         await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$set': {[`p${playerId+1}Username`]: 'Anonymous'}});
         //games[roomId][`p${playerId+1}Username`] = 'Anonymous';
       if (playerId === 1) {
-        // Start game
-        await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$set': {'inProgress': true}});
-        let gameData = await mongoDB().collection('games').findOne({'shortId': roomId});
-        io.sockets.in(`game-${roomId}`).emit('gameUpdate', gameData);
+        startGame(socket, roomId);
       }
         //games[roomId].inProgress = true;
       // send game update when the user connects
