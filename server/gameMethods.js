@@ -1,9 +1,8 @@
 const { nanoid } = require('nanoid');
 const { connectDB, mongoDB } = require("./mongodb");
 
-/* Live game functions */
 
-const handleGameRequest = async (socket, reqRoomId) => {
+const handleGameRequest = async (io, socket, reqRoomId) => {
   let roomId, playerId;
   if (reqRoomId !== -1) {
     roomId = reqRoomId;
@@ -32,11 +31,12 @@ const handleGameRequest = async (socket, reqRoomId) => {
     await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$set': {[`p${playerId+1}Username`]: 'Anonymous'}});
     //games[roomId][`p${playerId+1}Username`] = 'Anonymous';
   if (playerId === 1) {
-    startGame(roomId);
+    startGame(io, roomId);
   }
   // Send game when the user connects
   sendGame(socket, roomId); // Could add playerId to this data so that playerId wouldn't be sent separate
-  return roomId, playerId;
+  console.log("returning: " + roomId)
+  return [roomId, playerId];
 }
 
 // Send entire game to the user who requested it
@@ -46,15 +46,18 @@ const sendGame = async (socket, roomId) => {
 };
 
 // Send last move to all users in room
-const broadcastMove = async (io, socket, roomId, move) => {
+const broadcastMove = async (io, roomId, move) => {
+  console.log('broadcasting?')
+  console.log(roomId);
   io.sockets.in(`game-${roomId}`).emit('broadcastMove', move);
+  console.log('broadcasted?')
 };
 
 // Receive move from player
-const receiveMove = async (socket, moveData, roomId) => {
+const receiveMove = async (io, moveData, roomId) => {
   //if (game.playerId !== (game.switchPos ? 1 : 0)) return;
   //let oldGameObj = await mongoDB().collection('games').findOne({'shortId': roomId});
-  broadcastMove(socket, roomId, moveData);
+  broadcastMove(io, roomId, moveData);
   await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$push': {
     'moves': moveData
   }});
