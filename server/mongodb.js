@@ -4,6 +4,9 @@ const dotenv = require('dotenv');
 let mongoClient;
 dotenv.config();
 
+let db_uri = process.env.DB_URI || 'mongodb://127.0.0.1:27017';
+let db_name = process.env.DB_NAME || 'congol';
+
 module.exports = {
   async connectDB() {
     let options = {
@@ -26,7 +29,7 @@ module.exports = {
       options.authSource = process.env.DB_AUTH_SOURCE;
     }
 
-    return MongoClient.connect(process.env.DB_URI, options)
+    return MongoClient.connect(db_uri, options)
       .then((client) => {
         mongoClient = client;
       })
@@ -37,6 +40,6 @@ module.exports = {
   },
   mongoDB() {
     if (!mongoClient) throw new Error("Could not connect to the database");
-    return mongoClient.db(process.env.DB_NAME);
+    return mongoClient.db(db_name);
   },
 };
