@@ -6,7 +6,7 @@ Thanks for your interest in contributing to Congol. In this document you will le
 * [Project Structure](#structure)
 
 ## Setup
-1. Install nodejs and mongodb. Guide on install nodejs [here](https://nodejs.dev/learn/how-to-install-nodejs). Guide on how to install mongodb [here](https://docs.mongodb.com/manual/administration/install-community/)
+1. Install nodejs and mongodb. Guide on how to install nodejs [here](https://nodejs.dev/learn/how-to-install-nodejs). Guide on how to install mongodb [here](https://docs.mongodb.com/manual/administration/install-community/)
 2. Clone the repository
 ```
 git clone https://github.com/lukew3/congol.git
