@@ -35,7 +35,6 @@ const handleGameRequest = async (io, socket, reqRoomId) => {
   }
   // Send game when the user connects
   sendGame(socket, roomId); // Could add playerId to this data so that playerId wouldn't be sent separate
-  console.log("returning: " + roomId)
   return [roomId, playerId];
 }
 
@@ -47,10 +46,7 @@ const sendGame = async (socket, roomId) => {
 
 // Send last move to all users in room
 const broadcastMove = async (io, roomId, move) => {
-  console.log('broadcasting?')
-  console.log(roomId);
   io.sockets.in(`game-${roomId}`).emit('broadcastMove', move);
-  console.log('broadcasted?')
 };
 
 // Receive move from player
