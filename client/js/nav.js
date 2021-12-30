@@ -14,3 +14,13 @@ document.getElementById('navPlay').addEventListener('click', (e) => {
   e.preventDefault();
   Router.setPath('');
 });
+
+document.getElementById('navSignup').addEventListener('click', (e) => {
+  e.preventDefault();
+  Router.setPath('signup');
+});
+
+document.getElementById('navLogin').addEventListener('click', (e) => {
+  e.preventDefault();
+  Router.setPath('login');
+});

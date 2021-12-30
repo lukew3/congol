@@ -1,12 +1,7 @@
-#newGameCont {
-        margin-top: 30px;
-        max-width: 430px;
+#newGameCont h1, .newGameButtons {
+        margin-bottom: 30px;
 }
 
-#newGameCont h1, .newGameButtons {  
-        margin-bottom: 30px;  
-}
- 
 .newGameButtons {
         display: flex;
 }
@@ -21,4 +16,3 @@
         width: 50px;
         background-color: #5CB85C;
 }
-

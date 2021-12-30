@@ -36,6 +36,8 @@ const signUp = async (reqBody) => {
 
 const login = async (reqBody) => {
   let user = await mongoDB().collection('users').findOne({ username: reqBody.username});
+  if (!user)
+    return {error: 'User with that email/username not found'};
   const match = await bcrypt.compare(reqBody.password, user.password);
   if (match) {
     return signJWT(reqBody.username);

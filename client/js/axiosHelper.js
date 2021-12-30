@@ -1,7 +1,7 @@
-import axios from 'axios';
+const axios = require('axios');
 
 const axiosApiInstance = axios.create();
-
+/*
 // Request interceptor for API calls
 axiosApiInstance.interceptors.request.use(
   async config => {
@@ -46,7 +46,7 @@ axiosApiInstance.interceptors.response.use((response) => {
   }
   return Promise.reject(error);
 });
-
+*/
 module.exports = {
   axiosApiInstance
 };
