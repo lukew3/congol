@@ -1,11 +1,11 @@
 const axios = require('axios');
 
 const axiosApiInstance = axios.create();
-/*
+
 // Request interceptor for API calls
 axiosApiInstance.interceptors.request.use(
   async config => {
-    const access_token = window.localstorage.getItem('access_token') ? window.localstorage.getItem('access_token') : null;
+    const access_token = window.localStorage.getItem('access_token');
     if (access_token) {
       config.headers = {
         'Authorization': `Bearer ${access_token}`,
@@ -32,11 +32,11 @@ axiosApiInstance.interceptors.response.use((response) => {
   if (error.response.status === 401 && !originalRequest._retry) {
     originalRequest._retry = true;
     //console.log("Refreshing access token");
-    const refresh_token = window.localstorage.getItem('refresh_token') ? window.localstorage.getItem('refresh_token') : null;
+    const refresh_token = window.localStorage.getItem('refresh_token');
     await axios.post(`/api/refresh`, {},
           { headers: { Authorization: `Bearer ${refresh_token}` }}
         ).then(response => {
-          window.localstorage.setItem('access_token', response.data.access_token);
+          window.localStorage.setItem('access_token', response.data.access_token);
           axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.access_token;
         }).catch(error => {
           console.log(error);
@@ -46,7 +46,7 @@ axiosApiInstance.interceptors.response.use((response) => {
   }
   return Promise.reject(error);
 });
-*/
+
 module.exports = {
   axiosApiInstance
 };
