@@ -7,7 +7,8 @@ document.getElementById('signupSubmitButton').addEventListener('click', (e) => {
     username: document.getElementById('signupUsername').value,
     password: document.getElementById('signupPassword').value
   }).then((response) => {
-    window.localStorage.setItem('access_token', response.data);
+    window.localStorage.setItem('access_token', response.data.accessToken);
+    window.localStorage.setItem('refresh_token', response.data.refreshToken);
     Router.setPath('');
   });
 });
@@ -17,7 +18,8 @@ document.getElementById('loginSubmitButton').addEventListener('click', (e) => {
     emailUsername: document.getElementById('loginEmailUsername').value,
     password: document.getElementById('loginPassword').value
   }).then((response) => {
-    window.localStorage.setItem('access_token', response.data);
+    window.localStorage.setItem('access_token', response.data.accessToken);
+    window.localStorage.setItem('refresh_token', response.data.refreshToken);
     Router.setPath('');
   });
 });

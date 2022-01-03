@@ -4,9 +4,18 @@ const { mongoDB } = require("./mongodb");
 
 const saltRounds = 10;
 
-const signJWT = (username) => {
-  return jwt.sign({username: username}, process.env.TOKEN_SECRET, { expiresIn: '1800s' }); // expires in 30 minutes
+const signJWT = (username, expiration) => {
+  return jwt.sign({username: username}, process.env.TOKEN_SECRET, { expiresIn: expiration }); // expires in 30 minutes
 }
+
+const createAccessToken = (username) => {
+  return signJWT(username, '1800s');
+}
+
+const createRefreshToken = (username) => {
+  return signJWT(username, '90d');
+}
+
 
 const signUp = async (reqBody) => {
   if (reqBody.password === undefined || reqBody.username === undefined || reqBody.email === undefined) {
@@ -30,7 +39,10 @@ const signUp = async (reqBody) => {
       username: reqBody.username,
       password: pwdHash
     });
-    return signJWT(reqBody.username);
+    return {
+      accessToken: createAccessToken(reqBody.username),
+      refreshToken: createRefreshToken(reqBody.username)
+    };
   }
 }
 
@@ -42,10 +54,17 @@ const login = async (reqBody) => {
   }
   const match = await bcrypt.compare(reqBody.password, user.password);
   if (match) {
-    return signJWT(reqBody.username);
+    return {
+      accessToken: createAccessToken(reqBody.username),
+      refreshToken: createRefreshToken(reqBody.username)
+    };
   } else {
     return {error: 'Password incorrect'};
   }
+}
+
+const refresh = async (reqBody) => {
+  
 }
 
 const getUser = (username) => { // Include cookies or token in parameters?
