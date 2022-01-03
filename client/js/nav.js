@@ -33,11 +33,16 @@ document.getElementById('navLogout').addEventListener('click', (e) => {
   Router.setPath('');
 });
 
+document.getElementById('navAccount').addEventListener('click', (e) => {
+  e.preventDefault();
+  Router.setPath(`user/${localStorage.username}`);
+});
+
 const renderLoggedIn = () => {
   if (window.localStorage.access_token) {
     document.getElementById('navSignup').style.display = 'none';
     document.getElementById('navLogin').style.display = 'none';
-    document.getElementById('navLogout').style.display = 'block';
+    document.getElementById('navLogout').style.display = 'none';
     document.getElementById('navAccount').style.display = 'block';
     document.getElementById('navAccount').href = `/user/${window.localStorage.getItem('username')}`
   } else {
