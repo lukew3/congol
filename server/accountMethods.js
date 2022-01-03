@@ -40,6 +40,7 @@ const signUp = async (reqBody) => {
       password: pwdHash
     });
     return {
+      username: reqBody.username,
       accessToken: createAccessToken(reqBody.username),
       refreshToken: createRefreshToken(reqBody.username)
     };
@@ -55,6 +56,7 @@ const login = async (reqBody) => {
   const match = await bcrypt.compare(reqBody.password, user.password);
   if (match) {
     return {
+      username: user.username,
       accessToken: createAccessToken(reqBody.username),
       refreshToken: createRefreshToken(reqBody.username)
     };
@@ -64,7 +66,7 @@ const login = async (reqBody) => {
 }
 
 const refresh = async (reqBody) => {
-  
+
 }
 
 const getUser = (username) => { // Include cookies or token in parameters?

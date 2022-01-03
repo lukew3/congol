@@ -38,12 +38,16 @@ const renderLoggedIn = () => {
     document.getElementById('navSignup').style.display = 'none';
     document.getElementById('navLogin').style.display = 'none';
     document.getElementById('navLogout').style.display = 'block';
+    document.getElementById('navAccount').style.display = 'block';
+    document.getElementById('navAccount').href = `/user/${window.localStorage.getItem('username')}`
   } else {
     document.getElementById('navSignup').style.display = 'block';
     document.getElementById('navLogin').style.display = 'block';
     document.getElementById('navLogout').style.display = 'none';
+    document.getElementById('navAccount').style.display = 'none';
   }
 }
+
 renderLoggedIn();
 
 module.exports = {
