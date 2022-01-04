@@ -1,0 +1,63 @@
+#userCont {
+  display: grid;
+  grid-template-columns: 20% 75%;
+  grid-column-gap: 5%;
+  width: 80%;
+  margin: auto;
+  margin-top: 50px;
+}
+
+.userContainers {
+  background-color: #D8D8D8;
+  padding: 20px;
+}
+
+#userStats h2, #userGames h2 {
+  margin-bottom: 10px;
+}
+
+#userStatsGroup {
+  display: flex;
+  justify-content: space-between;
+}
+
+#userStatsValues {
+  text-align: right;
+}
+
+#userStatsLabels p, #userStatsValues p {
+  margin: 5px 0px;
+}
+
+#userGamesHead, .userGame {
+  width: 90%;
+  background-color: #c4c4c4;
+  display: grid;
+  grid-template-columns: 30% 10% 10% 10% 30% 15%;
+  padding: 8px 5%;
+  margin-bottom: 5px;
+}
+.userGame {
+  padding: 12px 5%;
+}
+
+.userGame p {
+  line-height: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.userGameView {
+  text-decoration: underline;
+  color: #2589E5;
+}
+
+.userGameResultL {
+  color: #FF3333;
+  font-weight: bold;
+}
+
+.userGameResultW {
+  color: #5AA34E;
+  font-weight: bold;
+}
