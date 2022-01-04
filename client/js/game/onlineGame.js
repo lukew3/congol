@@ -21,8 +21,10 @@ socket.on('setGame', (data) => {
     Router.setPage('err404Page');
   setUsernames(data);
 	runMoves(data.moves);
-  Data.updateGameVars({timers: data.timers});
-  Render.renderTimers();
+  if (data.timers) {
+    Data.updateGameVars({timers: data.timers});
+    Render.renderTimers();
+  }
 });
 
 const setUsernames = (uData) => {
