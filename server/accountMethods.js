@@ -37,7 +37,8 @@ const signUp = async (reqBody) => {
     await mongoDB().collection('users').insertOne({
       email: reqBody.email,
       username: reqBody.username,
-      password: pwdHash
+      password: pwdHash,
+      rating: 1000
     });
     return {
       username: reqBody.username,
@@ -69,8 +70,14 @@ const refresh = async (reqBody) => {
 
 }
 
-const getUser = (username) => { // Include cookies or token in parameters?
-
+const getUser = async (username) => { // Include cookies or token in parameters?
+  let user = await mongoDB().collection('users').findOne({ username: username });
+  let games = await mongoDB().collection('games').find({ $or: [ { p1Username: username }, { p2Username: username } ] }).toArray();
+  return {
+    username: user.username,
+    rating: user.rating,
+    games: games
+  }
 }
 
 module.exports = {
