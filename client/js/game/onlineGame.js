@@ -17,8 +17,10 @@ const pad2 = (num) => {
 };
 socket.on('setGame', (data) => {
   if (Data.getGameVars().mode !== 'gt_online') return;
-  if (!data)
+  if (!data) {
     Router.setPage('err404Page');
+    return;
+  }
   setUsernames(data);
 	runMoves(data.moves);
   if (data.timers) {

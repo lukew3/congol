@@ -7,20 +7,25 @@ const handleGameRequest = async (io, socket, reqData) => {
   if (reqData.roomId !== -1) {
     roomId = reqData.roomId;
   } else {
-    roomId = await newGameId();
+    roomId = await newGameId(reqData.username);
   }
-  socket.join(`game-${roomId}`);
-  socket.emit('setRoomId', roomId);
   let game = await mongoDB().collection('games').findOne({'shortId': roomId});
   // If game is null, tell the user that the game was not found and exit function
   if (game === null) {
     socket.emit('setGame', false);
     return;
   }
+  socket.join(`game-${roomId}`);
+  socket.emit('setRoomId', roomId);
   if (game.p1Username === 'waiting') {
     playerId = 0;
   } else if (game.p2Username === 'waiting') {
-    playerId = 1
+    playerId = 1;
+    // If trying to play a game with same account, return
+    if (game.p1Username === reqData.username && game.p1Username !== 'Anonymous') {
+      socket.emit('setGame', false);
+      return;
+    }
   } else {
     playerId = -1;
   }
@@ -35,8 +40,6 @@ const handleGameRequest = async (io, socket, reqData) => {
   }
   // Send game when the user connects
   sendGame(socket, roomId); // Could add playerId to this data so that playerId wouldn't be sent separate
-  console.log(roomId);
-  console.log(playerId);
   return [roomId, playerId];
 }
 
@@ -61,11 +64,17 @@ const receiveMove = async (io, moveData, roomId) => {
   }});
 };
 
-const newGameId = async () => {
+const newGameId = async (username) => {
   // Should take arguments like boardSize, time, and rating
   // Should get the roomsize from game object, and game object should be updated when a user joins
   //Search for open game first
-  let game = await mongoDB().collection('games').findOne({'p2Username': 'waiting'});
+  let game;
+  // If name is anonymous, don't check for a game without a user with the same name
+  if (username === 'Anonymous') {
+    game = await mongoDB().collection('games').findOne({'p2Username': 'waiting'});
+  } else {
+    game = await mongoDB().collection('games').findOne({'p2Username': 'waiting', 'p1Username': {'$ne': username}});
+  }
   // Create new game if no open game found
   if (game === null) {
     // Creating doesn't return game object
@@ -77,10 +86,8 @@ const newGameId = async () => {
       winner: undefined,
       shortId: nanoid(3)
     })
-    console.log(insertData)
     game = await mongoDB().collection('games').findOne({'_id': insertData.insertedId});
   };
-  console.log(game);
   return game.shortId;
 };
 
