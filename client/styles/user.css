@@ -74,4 +74,9 @@
   .userContainers {
     margin-bottom: 15px;
   }
+  #userGamesHead, .userGame {
+    width: calc(100% - 20px);
+    padding: 12px 10px;
+    grid-template-columns: 31% 11% 11% 11% 30% 15%;
+  }
 }
