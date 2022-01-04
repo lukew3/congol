@@ -39,7 +39,9 @@ socket.on('setPlayerId', (playerId) => {
 });
 
 socket.on('setRoomId', (roomId) => {
-	Router.setPath(`game/${roomId}`);
+  let newPath = `game/${roomId}`
+  if (window.location.pathname !== '/' + newPath)
+	 Router.setPath(newPath);
 });
 
 socket.on('broadcastMove', (move) => {
