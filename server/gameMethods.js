@@ -2,10 +2,10 @@ const { nanoid } = require('nanoid');
 const { connectDB, mongoDB } = require("./mongodb");
 
 
-const handleGameRequest = async (io, socket, reqRoomId) => {
+const handleGameRequest = async (io, socket, reqData) => {
   let roomId, playerId;
-  if (reqRoomId !== -1) {
-    roomId = reqRoomId;
+  if (reqData.roomId !== -1) {
+    roomId = reqData.roomId;
   } else {
     roomId = await newGameId();
   }
@@ -28,13 +28,15 @@ const handleGameRequest = async (io, socket, reqRoomId) => {
   socket.emit('setPlayerId', playerId);
   // Set player username
   if (playerId !== -1)
-    await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$set': {[`p${playerId+1}Username`]: 'Anonymous'}});
+    await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$set': {[`p${playerId+1}Username`]: reqData.username}});
     //games[roomId][`p${playerId+1}Username`] = 'Anonymous';
   if (playerId === 1) {
     startGame(io, roomId);
   }
   // Send game when the user connects
   sendGame(socket, roomId); // Could add playerId to this data so that playerId wouldn't be sent separate
+  console.log(roomId);
+  console.log(playerId);
   return [roomId, playerId];
 }
 
@@ -75,8 +77,10 @@ const newGameId = async () => {
       winner: undefined,
       shortId: nanoid(3)
     })
+    console.log(insertData)
     game = await mongoDB().collection('games').findOne({'_id': insertData.insertedId});
   };
+  console.log(game);
   return game.shortId;
 };
 
@@ -90,10 +94,12 @@ const startGame = async (io, roomId) => {
   io.sockets.in(`game-${roomId}`).emit('gameStart', gameData);
 };
 
-const endGame = async (roomId, winner) => {
+const endGame = async (roomId, endData) => {
   await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$set': {
     'inProgress': false,
-    'winner': winner
+    'winner': endData.winner,
+    'scores': endData.scores,
+    'timers': endData.timers
   }});
 }
 

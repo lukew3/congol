@@ -112,7 +112,7 @@ const updateTimer = () => {
     let gv = Data.getGameVars();
     let s = --gv.timers[activePlayer];
     Data.updateGameVars(gv);
-    Render.domObjs.timers[activePlayer].innerHTML = `${Math.floor(s/60)}:${pad2(s%60)}`;
+    Render.renderTimers();
     checkTimerEnd();
     if (Data.getGameVars().inProgress)
       updateTimer();
@@ -120,9 +120,6 @@ const updateTimer = () => {
 };
 const stopTimers = () => {
   clearTimeout(Data.getGameVars().timerTimeout);
-};
-const pad2 = (num) => {
-  return (num < 10 ? '0' : '') + num;
 };
 const checkTimerEnd = () => {
   Data.getGameVars().timers.forEach((s, i) => {

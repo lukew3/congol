@@ -12,12 +12,19 @@ socket.on('gameStart', (data) => {
   GameCore.updateTimer();
 })
 
+const pad2 = (num) => {
+  return (num < 10 ? '0' : '') + num;
+};
 socket.on('setGame', (data) => {
   if (Data.getGameVars().mode !== 'gt_online') return;
   if (!data)
     Router.setPage('err404Page');
   setUsernames(data);
 	runMoves(data.moves);
+  if (data.timers) {
+    Data.updateGameVars({timers: data.timers});
+    Render.renderTimers();
+  }
 });
 
 const setUsernames = (uData) => {
@@ -44,7 +51,10 @@ const requestGame = (roomId=undefined) => {
 	 roomId = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
 	if (roomId === '' || roomId === 'game')
 		roomId = -1
-	socket.emit('gameRequest', roomId);
+	socket.emit('gameRequest', {
+    roomId,
+    username: localStorage.username || 'Anonymous'
+  });
 };
 
 const sendMove = () => {
@@ -64,7 +74,11 @@ const runMove = (move) => {
 	}
 	GameCore.runRound();
   if (!Data.getGameVars().inProgress && Data.getGameVars().playerId !== -1)
-    socket.emit('endGame', Data.getGameVars().winner);
+    socket.emit('endGame', {
+      winner: Data.getGameVars().winner,
+      timers: Data.getGameVars().timers,
+      scores: Data.getGameVars().scores
+    });
 };
 
 const runMoves = (moves) => {
@@ -78,5 +92,5 @@ const runMoves = (moves) => {
 
 module.exports = {
   requestGame,
-  sendMove
+  sendMove,
 }

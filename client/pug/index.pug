@@ -2,16 +2,15 @@ doctype html
 html
   include head.pug
   body
-    nav
-      a#navTitle(href='/rules') Congol
-      div#navRight
-        a#navPlay(href='/rules') Play
-        a#navRules(href='/rules') Rules
+    include nav.pug
 
     include pages/game.pug
     include pages/rules.pug
     include pages/newGame.pug
     include pages/err404.pug
+    include pages/signup.pug
+    include pages/login.pug
+    include pages/user.pug
 
     footer
       a(href='https://github.com/lukew3/congol') Github

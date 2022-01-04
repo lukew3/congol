@@ -16,7 +16,7 @@ git clone https://github.com/lukew3/congol.git
 npm ci
 ```
 inside the congol folder/directory.
-4. (optional) Inside the server folder, copy `example.env` to `.env`. You can modify the values in the `.env` file to configure your environment, such as changing the port that the site is hosted on or choosing a different mongodb uri.
+4. (optional) Inside the server folder, copy `example.env` to `.env`. You can modify the values in the `.env` file to configure your environment, such as changing the port that the site is hosted on or choosing a different mongodb uri. If you want a different `TOKEN_SECRET` you can generate it by running node and then running `require('crypto').randomBytes(64).toString('hex')` inside of node. Copy the string generated without quotations to your .env.
 5. Run the application by running
 ```
 npm run start
