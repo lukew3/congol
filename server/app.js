@@ -32,9 +32,9 @@ io.on('connection', async (socket) => {
   socket.on('playerMove', (moveData) => {
     GameMethods.receiveMove(io, moveData, roomId);
   });
-  socket.on('endGame', async (winner) => {
+  socket.on('endGame', async (endData) => {
     // Should winner be set to the username of the winner instead of the playerId?
-    GameMethods.endGame(roomId, winner);
+    GameMethods.endGame(roomId, endData);
   });
   socket.on('disconnect', async () => {
     GameMethods.disconnect(roomId);

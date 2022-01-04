@@ -1,4 +1,5 @@
 const Router = require('./router.js');
+const User = require('./user.js');
 
 document.getElementById('navTitle').addEventListener('click', (e) => {
   e.preventDefault();
@@ -35,6 +36,7 @@ document.getElementById('navLogout').addEventListener('click', (e) => {
 
 document.getElementById('navAccount').addEventListener('click', (e) => {
   e.preventDefault();
+  User.loadUser(localStorage.username);
   Router.setPath(`user/${localStorage.username}`);
 });
 
