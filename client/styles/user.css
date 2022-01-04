@@ -41,15 +41,10 @@
   padding: 12px 5%;
 }
 
-.userGame p {
+.userGame p, .userGame a {
   line-height: 1rem;
   display: flex;
   align-items: center;
-}
-
-.userGameView {
-  text-decoration: underline;
-  color: #2589E5;
 }
 
 .userGameResultL {
