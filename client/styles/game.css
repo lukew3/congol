@@ -115,12 +115,6 @@ input + label #switchHandle {
         display: none;
 }
 
-#roundGroup {
-        display: flex;
-        position: absolute;
-        margin-left: 50%;
-        transform: translate(-50%, 0);
-}
 .piecesAvail {
         display: flex;
 }
@@ -130,4 +124,25 @@ input + label #switchHandle {
         width: 100%;
         font-size: 14pt;
         text-align: center;
+}
+
+#roundControl {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+#roundControl div {
+  margin: 3px;
+  padding: 8px 10px;
+}
+.roundButton {
+  background-color: #c4c4c4;
+}
+#roundGroup {
+        display: flex;
+        /*
+        position: absolute;
+        margin-left: 50%;
+        transform: translate(-50%, 0);
+        */
 }

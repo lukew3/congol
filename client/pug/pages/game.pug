@@ -1,12 +1,19 @@
 div#gamePage.page
   div#gameContainer
+    div#roundControl
+      div#roundMinusMax.roundButton.clickable -max
+      div#roundMinusOne.roundButton.clickable -1
+      div#roundMinusHalf.roundButton.clickable -.5
+      div#roundGroup
+        p Round:
+        p#roundCounter 0
+      div#roundPlusHalf.roundButton.clickable +.5
+      div#roundPlusOne.roundButton.clickable +1
+      div#roundPlusMax.roundButton.clickable +max
     div#gameBoard
     div#underBoard
       div#underBoardUpper
         div#p1PiecesAvail.piecesAvail
-        div#roundGroup
-          p Round:
-          p#roundCounter 0
         div#p2PiecesAvail.piecesAvail
       div#underBoardLower
         div.playerGroup
