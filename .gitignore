@@ -3,3 +3,4 @@ node_modules
 build-dev
 .env
 planning.md
+client/js/output.svg
