@@ -1,4 +1,4 @@
-const pagesArr = [].concat(...(document.getElementsByClassName('page')));
+const pagesArr = Array.from(document.getElementsByClassName('page'));
 
 const setPage = (pageId) => {
 	pagesArr.forEach((pageDiv) => {

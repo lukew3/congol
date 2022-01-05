@@ -1,4 +1,7 @@
 const { axiosApiInstance } = require('./axiosHelper.js');
+const GameCore = require('./game/gameCore.js');
+const Data = require('./game/data.js');
+const OnlineGame = require('./game/onlineGame.js');
 
 let loadedUser = {}
 let userGamesList = $('userGamesList');
@@ -15,6 +18,17 @@ const loadUser = async (username=undefined) => {
   loadedUser.games.forEach((game) => {
     addGame(game, username);
   })
+  // listen for click on view buttons
+  let viewBtns = document.getElementsByClassName('userGameView');
+  Array.from(viewBtns).forEach((element) => {
+    element.addEventListener('click', () => {
+      event.preventDefault();
+      GameCore.setGameMode('gt_online');
+      Data.updateRules({"boardSize": 15, "speciesCount": 2});
+    	GameCore.resetBoard();
+    	OnlineGame.requestGame(element.href.substring(element.href.lastIndexOf('/') + 1));
+    });
+  });
 }
 
 const addGame = (game, username) => {
@@ -43,6 +57,7 @@ const addGame = (game, username) => {
 if (window.location.pathname.substring(0, 6) === '/user/') {
   loadUser();
 }
+
 
 module.exports = {
   loadUser
