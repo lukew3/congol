@@ -17,7 +17,7 @@ document.addEventListener('click', (e) => {
   };
 });
 
-document.getElementById('submitMoveButton').addEventListener('click', (e) => {
+$('submitMoveButton').addEventListener('click', (e) => {
   if (Data.getGameVars().mode === 'gt_online') {
     if (Data.getGameVars().playerId !== ((Render.domObjs.playerSwitch.checked) ? 1 : 0)) {
       return;
@@ -29,32 +29,32 @@ document.getElementById('submitMoveButton').addEventListener('click', (e) => {
   }
 });
 
-document.getElementById('newGame2pButton').addEventListener('click', (e) => {
+$('newGame2pButton').addEventListener('click', (e) => {
   GameCore.resetBoard();
   if (Data.getGameVars().mode === 'gt_online') {
     OnlineGame.requestGame(-1);
   }
-	document.getElementById('submitMoveButton').style.display = 'block';
-	document.getElementById('newGame2pButton').style.display = 'none';
-	document.getElementById('winnerMessage').style.display = 'none';
+	$('submitMoveButton').style.display = 'block';
+	$('newGame2pButton').style.display = 'none';
+	$('winnerMessage').style.display = 'none';
 });
 
-document.getElementById('resetGameButton').addEventListener('click', (e) => {
+$('resetGameButton').addEventListener('click', (e) => {
 	GameCore.resetBoard();
 });
 
 // 2pPlayground Buttons
-document.getElementById('startStopButton').addEventListener('click', (e) => {
+$('startStopButton').addEventListener('click', (e) => {
   if (Data.getGameVars().running) {
     GameCore.stopGame();
-    document.getElementById('startStopButton').innerHTML = "Start";
+    $('startStopButton').innerHTML = "Start";
   } else {
     GameCore.runGame();
-    document.getElementById('startStopButton').innerHTML = "Stop";
+    $('startStopButton').innerHTML = "Stop";
   }
 });
 
-document.getElementById('nextButton').addEventListener('click', (e) => {
+$('nextButton').addEventListener('click', (e) => {
   GameCore.runRound();
 });
 

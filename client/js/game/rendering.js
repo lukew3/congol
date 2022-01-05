@@ -1,21 +1,21 @@
 const Data = require('./data.js');
 
 let domObjs = {
-  "gameContainer": document.getElementById("gameContainer"),
-  "boardObj": document.getElementById('gameBoard'),
-  "roundCtr": document.getElementById('roundCounter'),
+  "gameContainer": $("gameContainer"),
+  "boardObj": $('gameBoard'),
+  "roundCtr": $('roundCounter'),
   "scoreObjs": [
-      document.getElementById('p1Score'),
-      document.getElementById('p2Score')
+      $('p1Score'),
+      $('p2Score')
   ],
   "piecesObjs": [
-      document.getElementById('p1PiecesAvail'),
-      document.getElementById('p2PiecesAvail')
+      $('p1PiecesAvail'),
+      $('p2PiecesAvail')
   ],
-  "playerSwitch": document.getElementById("switch"),
+  "playerSwitch": $("switch"),
   "timers": [
-      document.getElementById('p1Timer'),
-      document.getElementById('p2Timer')
+      $('p1Timer'),
+      $('p2Timer')
   ]
 };
 
@@ -47,7 +47,7 @@ const renderBoard = () => {
   let cell, cellObj;
   data.forEach((row, y) => {
     row.forEach((cell, x) => {
-      cellObj = document.getElementById(`cell-${y*boardSize+x}`);
+      cellObj = $(`cell-${y*boardSize+x}`);
       cellObj.style.backgroundColor = colors[cell];
     });
   });

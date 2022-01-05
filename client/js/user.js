@@ -1,16 +1,16 @@
 const { axiosApiInstance } = require('./axiosHelper.js');
 
 let loadedUser = {}
-let userGamesList = document.getElementById('userGamesList');
+let userGamesList = $('userGamesList');
 
 const loadUser = async (username=undefined) => {
   if (loadedUser.username && loadedUser.username === loadedUser) return;
   if (username === undefined)
     username = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
   loadedUser = (await axiosApiInstance.get(`/api/user/${username}`)).data;
-  document.getElementById('userUsername').innerHTML = loadedUser.username;
-  document.getElementById('uStatRating').innerHTML = loadedUser.rating;
-  document.getElementById('uStatGames').innerHTML = loadedUser.games.length;
+  $('userUsername').innerHTML = loadedUser.username;
+  $('uStatRating').innerHTML = loadedUser.rating;
+  $('uStatGames').innerHTML = loadedUser.games.length;
   userGamesList.innerHTML = '';
   loadedUser.games.forEach((game) => {
     addGame(game, username);

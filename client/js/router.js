@@ -1,17 +1,17 @@
-const defaultPage = document.getElementById('gamePage');
-const rulesPage = document.getElementById('rulesPage');
-const newGamePage = document.getElementById('newGamePage');
-const err404Page = document.getElementById('err404Page');
-const signupPage = document.getElementById('signupPage');
-const loginPage = document.getElementById('loginPage');
-const userPage = document.getElementById('userPage');
+const defaultPage = $('gamePage');
+const rulesPage = $('rulesPage');
+const newGamePage = $('newGamePage');
+const err404Page = $('err404Page');
+const signupPage = $('signupPage');
+const loginPage = $('loginPage');
+const userPage = $('userPage');
 
 
 const setPage = (pageId) => {
 	[defaultPage, rulesPage, newGamePage, err404Page, signupPage, loginPage, userPage].forEach((pageDiv) => {
 		pageDiv.style = 'display: none;';
 	});
-	document.getElementById(pageId).style = 'display: block;';
+	$(pageId).style = 'display: block;';
 };
 
 const setPath = (path) => {
@@ -43,7 +43,7 @@ window.addEventListener('popstate', (e) => {
 	handlePath();
 });
 
-document.getElementById('err404Button').addEventListener('click', (e) => { setPath(''); });
+$('err404Button').addEventListener('click', (e) => { setPath(''); });
 
 handlePath();
 

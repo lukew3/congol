@@ -160,13 +160,13 @@ const toggleCell = (cellNum, playerId) => {
   if (gv.data[cy][cellNum % Data.getRules().boardSize] == 0 && gv.piecesAvail[playerId - 1] != 0) {
     // fill empty square
     gv.data[cy][cellNum % Data.getRules().boardSize] = playerId;
-    document.getElementById(`cell-${cellNum}`).style.backgroundColor = Data.getRules().colors[playerId];
+    $(`cell-${cellNum}`).style.backgroundColor = Data.getRules().colors[playerId];
     gv.piecesAvail[playerId - 1]--;
     gv.roundToggledCells.push(cellNum);
   } else if (Data.getGameVars().data[cy][cellNum % Data.getRules().boardSize] == playerId && Data.getGameVars().roundToggledCells.includes(cellNum)) {
     // empty filled square
     gv.data[cy][cellNum % Data.getRules().boardSize] = 0;
-    document.getElementById(`cell-${cellNum}`).style.backgroundColor = Data.getRules().colors[0];
+    $(`cell-${cellNum}`).style.backgroundColor = Data.getRules().colors[0];
     gv.piecesAvail[playerId - 1]++;
     // remove num from roundToggledCells, not sure if this is the best way to do this
     gv.roundToggledCells = Data.getGameVars().roundToggledCells.filter((val) => {
@@ -179,12 +179,12 @@ const toggleCell = (cellNum, playerId) => {
 const endGame = (winner) => {
   Data.updateGameVars({'inProgress': false, 'winner': winner})
   stopTimers();
-  // Should not use document.getElementById
-  document.getElementById('winnerMessage').style.display = 'block';
+  // Should not use $
+  $('winnerMessage').style.display = 'block';
   // Set this to the actual winner of the game
-  document.getElementById('winnerMessage').innerHTML = `Player ${winner+1} wins!`;
-  document.getElementById('submitMoveButton').style.display = 'none';
-  document.getElementById('newGame2pButton').style.display = 'block';
+  $('winnerMessage').innerHTML = `Player ${winner+1} wins!`;
+  $('submitMoveButton').style.display = 'none';
+  $('newGame2pButton').style.display = 'block';
 };
 const setGameMode = (mode) => {
 	Data.updateGameVars({ mode });
@@ -196,22 +196,22 @@ const setGameMode = (mode) => {
       break;
   	case 'gt_local':
 			// Remove player groups
-			document.getElementById('underBoardLower').style.display = "flex";
-			document.getElementById('p2PiecesAvail').style.display = "flex";
-			document.getElementById('p1PiecesAvail').style.display = "flex";
+			$('underBoardLower').style.display = "flex";
+			$('p2PiecesAvail').style.display = "flex";
+			$('p1PiecesAvail').style.display = "flex";
 			// Switch buttons sets
-			document.getElementById('local2pButtons').style.display = 'flex';
-			document.getElementById('soloButtons').style.display = 'none';
+			$('local2pButtons').style.display = 'flex';
+			$('soloButtons').style.display = 'none';
 			Data.updateRules(local2pConfig);
       break;
 		case 'gt_solo':
 			// Remove player groups
-			document.getElementById('underBoardLower').style.display = "none";
-			document.getElementById('p2PiecesAvail').style.display = "none";
-			document.getElementById('p1PiecesAvail').style.display = "none";
+			$('underBoardLower').style.display = "none";
+			$('p2PiecesAvail').style.display = "none";
+			$('p1PiecesAvail').style.display = "none";
 			// Switch buttons sets
-			document.getElementById('local2pButtons').style.display = 'none';
-			document.getElementById('soloButtons').style.display = 'flex';
+			$('local2pButtons').style.display = 'none';
+			$('soloButtons').style.display = 'flex';
 			// Set player to player 1
 			Render.domObjs.playerSwitch.checked = false;
 			// Later: Remove timer

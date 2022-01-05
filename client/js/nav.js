@@ -1,32 +1,32 @@
 const Router = require('./router.js');
 const User = require('./user.js');
 
-document.getElementById('navTitle').addEventListener('click', (e) => {
+$('navTitle').addEventListener('click', (e) => {
   e.preventDefault();
   Router.setPath('');
 });
 
-document.getElementById('navRules').addEventListener('click', (e) => {
+$('navRules').addEventListener('click', (e) => {
   e.preventDefault();
   Router.setPath('rules');
 });
 
-document.getElementById('navPlay').addEventListener('click', (e) => {
+$('navPlay').addEventListener('click', (e) => {
   e.preventDefault();
   Router.setPath('');
 });
 
-document.getElementById('navSignup').addEventListener('click', (e) => {
+$('navSignup').addEventListener('click', (e) => {
   e.preventDefault();
   Router.setPath('signup');
 });
 
-document.getElementById('navLogin').addEventListener('click', (e) => {
+$('navLogin').addEventListener('click', (e) => {
   e.preventDefault();
   Router.setPath('login');
 });
 
-document.getElementById('navLogout').addEventListener('click', (e) => {
+$('navLogout').addEventListener('click', (e) => {
   e.preventDefault();
   window.localStorage.removeItem('access_token');
   window.localStorage.removeItem('refresh_token');
@@ -34,7 +34,7 @@ document.getElementById('navLogout').addEventListener('click', (e) => {
   Router.setPath('');
 });
 
-document.getElementById('navAccount').addEventListener('click', (e) => {
+$('navAccount').addEventListener('click', (e) => {
   e.preventDefault();
   User.loadUser(localStorage.username);
   Router.setPath(`user/${localStorage.username}`);
@@ -42,16 +42,16 @@ document.getElementById('navAccount').addEventListener('click', (e) => {
 
 const renderLoggedIn = () => {
   if (window.localStorage.access_token) {
-    document.getElementById('navSignup').style.display = 'none';
-    document.getElementById('navLogin').style.display = 'none';
-    document.getElementById('navLogout').style.display = 'none';
-    document.getElementById('navAccount').style.display = 'block';
-    document.getElementById('navAccount').href = `/user/${window.localStorage.getItem('username')}`
+    $('navSignup').style.display = 'none';
+    $('navLogin').style.display = 'none';
+    $('navLogout').style.display = 'none';
+    $('navAccount').style.display = 'block';
+    $('navAccount').href = `/user/${window.localStorage.getItem('username')}`
   } else {
-    document.getElementById('navSignup').style.display = 'block';
-    document.getElementById('navLogin').style.display = 'block';
-    document.getElementById('navLogout').style.display = 'none';
-    document.getElementById('navAccount').style.display = 'none';
+    $('navSignup').style.display = 'block';
+    $('navLogin').style.display = 'block';
+    $('navLogout').style.display = 'none';
+    $('navAccount').style.display = 'none';
   }
 }
 

@@ -30,10 +30,10 @@ socket.on('setGame', (data) => {
 });
 
 const setUsernames = (uData) => {
-  document.getElementById(`p1Username`).innerHTML = uData.p1Username;
-	document.getElementById(`p2Username`).innerHTML = uData.p2Username;
+  $(`p1Username`).innerHTML = uData.p1Username;
+	$(`p2Username`).innerHTML = uData.p2Username;
 	if (Data.getGameVars().playerId !== -1)
-		document.getElementById(`p${Data.getGameVars().playerId+1}Username`).innerHTML = "Me";
+		$(`p${Data.getGameVars().playerId+1}Username`).innerHTML = "Me";
 }
 
 socket.on('setPlayerId', (playerId) => {
