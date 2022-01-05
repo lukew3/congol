@@ -1,14 +1,7 @@
-const defaultPage = $('gamePage');
-const rulesPage = $('rulesPage');
-const newGamePage = $('newGamePage');
-const err404Page = $('err404Page');
-const signupPage = $('signupPage');
-const loginPage = $('loginPage');
-const userPage = $('userPage');
-
+const pagesArr = [].concat(...(document.getElementsByClassName('page')));
 
 const setPage = (pageId) => {
-	[defaultPage, rulesPage, newGamePage, err404Page, signupPage, loginPage, userPage].forEach((pageDiv) => {
+	pagesArr.forEach((pageDiv) => {
 		pageDiv.style = 'display: none;';
 	});
 	$(pageId).style = 'display: block;';
