@@ -34,12 +34,9 @@ nav {
 #navSignup {
 	padding: 10px;
 	margin: 10px 3px;
-	background-color: #0275d8;
-	color: #f4f4f4;
-	border-radius: 2px;
-}
-#navSignup:hover {
-	background-color: #025aa5;
+	background-color: #39a5b7;
+	color: #282828;
+	border-radius: 3px;
 }
 footer {
 	padding: 20px;
