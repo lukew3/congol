@@ -59,8 +59,7 @@ const renderScores = () => {
   domObjs.scoreObjs[1].innerHTML = scores[1];
 };
 
-const renderRound = () => {
-  let round = Data.getGameVars().round;
+const renderRound = (round=Data.getGameVars().round) => {
   domObjs.roundCtr.innerHTML = round;
 };
 

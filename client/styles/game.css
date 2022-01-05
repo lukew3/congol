@@ -140,6 +140,8 @@ input + label #switchHandle {
 }
 #roundGroup {
         display: flex;
+        width: 70px;
+        justify-content: center;
         /*
         position: absolute;
         margin-left: 50%;

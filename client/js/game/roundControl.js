@@ -1,5 +1,6 @@
 const Data = require('./data.js');
 const GameCore = require('./gameCore.js');
+const Render = require('./rendering.js');
 
 Data.updateGameVars({selectedRound: 0});
 
@@ -7,7 +8,18 @@ const showRound = () => {
   let holdRound = Data.getGameVars().round;
   GameCore.resetBoard();
   let moves = Data.getGameVars().moves;
+  let selectedRound = Data.getGameVars().selectedRound;
   GameCore.runMoves(moves.slice(0, Math.floor(Data.getGameVars().selectedRound)));
+  if (selectedRound - Math.floor(selectedRound) !== 0) {
+    let nextMove = moves[Math.floor(Data.getGameVars().selectedRound)];
+    if (nextMove !== undefined) {
+      let tempProgress = Data.getGameVars().inProgress;
+      Data.updateGameVars({'inProgress': true});
+      GameCore.toggleCells(nextMove);
+      Data.updateGameVars({'inProgress': tempProgress});
+    }
+  }
+  Render.renderRound(Data.getGameVars().selectedRound);
   Data.updateGameVars({round: holdRound});
 }
 

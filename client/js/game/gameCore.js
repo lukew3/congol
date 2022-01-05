@@ -222,17 +222,21 @@ const setGameMode = (mode) => {
   }
 };
 
-const runMove = (move) => {
-	let playerId = (Render.domObjs.playerSwitch.checked) ? 2 : 1;
-	// only toggle cells if current user wasn't the one who toggled them
-	if (Data.getGameVars().playerId !== playerId-1) {
+const toggleCells = (move) => {
+  let playerId = (Render.domObjs.playerSwitch.checked) ? 2 : 1;
+  // only toggle cells if current user wasn't the one who toggled them
+  if (Data.getGameVars().playerId !== playerId-1) {
     let tempPlayerId = Data.getGameVars().playerId;
-		Data.updateGameVars({"playerId": playerId-1})
-		move.forEach((cellNum) => {
-			toggleCell(cellNum, playerId);
-		});
-		Data.updateGameVars({"playerId": tempPlayerId})
-	}
+    Data.updateGameVars({"playerId": playerId-1})
+    move.forEach((cellNum) => {
+      toggleCell(cellNum, playerId);
+    });
+    Data.updateGameVars({"playerId": tempPlayerId})
+  }
+}
+
+const runMove = (move) => {
+  toggleCells(move);
 	runRound();
   if (!Data.getGameVars().inProgress && Data.getGameVars().playerId !== -1)
     socket.emit('endGame', {
@@ -260,6 +264,7 @@ module.exports = {
   setGameMode,
   createEmptyData,
   updateTimer,
+  toggleCells,
   runMove,
   runMoves
 }
