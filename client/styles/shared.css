@@ -21,12 +21,25 @@ nav {
 	display: flex;
 	padding-right: 15px; /* Not sure why the 15 looks more even than 10 */
 }
-#navRight a {
+.navLink {
 	font-size: 16px;
 	padding: 20px 10px;
 	color: black;
 	text-decoration: none;
 	cursor: pointer;
+}
+.navLink:hover, .button:hover {
+     opacity: 0.8;
+}
+#navSignup {
+	padding: 10px;
+	margin: 10px 3px;
+	background-color: #0275d8;
+	color: #f4f4f4;
+	border-radius: 2px;
+}
+#navSignup:hover {
+	background-color: #025aa5;
 }
 footer {
 	padding: 20px;
