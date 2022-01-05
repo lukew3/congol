@@ -72,6 +72,13 @@ const refresh = async (reqBody) => {
 
 const getUser = async (username) => { // Include cookies or token in parameters?
   let user = await mongoDB().collection('users').findOne({ username: username });
+  if (!user) {
+    return {
+      username: 'User DNE',
+      rating: 'null',
+      games: []
+    };
+  }
   // get games where user is p1 or p1 and sort in reverse
   let games = await mongoDB().collection('games').find({ $or: [ { p1Username: username }, { p2Username: username } ] }).sort({$natural:-1}).toArray();
   return {
