@@ -255,6 +255,12 @@ const runMoves = (moves) => {
   Data.updateGameVars({'inProgress': tempProgress});
 };
 
+const pushMove = (move=Data.getGameVars().roundToggledCells) => {
+  moves = Data.getGameVars().moves;
+  moves.push(move);
+  Data.updateGameVars({moves, selectedRound: moves.length});
+}
+
 module.exports = {
   toggleCell,
   runRound,
@@ -266,5 +272,6 @@ module.exports = {
   updateTimer,
   toggleCells,
   runMove,
-  runMoves
+  runMoves,
+  pushMove
 }

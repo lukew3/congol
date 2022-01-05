@@ -26,12 +26,14 @@ $('submitMoveButton').addEventListener('click', (e) => {
       OnlineGame.sendMove();
     }
   } else {
+    GameCore.pushMove();
     GameCore.runRound();
   }
 });
 
 $('newGame2pButton').addEventListener('click', (e) => {
   GameCore.resetBoard();
+  Data.updateGameVars({'moves': []});
   if (Data.getGameVars().mode === 'gt_online') {
     OnlineGame.requestGame(-1);
   }
@@ -42,6 +44,7 @@ $('newGame2pButton').addEventListener('click', (e) => {
 
 $('resetGameButton').addEventListener('click', (e) => {
 	GameCore.resetBoard();
+  Data.updateGameVars({'moves': []});
 });
 
 // 2pPlayground Buttons
@@ -56,6 +59,7 @@ $('startStopButton').addEventListener('click', (e) => {
 });
 
 $('nextButton').addEventListener('click', (e) => {
+  GameCore.pushMove();
   GameCore.runRound();
 });
 

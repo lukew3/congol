@@ -48,9 +48,7 @@ socket.on('setRoomId', (roomId) => {
 });
 
 socket.on('broadcastMove', (move) => {
-  let moves = Data.getGameVars().moves;
-  moves.push(move);
-  Data.updateGameVars({moves})
+  GameCore.pushMove(move);
 	GameCore.runMove(move);
   Data.updateGameVars({selectedRound: Data.getGameVars().round})
 })
