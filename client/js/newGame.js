@@ -4,19 +4,13 @@ const Data = require('./game/data.js');
 const Render = require('./game/rendering.js');
 const Router = require('./router.js');
 
-const gtOnline = $("gt_online");
-const gtLocal = $("gt_local");
-const gtSolo = $("gt_solo");
-const bs10 = $("bs_15");
-const bs25 = $("bs_25");
-const bs50 = $("bs_40");
 
 let gtSelected = "gt_online";
 let bsSelected = "bs_15";
 
 const setNewGameSelections = () => {
-	[gtOnline, gtLocal, gtSolo, bs10, bs25, bs50].forEach((newGameButton) => {
-		newGameButton.style.border = "none";
+	Array.from(document.getElementsByClassName('ngButton')).forEach((newGameButton) => {
+		newGameButton.style.border = "1px solid transparent";
 	});
 	$(gtSelected).style.border = "1px solid black";
 	$(bsSelected).style.border = "1px solid black";
