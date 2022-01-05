@@ -22,7 +22,8 @@ socket.on('setGame', (data) => {
     return;
   }
   setUsernames(data);
-	runMoves(data.moves);
+  GameCore.runMoves(data.moves);
+  Data.updateGameVars({moves: data.moves, selectedRound: Data.getGameVars().round});
   if (data.timers) {
     Data.updateGameVars({timers: data.timers});
     Render.renderTimers();
@@ -47,7 +48,11 @@ socket.on('setRoomId', (roomId) => {
 });
 
 socket.on('broadcastMove', (move) => {
-	runMove(move);
+  let moves = Data.getGameVars().moves;
+  moves.push(move);
+  Data.updateGameVars({moves})
+	GameCore.runMove(move);
+  Data.updateGameVars({selectedRound: Data.getGameVars().round})
 })
 
 const requestGame = (roomId=undefined) => {
@@ -63,35 +68,6 @@ const requestGame = (roomId=undefined) => {
 
 const sendMove = () => {
 	socket.emit('playerMove', Data.getGameVars().roundToggledCells);
-};
-
-const runMove = (move) => {
-	let playerId = (Render.domObjs.playerSwitch.checked) ? 2 : 1;
-	// only toggle cells if current user wasn't the one who toggled them
-	if (Data.getGameVars().playerId !== playerId-1) {
-    let tempPlayerId = Data.getGameVars().playerId;
-		Data.updateGameVars({"playerId": playerId-1})
-		move.forEach((cellNum) => {
-			GameCore.toggleCell(cellNum, playerId);
-		});
-		Data.updateGameVars({"playerId": tempPlayerId})
-	}
-	GameCore.runRound();
-  if (!Data.getGameVars().inProgress && Data.getGameVars().playerId !== -1)
-    socket.emit('endGame', {
-      winner: Data.getGameVars().winner,
-      timers: Data.getGameVars().timers,
-      scores: Data.getGameVars().scores
-    });
-};
-
-const runMoves = (moves) => {
-  let tempProgress = Data.getGameVars().inProgress;
-  Data.updateGameVars({'inProgress': true});
-	moves.forEach((move) => {
-		runMove(move);
-	});
-  Data.updateGameVars({'inProgress': tempProgress});
 };
 
 module.exports = {

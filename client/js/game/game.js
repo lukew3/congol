@@ -2,6 +2,7 @@ const Data = require('./data.js');
 const Render = require('./rendering.js');
 const GameCore = require('./gameCore.js');
 const OnlineGame = require('./onlineGame.js');
+const RoundControl = require('./roundControl.js');
 
 // Event listeners
 document.addEventListener('click', (e) => {
