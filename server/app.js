@@ -29,6 +29,7 @@ io.on('connection', async (socket) => {
 
   socket.on('gameRequest', async (reqData) => {
     let retData = await GameMethods.handleGameRequest(io, socket, reqData);
+    if (!retData) return;
     roomId = retData[0];
     playerId = retData[1];
   });
