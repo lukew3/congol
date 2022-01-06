@@ -257,8 +257,6 @@ const runMove = (move) => {
 };
 
 const runMoves = (moves) => {
-  console.log('running moves')
-  console.log(moves);
   let tempProgress = Data.getGameVars().inProgress;
   Data.updateGameVars({'inProgress': true});
 	moves.forEach((move) => {
@@ -271,7 +269,6 @@ const pushMove = (move=Data.getGameVars().roundToggledCells) => {
   moves = Data.getGameVars().moves;
   moves.push(move);
   Data.updateGameVars({moves, selectedRound: moves.length});
-  console.log(Data.getGameVars().moves);
 }
 
 module.exports = {
