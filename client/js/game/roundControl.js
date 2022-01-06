@@ -6,7 +6,7 @@ Data.updateGameVars({selectedRound: 0});
 
 const showRound = () => {
   let holdRound = Data.getGameVars().round;
-  GameCore.resetBoard();
+  GameCore.clearBoard();
   let moves = Data.getGameVars().moves;
   let selectedRound = Data.getGameVars().selectedRound;
   GameCore.runMoves(moves.slice(0, Math.floor(Data.getGameVars().selectedRound)));

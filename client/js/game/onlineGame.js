@@ -49,7 +49,12 @@ socket.on('setRoomId', (roomId) => {
 
 socket.on('broadcastMove', (move) => {
   GameCore.pushMove(move);
-	GameCore.runMove(move);
+  let playerId = (Render.domObjs.playerSwitch.checked) ? 2 : 1;
+  if (Data.getGameVars().playerId === playerId-1) {
+    GameCore.runRound();
+  } else {
+    GameCore.runMove(move);
+  }
   Data.updateGameVars({selectedRound: Data.getGameVars().round})
 })
 

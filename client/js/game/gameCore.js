@@ -14,6 +14,16 @@ const createEmptyData = () => {
   }
   return myarr;
 };
+const clearBoard = () => {
+  Data.updateGameVars({
+    'data': createEmptyData(),
+    'round': 0,
+    'scores': [0,0],
+    'piecesAvail': [Data.getRules().startingPieceCount, Data.getRules().startingPieceCount]
+  });
+  Render.renderAll();
+  Render.domObjs.playerSwitch.checked = false;
+}
 const resetBoard = () => {
   stopGame();
   let inProgress = (Data.getGameVars().mode === 'gt_online') ? false : true;
@@ -149,10 +159,13 @@ const updatePieces = () => {
     gv.piecesAvail[1]++;
   Data.updateGameVars(gv);
 };
-const toggleCell = (cellNum, playerId) => {
-	if (!Data.getGameVars().inProgress ||
+const manualToggleCell = (cellNum, playerId) => {
+  if (!Data.getGameVars().inProgress ||
 	(Data.getGameVars().mode === 'gt_online' && Data.getGameVars().playerId != playerId-1))
 		return;
+  toggleCell(cellNum, playerId);
+}
+const toggleCell = (cellNum, playerId) => {
   //this.roundToggledCells = [];
   let cy = Math.floor(cellNum / Data.getRules().boardSize);
   //console.log(`${cy} ${num%this.boardSize}`);
@@ -224,15 +237,12 @@ const setGameMode = (mode) => {
 
 const toggleCells = (move) => {
   let playerId = (Render.domObjs.playerSwitch.checked) ? 2 : 1;
-  // only toggle cells if current user wasn't the one who toggled them
-  if (Data.getGameVars().playerId !== playerId-1) {
-    let tempPlayerId = Data.getGameVars().playerId;
-    Data.updateGameVars({"playerId": playerId-1})
-    move.forEach((cellNum) => {
-      toggleCell(cellNum, playerId);
-    });
-    Data.updateGameVars({"playerId": tempPlayerId})
-  }
+  let tempPlayerId = Data.getGameVars().playerId;
+  Data.updateGameVars({"playerId": playerId-1})
+  move.forEach((cellNum) => {
+    toggleCell(cellNum, playerId);
+  });
+  Data.updateGameVars({"playerId": tempPlayerId})
 }
 
 const runMove = (move) => {
@@ -247,6 +257,8 @@ const runMove = (move) => {
 };
 
 const runMoves = (moves) => {
+  console.log('running moves')
+  console.log(moves);
   let tempProgress = Data.getGameVars().inProgress;
   Data.updateGameVars({'inProgress': true});
 	moves.forEach((move) => {
@@ -259,11 +271,14 @@ const pushMove = (move=Data.getGameVars().roundToggledCells) => {
   moves = Data.getGameVars().moves;
   moves.push(move);
   Data.updateGameVars({moves, selectedRound: moves.length});
+  console.log(Data.getGameVars().moves);
 }
 
 module.exports = {
   toggleCell,
+  manualToggleCell,
   runRound,
+  clearBoard,
   resetBoard,
   stopGame,
   runGame,
