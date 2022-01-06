@@ -248,12 +248,6 @@ const toggleCells = (move) => {
 const runMove = (move) => {
   toggleCells(move);
 	runRound();
-  if (!Data.getGameVars().inProgress && Data.getGameVars().playerId !== -1)
-    socket.emit('endGame', {
-      winner: Data.getGameVars().winner,
-      timers: Data.getGameVars().timers,
-      scores: Data.getGameVars().scores
-    });
 };
 
 const runMoves = (moves) => {

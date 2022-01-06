@@ -58,6 +58,14 @@ socket.on('broadcastMove', (move) => {
     GameCore.runRound();
   } else {
     GameCore.runMove(move);
+		// only send endGame from one player
+		if (!Data.getGameVars().inProgress && Data.getGameVars().playerId !== -1) {
+	    socket.emit('endGame', {
+	      winner: Data.getGameVars().winner,
+	      timers: Data.getGameVars().timers,
+	      scores: Data.getGameVars().scores
+	  	});
+		}
   }
   Data.updateGameVars({selectedRound: Data.getGameVars().round})
 })
