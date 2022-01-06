@@ -27,8 +27,8 @@ io.on('connection', async (socket) => {
   io.sockets.emit('connectionCountUpdate', connectionsCounter);
   let roomId, playerId; // maybe should be playerRole instead of playerId
 
-  socket.on('gameRequest', async (reqRoomId) => {
-    let retData = await GameMethods.handleGameRequest(io, socket, reqRoomId);
+  socket.on('gameRequest', async (reqData) => {
+    let retData = await GameMethods.handleGameRequest(io, socket, reqData);
     roomId = retData[0];
     playerId = retData[1];
   });

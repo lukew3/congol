@@ -7,7 +7,7 @@ const handleGameRequest = async (io, socket, reqData) => {
   if (reqData.roomId !== -1) {
     roomId = reqData.roomId;
   } else {
-    roomId = await newGameId(reqData.username);
+    roomId = await newGameId(reqData.username, reqData.private);
   }
   let game = await mongoDB().collection('games').findOne({'shortId': roomId});
   // If game is null, tell the user that the game was not found and exit function
@@ -64,19 +64,30 @@ const receiveMove = async (io, moveData, roomId) => {
   }});
 };
 
-const newGameId = async (username) => {
+const newGameId = async (username, private) => {
+  console.log(private);
   // Should take arguments like boardSize, time, and rating
+  let game;
   // Should get the roomsize from game object, and game object should be updated when a user joins
   //Search for open game first
-  let game;
-  // If name is anonymous, don't check for a game without a user with the same name
-  if (username === 'Anonymous') {
-    game = await mongoDB().collection('games').findOne({'p2Username': 'waiting'});
-  } else {
-    game = await mongoDB().collection('games').findOne({'p2Username': 'waiting', 'p1Username': {'$ne': username}});
+  if (!private) {
+    // Don't need to search for a game if you are creating  private game
+    // If name is anonymous, don't check for a game without a user with the same name
+    if (username === 'Anonymous') {
+      game = await mongoDB().collection('games').findOne({
+        'p2Username': 'waiting',
+        'private': false
+      });
+    } else {
+      game = await mongoDB().collection('games').findOne({
+        'p2Username': 'waiting',
+        'p1Username': {'$ne': username},
+        'private': false
+      });
+    }
   }
   // Create new game if no open game found
-  if (game === null) {
+  if (!game) {
     // Creating doesn't return game object
     let insertData = await mongoDB().collection('games').insertOne({
       moves: [],
@@ -84,7 +95,8 @@ const newGameId = async (username) => {
       p1Username: 'waiting',
       p2Username: 'waiting',
       winner: undefined,
-      shortId: nanoid(3)
+      shortId: nanoid(3),
+      private: private
     })
     game = await mongoDB().collection('games').findOne({'_id': insertData.insertedId});
   };

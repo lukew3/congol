@@ -31,3 +31,16 @@
   text-align: right;
   margin-bottom: 3px;
 }
+
+#privateCheckboxCont {
+  display: flex;
+  width: 100%;
+  margin-bottom: 20px;
+  justify-content: right;
+}
+#privateCheckbox {
+  margin: 3px;
+}
+#privateCheckboxCont p {
+  margin: 3px;
+}
