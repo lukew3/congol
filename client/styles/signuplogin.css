@@ -1,11 +1,31 @@
+#signupCont, #loginCont {
+  margin: auto;
+  margin-top: 50px;
+  width: 340px;
+  background-color: lightgrey;
+  display: flex;
+  justify-content: center;
+  padding: 50px 0;
+  border-radius: 5px;
+}
 #signupSubmitButton {
-        margin-top: 10px;
-        width: 50px;
-        background-color: #c4c4c4;
+  margin-top: 10px;
+  width: 50px;
+  background-color: #c4c4c4;
 }
 
 #loginSubmitButton {
-        margin-top: 10px;
-        width: 50px;
-        background-color: #c4c4c4;
+  margin-top: 10px;
+  width: 50px;
+  background-color: #c4c4c4;
+}
+.authGroup {
+  margin: 10px 0;
+}
+.authInput {
+  margin: 2px 0;
+  border-radius: 3px;
+  border: 1px grey solid;
+  padding: 2px;
+  font-size: 12pt;
 }
