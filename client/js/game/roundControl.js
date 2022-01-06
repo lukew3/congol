@@ -21,6 +21,7 @@ const showRound = () => {
   }
   Render.renderRound(Data.getGameVars().selectedRound);
   Data.updateGameVars({round: holdRound});
+  greyButtons();
 }
 
 const incrementSelRound = (val) => {
@@ -36,6 +37,17 @@ const incrementSelRound = (val) => {
   }
   Data.updateGameVars({selectedRound});
   showRound();
+}
+
+const greyButtons = () => {
+  let selectedRound = Data.getGameVars().selectedRound;
+  let round = Data.getGameVars().round;
+  $('roundPlusMax').style.color = (round-selectedRound === 0) ? 'grey' : 'black';
+  $('roundPlusOne').style.color = (round-selectedRound < 1) ? 'grey' : 'black';
+  $('roundPlusHalf').style.color = (round-selectedRound < .5) ? 'grey' : 'black';
+  $('roundMinusHalf').style.color = (selectedRound < .5) ? 'grey' : 'black';
+  $('roundMinusOne').style.color = (selectedRound < 1) ? 'grey' : 'black';
+  $('roundMinusMax').style.color = (selectedRound === 0) ? 'grey' : 'black';
 }
 
 $('roundMinusMax').addEventListener('click', (e) => {
@@ -58,3 +70,5 @@ $('roundPlusMax').addEventListener('click', (e) => {
   Data.updateGameVars({selectedRound: Data.getGameVars().round});
   showRound();
 });
+
+greyButtons();
