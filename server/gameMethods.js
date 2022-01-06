@@ -65,7 +65,6 @@ const receiveMove = async (io, moveData, roomId) => {
 };
 
 const newGameId = async (username, private) => {
-  console.log(private);
   // Should take arguments like boardSize, time, and rating
   let game;
   // Should get the roomsize from game object, and game object should be updated when a user joins
