@@ -21,7 +21,10 @@ app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, '../dist')));
 
 /* Socket */
+let connectionsCounter = 0;
 io.on('connection', async (socket) => {
+  connectionsCounter++;
+  io.sockets.emit('connectionCountUpdate', connectionsCounter);
   let roomId, playerId; // maybe should be playerRole instead of playerId
 
   socket.on('gameRequest', async (reqRoomId) => {
@@ -38,6 +41,8 @@ io.on('connection', async (socket) => {
   });
   socket.on('disconnect', async () => {
     GameMethods.disconnect(roomId);
+    connectionsCounter--;
+    io.sockets.emit('connectionCountUpdate', connectionsCounter);
   });
 });
 

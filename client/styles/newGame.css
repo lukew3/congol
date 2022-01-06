@@ -1,5 +1,9 @@
-#newGameCont h1, .newGameButtons {
-        margin-bottom: 30px;
+#newGameCont h1 {
+  margin-bottom: 10px;
+}
+
+.newGameButtons {
+  margin-bottom: 30px;
 }
 
 .newGameButtons {
@@ -15,4 +19,15 @@
         margin-top: 10px;
         width: 50px;
         background-color: #5CB85C;
+}
+
+#newGameHead {
+  display: flex;
+  justify-content: space-between;
+}
+
+#usersOnline {
+  width: 100%;
+  text-align: right;
+  margin-bottom: 3px;
 }

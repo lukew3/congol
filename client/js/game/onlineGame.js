@@ -4,6 +4,10 @@ const Render = require('./rendering.js');
 const Router = require('../router.js');
 const socket = io();
 
+socket.on('connectionCountUpdate', (connectionCount) => {
+	$('usersOnline').innerHTML = `${connectionCount} users online`;
+})
+
 socket.on('gameStart', (data) => {
   if (Data.getGameVars().mode !== 'gt_online') return;
   Data.updateGameVars({'inProgress': true});

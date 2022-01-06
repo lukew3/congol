@@ -4,7 +4,6 @@ const Data = require('./game/data.js');
 const Render = require('./game/rendering.js');
 const Router = require('./router.js');
 
-
 let gtSelected = "gt_online";
 let bsSelected = "bs_15";
 
