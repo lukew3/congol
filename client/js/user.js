@@ -5,15 +5,18 @@ const OnlineGame = require('./game/onlineGame.js');
 
 let loadedUser = {}
 let userGamesList = $('userGamesList');
-
 const loadUser = async (username=undefined) => {
   if (loadedUser.username && loadedUser.username === loadedUser) return;
   if (username === undefined)
     username = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
   loadedUser = (await axiosApiInstance.get(`/api/user/${username}`)).data;
+  loadedUser.record = {
+    wins: 0,
+    losses: 0,
+    ties: 0
+  }
   $('userUsername').innerHTML = loadedUser.username;
   $('uStatRating').innerHTML = loadedUser.rating;
-  $('uStatGames').innerHTML = loadedUser.games.length;
   userGamesList.innerHTML = '';
   loadedUser.games.forEach((game) => {
     addGame(game, username);
@@ -29,12 +32,19 @@ const loadUser = async (username=undefined) => {
     	OnlineGame.requestGame(element.href.substring(element.href.lastIndexOf('/') + 1));
     });
   });
+  $('uStatGames').innerHTML = Array.from(document.getElementsByClassName('userGame')).length;
+  $('uStatRecord').innerHTML = `${loadedUser.record.wins}/${loadedUser.record.losses}/0`;
 }
 
 const addGame = (game, username) => {
   if (game.winner === null) return;
   let playerId = (game.p1Username === username) ? 0 : 1;
   let outcome = (game.scores[playerId]>game.scores[Math.abs(playerId-1)]) ? 'W' : 'L';
+  if (outcome === 'W') {
+    loadedUser.record.wins = loadedUser.record.wins + 1;
+  } else if (outcome === 'L') {
+    loadedUser.record.losses = loadedUser.record.losses + 1;
+  }
   let gameDiv = document.createElement('div');
   gameDiv.classList.add('userGame');
   gameDiv.innerHTML = `
