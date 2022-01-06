@@ -1,8 +1,8 @@
 div#signupPage.page
   div#signupCont.centeredCont
     div#authCont
-      div.authInner
-        h1 Sign Up
+      h1 Sign Up
+      form.authForm
         div.authGroup
           p Email
           input#signupEmail.authInput(type="text")
@@ -12,4 +12,4 @@ div#signupPage.page
         div.authGroup
           p Password
           input#signupPassword.authInput(type="password")
-        div#signupSubmitButton.button Submit
+        input(type='submit' value='Submit')#signupSubmitButton.button

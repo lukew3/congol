@@ -3,6 +3,7 @@ const Nav = require('./nav.js');
 const { axiosApiInstance } = require('./axiosHelper.js');
 
 $('signupSubmitButton').addEventListener('click', (e) => {
+  e.preventDefault();
   axiosApiInstance.post('/api/signup', {
     email: $('signupEmail').value,
     username: $('signupUsername').value,
@@ -20,6 +21,7 @@ $('signupSubmitButton').addEventListener('click', (e) => {
 });
 
 $('loginSubmitButton').addEventListener('click', (e) => {
+  e.preventDefault();
   axiosApiInstance.post('/api/login', {
     emailUsername: $('loginEmailUsername').value,
     password: $('loginPassword').value

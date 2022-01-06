@@ -29,3 +29,7 @@
   padding: 2px;
   font-size: 12pt;
 }
+#loginSubmitButton, #signupSubmitButton {
+  font-size: 12pt;
+  width: 90px;
+}
