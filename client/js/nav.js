@@ -34,6 +34,15 @@ $('navLogout').addEventListener('click', (e) => {
   Router.setPath('');
 });
 
+$('navAccountDropdown').style.display = 'none';
+document.addEventListener('click', (e) => {
+  if (e.target.id === 'navAccountDropdownToggle') {
+    $('navAccountDropdown').style.display = ($('navAccountDropdown').style.display==='none') ? 'block' : 'none';
+  } else if ($('navAccountDropdown').style.display === 'block') {
+    $('navAccountDropdown').style.display = 'none';
+  }
+})
+
 $('navAccount').addEventListener('click', (e) => {
   e.preventDefault();
   User.loadUser(localStorage.username);
@@ -44,16 +53,15 @@ const renderLoggedIn = () => {
   if (window.localStorage.access_token) {
     $('navSignup').style.display = 'none';
     $('navLogin').style.display = 'none';
-    $('navLogout').style.display = 'none';
-    $('navAccount').style.display = 'block';
+    $('navAccountDropdownToggle').style.display = 'block';
     $('navAccount').href = `/user/${window.localStorage.getItem('username')}`
   } else {
     $('navSignup').style.display = 'block';
     $('navLogin').style.display = 'block';
-    $('navLogout').style.display = 'none';
-    $('navAccount').style.display = 'none';
+    $('navAccountDropdownToggle').style.display = 'none';
   }
 }
+
 
 renderLoggedIn();
 

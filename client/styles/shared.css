@@ -4,6 +4,8 @@
 html {
 	background-color: #E0E0E0;
 }
+
+/* Nav */
 nav {
 	width: 100%;
 	background-color: #D2D2D2;
@@ -38,6 +40,25 @@ nav {
 	color: #282828;
 	border-radius: 3px;
 }
+#navAccountDropdown {
+	display: none;
+	position: absolute;
+	background-color: #f7f7f7;
+	width: 150px;
+	margin-top: 50px;
+	right: 25px;
+	border-radius: 3px;
+}
+.navDropdownLink {
+	padding: 8px;
+	display: block;
+	text-decoration: none;
+	color: #313131;
+}
+.navDropdownLink:hover {
+	background-color: #2667ff;
+}
+
 footer {
 	padding: 20px;
 	position: absolute;

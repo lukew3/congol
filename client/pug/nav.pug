@@ -5,5 +5,8 @@ nav
     a#navRules.navLink(href='/rules') Rules
     a#navLogin.navLink(href='/login') Login
     a#navSignup.navLink(href='/signup') Sign Up
-    a#navLogout.navLink(href='/') Logout
-    a#navAccount.navLink(href='/user') Account
+    a#navAccountDropdownToggle.navLink Account
+    #navAccountDropdown
+      a#navAccount.navDropdownLink(href='/user') View Profile
+      a#navSettings.navDropdownLink(href='/settings') Settings
+      a#navLogout.navDropdownLink(href='/') Logout
