@@ -17,6 +17,10 @@ const setNewGameSelections = () => {
 
 $('newGameStartButton').addEventListener('click', () => {
 	Router.setPath('game');
+	// ensure that old finished game display stuff is hidden
+	$('submitMoveButton').style.display = 'block';
+	$('newGame2pButton').style.display = 'none';
+	$('winnerMessage').style.display = 'none';
 	//gameObj.boardSize = Number(bsSelected.splice(3, 5));
 	GameCore.setGameMode(gtSelected);
 	Data.updateRules({"boardSize": Number(bsSelected.slice(3, 5))});
