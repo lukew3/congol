@@ -46,6 +46,7 @@ const addGame = (game, username) => {
     loadedUser.record.losses = loadedUser.record.losses + 1;
   }
   let gameDiv = document.createElement('div');
+  let date = new Date(game.startTime);
   gameDiv.classList.add('userGame');
   gameDiv.innerHTML = `
     <div class='userGamePlayers'>
@@ -58,7 +59,7 @@ const addGame = (game, username) => {
     </div>
     <p class='userGameResult${outcome}'>${outcome}</p>
     <p>${game.moves.length}</p>
-    <p>January 4, 2022</p>
+    <p>${date.toLocaleDateString()}</p>
     <a href='/game/${game.shortId}' class='userGameView'>view</a>
   `;
   userGamesList.append(gameDiv);

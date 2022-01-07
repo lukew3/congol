@@ -106,7 +106,7 @@ const startGame = async (io, roomId) => {
   // Should also set the time that the game starts at to mongo
   await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$set': {
     'inProgress': true,
-    'startTime': new Date()
+    'startTime': new Date().getTime()
   }});
   let gameData = await mongoDB().collection('games').findOne({'shortId': roomId});
   io.sockets.in(`game-${roomId}`).emit('gameStart', gameData);
