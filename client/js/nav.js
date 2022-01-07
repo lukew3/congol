@@ -26,14 +26,6 @@ $('navLogin').addEventListener('click', (e) => {
   Router.setPath('login');
 });
 
-$('navLogout').addEventListener('click', (e) => {
-  e.preventDefault();
-  window.localStorage.removeItem('access_token');
-  window.localStorage.removeItem('refresh_token');
-  renderLoggedIn();
-  Router.setPath('');
-});
-
 $('navAccountDropdown').style.display = 'none';
 document.addEventListener('click', (e) => {
   if (e.target.id === 'navAccountDropdownToggle') {
@@ -47,6 +39,19 @@ $('navAccount').addEventListener('click', (e) => {
   e.preventDefault();
   User.loadUser(localStorage.username);
   Router.setPath(`user/${localStorage.username}`);
+});
+
+$('navSettings').addEventListener('click', (e) => {
+  e.preventDefault();
+  Router.setPath('settings');
+});
+
+$('navLogout').addEventListener('click', (e) => {
+  e.preventDefault();
+  window.localStorage.removeItem('access_token');
+  window.localStorage.removeItem('refresh_token');
+  renderLoggedIn();
+  Router.setPath('');
 });
 
 const renderLoggedIn = () => {

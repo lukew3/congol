@@ -22,6 +22,8 @@ const handlePath = () => {
 		setPage('signupPage');
 	} else if (path === '/login') {
 		setPage('loginPage');
+	} else if (path === '/settings') {
+		setPage('settingsPage');
 	} else if (path.substring(0, 5) == '/game') {
 		setPage('gamePage');
 	} else if (path.substring(0, 5) == '/user') {
