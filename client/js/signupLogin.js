@@ -9,6 +9,10 @@ $('signupSubmitButton').addEventListener('click', (e) => {
     username: $('signupUsername').value,
     password: $('signupPassword').value
   }).then((response) => {
+    if (response.data.error) {
+      $('signupMessage').innerHTML = response.data.error;
+      return;
+    }
     window.localStorage.setItem('username', response.data.username);
     window.localStorage.setItem('access_token', response.data.accessToken);
     window.localStorage.setItem('refresh_token', response.data.refreshToken);
@@ -17,6 +21,7 @@ $('signupSubmitButton').addEventListener('click', (e) => {
     $('signupEmail').value = '';
     $('signupUsername').value = '';
     $('signupPassword').value = '';
+    $('signupMessage').innerHTML = '';
   });
 });
 
@@ -26,6 +31,10 @@ $('loginSubmitButton').addEventListener('click', (e) => {
     emailUsername: $('loginEmailUsername').value,
     password: $('loginPassword').value
   }).then((response) => {
+    if (response.data.error) {
+      $('loginMessage').innerHTML = response.data.error;
+      return;
+    }
     window.localStorage.setItem('username', response.data.username);
     window.localStorage.setItem('access_token', response.data.accessToken);
     window.localStorage.setItem('refresh_token', response.data.refreshToken);
@@ -33,5 +42,6 @@ $('loginSubmitButton').addEventListener('click', (e) => {
     Nav.renderLoggedIn();
     $('loginEmailUsername').value = '';
     $('loginPassword').value = '';
+    $('loginMessage').innerHTML = '';
   });
 });

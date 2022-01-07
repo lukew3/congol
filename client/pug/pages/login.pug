@@ -1,12 +1,12 @@
 div#loginPage.page
   div#loginCont.centeredCont.smallCont
-    div#authCont
-      h1 Login
-      form.authForm
-        div.authGroup
-          p Email/Username
-          input#loginEmailUsername.authInput(type="text")
-        div.authGroup
-          p Password
-          input#loginPassword.authInput(type="password")
-        input(type='submit' value='Submit')#loginSubmitButton.button
+    h1 Login
+    form.authForm
+      div.authGroup
+        p Email/Username
+        input#loginEmailUsername.authInput(type="text")
+      div.authGroup
+        p Password
+        input#loginPassword.authInput(type="password")
+      p#loginMessage.authMessage
+      input(type='submit' value='Submit')#loginSubmitButton.button

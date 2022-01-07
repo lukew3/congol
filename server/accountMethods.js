@@ -19,7 +19,7 @@ const createRefreshToken = (username) => {
 
 const signUp = async (reqBody) => {
   if (reqBody.password === undefined || reqBody.username === undefined || reqBody.email === undefined) {
-    return {error: 'Fields incomplete'}
+    return {error: 'Form incomplete'}
   }
   if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(reqBody.email)) {
     return {error: 'Email invalid'}
@@ -49,10 +49,12 @@ const signUp = async (reqBody) => {
 }
 
 const login = async (reqBody) => {
+  if (!reqBody.password || !reqBody.emailUsername)
+    return {'error': 'Form incomplete'}
   let user = await mongoDB().collection('users').findOne({ email: reqBody.emailUsername });
   if (!user) {
     user = await mongoDB().collection('users').findOne({ username: reqBody.emailUsername });
-    if (!user) return {error: 'User with that email/username not found'};
+    if (!user) return {error: 'No user with that email/username'};
   }
   const match = await bcrypt.compare(reqBody.password, user.password);
   if (match) {
