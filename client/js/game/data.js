@@ -1,5 +1,6 @@
 const { baseConfig } = require("./config.js");
 
+// Rules don't change once the game starts, gameVars do
 let rules = baseConfig;
 let gameVars = {
   "gameOver": false,
@@ -24,7 +25,7 @@ const getGameVars = () => {
 	return gameVars;
 };
 
-const updateRules = (addedRulesObj) => {
+const setRules = (addedRulesObj) => {
         Object.keys(addedRulesObj).forEach((key) => {
                 rules[key] = addedRulesObj[key];
         });
@@ -40,6 +41,6 @@ const setGameVars = (addedGameVarsObj) => {
 module.exports = {
 	getRules,
 	getGameVars,
-	updateRules,
+	setRules,
   setGameVars
 }

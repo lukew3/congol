@@ -37,7 +37,7 @@ const initBoard = () => {
   }
   renderPieces(rules, piecesAvail);
   domObjs.playerSwitch.checked = false;
-  Data.updateRules(rules);
+  Data.setRules(rules);
 };
 
 const renderBoard = () => {

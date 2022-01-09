@@ -207,7 +207,7 @@ const setGameMode = (mode) => {
   	case 'gt_online':
 			// Restrict user to only use one color
 			// Should the user always have the right or left player?
-			Data.updateRules({});
+			Data.setRules({});
       break;
   	case 'gt_local':
 			// Remove player groups
@@ -217,7 +217,7 @@ const setGameMode = (mode) => {
 			// Switch buttons sets
 			$('local2pButtons').style.display = 'flex';
 			$('soloButtons').style.display = 'none';
-			Data.updateRules(local2pConfig);
+			Data.setRules(local2pConfig);
       break;
 		case 'gt_solo':
 			// Remove player groups
@@ -230,7 +230,7 @@ const setGameMode = (mode) => {
 			// Set player to player 1
 			Render.domObjs.playerSwitch.checked = false;
 			// Later: Remove timer
-			Data.updateRules(soloConfig);
+			Data.setRules(soloConfig);
       break;
     default:
       console.log*("Game mode not recognized");

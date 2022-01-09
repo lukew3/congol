@@ -70,7 +70,7 @@ Render.initBoard();
 // Handling if the game is online or not
 if (window.location.pathname.substring(0, 6) === '/game/') {
   GameCore.setGameMode('gt_online');
-  Data.updateRules({"boardSize": 15, "speciesCount": 2});
+  Data.setRules({"boardSize": 15, "speciesCount": 2});
 	GameCore.resetBoard();
 	OnlineGame.requestGame();
 } else {

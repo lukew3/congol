@@ -23,7 +23,7 @@ $('newGameStartButton').addEventListener('click', () => {
 	$('winnerMessage').style.display = 'none';
 	//gameObj.boardSize = Number(bsSelected.splice(3, 5));
 	GameCore.setGameMode(gtSelected);
-	Data.updateRules({"boardSize": Number(bsSelected.slice(3, 5))});
+	Data.setRules({"boardSize": Number(bsSelected.slice(3, 5))});
 	Render.initBoard();
 	GameCore.resetBoard();
 	if (gtSelected === 'gt_online')
