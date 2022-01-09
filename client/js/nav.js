@@ -49,7 +49,6 @@ $('navSettings').addEventListener('click', (e) => {
 $('navLogout').addEventListener('click', (e) => {
   e.preventDefault();
   window.localStorage.removeItem('access_token');
-  window.localStorage.removeItem('refresh_token');
   renderLoggedIn();
   Router.setPath('');
 });

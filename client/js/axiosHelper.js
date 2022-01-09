@@ -5,7 +5,7 @@ const axiosApiInstance = axios.create();
 // Request interceptor for API calls
 axiosApiInstance.interceptors.request.use(
   async config => {
-    const access_token = window.localStorage.getItem('access_token');
+    const access_token = localStorage.getItem('access_token');
     if (access_token) {
       config.headers = {
         'Authorization': `Bearer ${access_token}`,
@@ -25,6 +25,8 @@ axiosApiInstance.interceptors.request.use(
 });
 
 // Response interceptor for API calls
+// Currently not being used because tokens are not expiring
+/*
 axiosApiInstance.interceptors.response.use((response) => {
   return response
 }, async function (error) {
@@ -46,6 +48,7 @@ axiosApiInstance.interceptors.response.use((response) => {
   }
   return Promise.reject(error);
 });
+*/
 
 module.exports = {
   axiosApiInstance

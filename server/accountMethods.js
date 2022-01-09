@@ -6,17 +6,7 @@ const saltRounds = 10;
 
 const signJWT = (username, expiration) => {
   return jwt.sign({username: username}, process.env.TOKEN_SECRET);
-  //return jwt.sign({username: username}, process.env.TOKEN_SECRET, { expiresIn: expiration }); // expires in 30 minutes
 }
-
-const createAccessToken = (username) => {
-  return signJWT(username, '1800s');
-}
-
-const createRefreshToken = (username) => {
-  return signJWT(username, '90d');
-}
-
 
 const signUp = async (reqBody) => {
   if (reqBody.password === undefined || reqBody.username === undefined || reqBody.email === undefined) {
@@ -43,8 +33,7 @@ const signUp = async (reqBody) => {
     });
     return {
       username: reqBody.username,
-      accessToken: createAccessToken(reqBody.username),
-      refreshToken: createRefreshToken(reqBody.username)
+      accessToken: signJWT(reqBody.username)
     };
   }
 }
@@ -61,16 +50,11 @@ const login = async (reqBody) => {
   if (match) {
     return {
       username: user.username,
-      accessToken: createAccessToken(user.username),
-      refreshToken: createRefreshToken(user.username)
+      accessToken: signJWT(user.username),
     };
   } else {
     return {error: 'Password incorrect'};
   }
-}
-
-const refresh = async (reqBody) => {
-
 }
 
 const getUser = async (username) => { // Include cookies or token in parameters?
