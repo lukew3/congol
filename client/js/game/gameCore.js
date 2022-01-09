@@ -161,8 +161,10 @@ const updatePieces = () => {
 };
 const manualToggleCell = (cellNum, playerId) => {
   if (!Data.getGameVars().inProgress ||
-	(Data.getGameVars().mode === 'gt_online' && Data.getGameVars().playerId != playerId-1))
+  (Data.getGameVars().round !== Data.getGameVars().selectedRound) ||
+	(Data.getGameVars().mode === 'gt_online' && Data.getGameVars().playerId != playerId-1)) {
 		return;
+  }
   toggleCell(cellNum, playerId);
 }
 const toggleCell = (cellNum, playerId) => {
