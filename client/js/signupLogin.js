@@ -13,8 +13,8 @@ $('signupSubmitButton').addEventListener('click', (e) => {
       $('signupMessage').innerHTML = response.data.error;
       return;
     }
-    window.localStorage.setItem('username', response.data.username);
-    window.localStorage.setItem('access_token', response.data.accessToken);
+    localStorage.setItem('username', response.data.username);
+    localStorage.setItem('access_token', response.data.accessToken);
     Router.setPath('');
     Nav.renderLoggedIn();
     $('signupEmail').value = '';
@@ -34,8 +34,8 @@ $('loginSubmitButton').addEventListener('click', (e) => {
       $('loginMessage').innerHTML = response.data.error;
       return;
     }
-    window.localStorage.setItem('username', response.data.username);
-    window.localStorage.setItem('access_token', response.data.accessToken);
+    localStorage.setItem('username', response.data.username);
+    localStorage.setItem('access_token', response.data.accessToken);
     Router.setPath('');
     Nav.renderLoggedIn();
     $('loginEmailUsername').value = '';

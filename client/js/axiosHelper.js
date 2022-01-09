@@ -34,11 +34,11 @@ axiosApiInstance.interceptors.response.use((response) => {
   if (error.response.status === 401 && !originalRequest._retry) {
     originalRequest._retry = true;
     //console.log("Refreshing access token");
-    const refresh_token = window.localStorage.getItem('refresh_token');
+    const refresh_token = localStorage.getItem('refresh_token');
     await axios.post(`/api/refresh`, {},
           { headers: { Authorization: `Bearer ${refresh_token}` }}
         ).then(response => {
-          window.localStorage.setItem('access_token', response.data.accessToken);
+          localStorage.setItem('access_token', response.data.accessToken);
           axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.accessToken;
         }).catch(error => {
           console.log(error);

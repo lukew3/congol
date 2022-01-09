@@ -48,17 +48,17 @@ $('navSettings').addEventListener('click', (e) => {
 
 $('navLogout').addEventListener('click', (e) => {
   e.preventDefault();
-  window.localStorage.removeItem('access_token');
+  localStorage.removeItem('access_token');
   renderLoggedIn();
   Router.setPath('');
 });
 
 const renderLoggedIn = () => {
-  if (window.localStorage.access_token) {
+  if (localStorage.access_token) {
     $('navSignup').style.display = 'none';
     $('navLogin').style.display = 'none';
     $('navAccountDropdownToggle').style.display = 'block';
-    $('navAccount').href = `/user/${window.localStorage.getItem('username')}`
+    $('navAccount').href = `/user/${localStorage.getItem('username')}`
   } else {
     $('navSignup').style.display = 'block';
     $('navLogin').style.display = 'block';
