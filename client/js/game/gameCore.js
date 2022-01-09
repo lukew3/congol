@@ -15,7 +15,7 @@ const createEmptyData = () => {
   return myarr;
 };
 const clearBoard = () => {
-  Data.updateGameVars({
+  Data.setGameVars({
     'data': createEmptyData(),
     'round': 0,
     'scores': [0,0],
@@ -27,7 +27,7 @@ const clearBoard = () => {
 const resetBoard = () => {
   stopGame();
   let inProgress = (Data.getGameVars().mode === 'gt_online') ? false : true;
-  Data.updateGameVars({"data": createEmptyData(),
+  Data.setGameVars({"data": createEmptyData(),
 											 "round": 0,
 											 "scores": [0, 0],
 											 "piecesAvail": [Data.getRules().startingPieceCount, Data.getRules().startingPieceCount],
@@ -46,7 +46,7 @@ const stopGame = () => {
   Data.getGameVars().roundTimeouts.forEach((id) => {
     clearTimeout(id);
   });
-  Data.updateGameVars({"running": false});
+  Data.setGameVars({"running": false});
 };
 const runGame = () => {
   for (let r = 0; r < Data.getRules().totalRounds; r++) {
@@ -56,12 +56,12 @@ const runGame = () => {
       }, r * Data.getRules().roundTime)
     );
   }
-  Data.updateGameVars({"running": true});
+  Data.setGameVars({"running": true});
 };
 const runRound = () => {
   let startTime = performance.now();
   let nvalues, n, dominant;
-  Data.updateGameVars({"round": Data.getGameVars().round + 1});
+  Data.setGameVars({"round": Data.getGameVars().round + 1});
   let newData = createEmptyData();
   Data.getGameVars().data.forEach((row, y) => {
     row.forEach((cell, x) => {
@@ -77,13 +77,13 @@ const runRound = () => {
       }
     });
   });
-  Data.updateGameVars({"data": newData});
+  Data.setGameVars({"data": newData});
   updateScores();
   updatePieces();
 	Render.renderAll();
   //console.log(`Round ran in ${performance.now()-startTime} milliseconds`);
   checkScoreLimit();
-  Data.updateGameVars({"roundToggledCells": []});
+  Data.setGameVars({"roundToggledCells": []});
 	if (Data.getRules().speciesCount === 2) {
 		Render.domObjs.playerSwitch.checked = !Render.domObjs.playerSwitch.checked;
 	}
@@ -121,7 +121,7 @@ const updateTimer = () => {
     let activePlayer = (Render.domObjs.playerSwitch.checked) ? 1 : 0;
     let gv = Data.getGameVars();
     let s = --gv.timers[activePlayer];
-    Data.updateGameVars(gv);
+    Data.setGameVars(gv);
     Render.renderTimers();
     checkTimerEnd();
     if (Data.getGameVars().inProgress)
@@ -147,7 +147,7 @@ const updateScores = () => {
   let winner = (cellCounts[0] > cellCounts[1]) ? 0 : 1;
   let gv = Data.getGameVars();
   gv.scores[winner] += Math.abs(cellCounts[0] - cellCounts[1]);
-  Data.updateGameVars(gv);
+  Data.setGameVars(gv);
   Render.renderScores();
 };
 const updatePieces = () => {
@@ -157,7 +157,7 @@ const updatePieces = () => {
     gv.piecesAvail[0]++;
   if (Data.getGameVars().piecesAvail[1] < Data.getRules().maxPieceCount)
     gv.piecesAvail[1]++;
-  Data.updateGameVars(gv);
+  Data.setGameVars(gv);
 };
 const manualToggleCell = (cellNum, playerId) => {
   if (!Data.getGameVars().inProgress ||
@@ -186,11 +186,11 @@ const toggleCell = (cellNum, playerId) => {
       return val != cellNum;
     });
   }
-  Data.updateGameVars(gv);
+  Data.setGameVars(gv);
   Render.renderPieces();
 };
 const endGame = (winner) => {
-  Data.updateGameVars({'inProgress': false, 'winner': winner})
+  Data.setGameVars({'inProgress': false, 'winner': winner})
   stopTimers();
   // Should not use $
   $('winnerMessage').style.display = 'block';
@@ -200,7 +200,7 @@ const endGame = (winner) => {
   $('newGame2pButton').style.display = 'block';
 };
 const setGameMode = (mode) => {
-	Data.updateGameVars({ mode });
+	Data.setGameVars({ mode });
 	switch(mode) {
   	case 'gt_online':
 			// Restrict user to only use one color
@@ -238,11 +238,11 @@ const setGameMode = (mode) => {
 const toggleCells = (move) => {
   let playerId = (Render.domObjs.playerSwitch.checked) ? 2 : 1;
   let tempPlayerId = Data.getGameVars().playerId;
-  Data.updateGameVars({"playerId": playerId-1})
+  Data.setGameVars({"playerId": playerId-1})
   move.forEach((cellNum) => {
     toggleCell(cellNum, playerId);
   });
-  Data.updateGameVars({"playerId": tempPlayerId})
+  Data.setGameVars({"playerId": tempPlayerId})
 }
 
 const runMove = (move) => {
@@ -252,17 +252,17 @@ const runMove = (move) => {
 
 const runMoves = (moves) => {
   let tempProgress = Data.getGameVars().inProgress;
-  Data.updateGameVars({'inProgress': true});
+  Data.setGameVars({'inProgress': true});
 	moves.forEach((move) => {
 		runMove(move);
 	});
-  Data.updateGameVars({'inProgress': tempProgress});
+  Data.setGameVars({'inProgress': tempProgress});
 };
 
 const pushMove = (move=Data.getGameVars().roundToggledCells) => {
   moves = Data.getGameVars().moves;
   moves.push(move);
-  Data.updateGameVars({moves, selectedRound: moves.length});
+  Data.setGameVars({moves, selectedRound: moves.length});
 }
 
 module.exports = {

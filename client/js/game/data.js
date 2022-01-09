@@ -31,7 +31,7 @@ const updateRules = (addedRulesObj) => {
         //rules = initBoard(rules, gameVars.piecesAvail);
 };
 
-const updateGameVars = (addedGameVarsObj) => {
+const setGameVars = (addedGameVarsObj) => {
         Object.keys(addedGameVarsObj).forEach((key) => {
                 gameVars[key] = addedGameVarsObj[key];
         });
@@ -41,5 +41,5 @@ module.exports = {
 	getRules,
 	getGameVars,
 	updateRules,
-  updateGameVars
+  setGameVars
 }

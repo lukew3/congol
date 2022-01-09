@@ -10,7 +10,7 @@ socket.on('connectionCountUpdate', (connectionCount) => {
 
 socket.on('gameStart', (data) => {
   if (Data.getGameVars().mode !== 'gt_online') return;
-  Data.updateGameVars({'inProgress': true});
+  Data.setGameVars({'inProgress': true});
   setUsernames(data);
   // start timers
   GameCore.updateTimer();
@@ -27,9 +27,9 @@ socket.on('setGame', (data) => {
   }
   setUsernames(data);
   GameCore.runMoves(data.moves);
-  Data.updateGameVars({moves: data.moves, selectedRound: Data.getGameVars().round});
+  Data.setGameVars({moves: data.moves, selectedRound: Data.getGameVars().round});
   if (data.timers) {
-    Data.updateGameVars({timers: data.timers});
+    Data.setGameVars({timers: data.timers});
     Render.renderTimers();
   }
 });
@@ -42,7 +42,7 @@ const setUsernames = (uData) => {
 }
 
 socket.on('setPlayerId', (playerId) => {
-	Data.updateGameVars({ playerId });
+	Data.setGameVars({ playerId });
 });
 
 socket.on('setRoomId', (roomId) => {
@@ -67,7 +67,7 @@ socket.on('broadcastMove', (move) => {
 	  	});
 		}
   }
-  Data.updateGameVars({selectedRound: Data.getGameVars().round})
+  Data.setGameVars({selectedRound: Data.getGameVars().round})
 })
 
 const requestGame = (roomId=undefined) => {

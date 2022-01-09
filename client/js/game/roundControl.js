@@ -2,7 +2,7 @@ const Data = require('./data.js');
 const GameCore = require('./gameCore.js');
 const Render = require('./rendering.js');
 
-Data.updateGameVars({selectedRound: 0});
+Data.setGameVars({selectedRound: 0});
 
 const showRound = () => {
   let holdRound = Data.getGameVars().round;
@@ -14,13 +14,13 @@ const showRound = () => {
     let nextMove = moves[Math.floor(Data.getGameVars().selectedRound)];
     if (nextMove !== undefined) {
       let tempProgress = Data.getGameVars().inProgress;
-      Data.updateGameVars({'inProgress': true});
+      Data.setGameVars({'inProgress': true});
       GameCore.toggleCells(nextMove);
-      Data.updateGameVars({'inProgress': tempProgress});
+      Data.setGameVars({'inProgress': tempProgress});
     }
   }
   Render.renderRound(Data.getGameVars().selectedRound);
-  Data.updateGameVars({round: holdRound});
+  Data.setGameVars({round: holdRound});
 }
 
 const incrementSelRound = (val) => {
@@ -34,12 +34,12 @@ const incrementSelRound = (val) => {
       selectedRound += val;
     }
   }
-  Data.updateGameVars({selectedRound});
+  Data.setGameVars({selectedRound});
   showRound();
 }
 
 $('roundMinusMax').addEventListener('click', (e) => {
-  Data.updateGameVars({selectedRound: 0});
+  Data.setGameVars({selectedRound: 0});
   showRound();
 });
 $('roundMinusOne').addEventListener('click', (e) => {
@@ -55,6 +55,6 @@ $('roundPlusOne').addEventListener('click', (e) => {
   incrementSelRound(1);
 });
 $('roundPlusMax').addEventListener('click', (e) => {
-  Data.updateGameVars({selectedRound: Data.getGameVars().round});
+  Data.setGameVars({selectedRound: Data.getGameVars().round});
   showRound();
 });

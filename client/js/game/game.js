@@ -33,7 +33,7 @@ $('submitMoveButton').addEventListener('click', (e) => {
 
 $('newGame2pButton').addEventListener('click', (e) => {
   GameCore.resetBoard();
-  Data.updateGameVars({'moves': []});
+  Data.setGameVars({'moves': []});
   if (Data.getGameVars().mode === 'gt_online') {
     OnlineGame.requestGame(-1);
   }
@@ -44,7 +44,7 @@ $('newGame2pButton').addEventListener('click', (e) => {
 
 $('resetGameButton').addEventListener('click', (e) => {
 	GameCore.resetBoard();
-  Data.updateGameVars({'moves': []});
+  Data.setGameVars({'moves': []});
 });
 
 // 2pPlayground Buttons
@@ -65,7 +65,7 @@ $('nextButton').addEventListener('click', (e) => {
 
 
 // Stuff that runs on load
-Data.updateGameVars({"data": GameCore.createEmptyData()})
+Data.setGameVars({"data": GameCore.createEmptyData()})
 Render.initBoard();
 // Handling if the game is online or not
 if (window.location.pathname.substring(0, 6) === '/game/') {
@@ -74,6 +74,6 @@ if (window.location.pathname.substring(0, 6) === '/game/') {
 	GameCore.resetBoard();
 	OnlineGame.requestGame();
 } else {
-	Data.updateGameVars({"inProgress": true})
+	Data.setGameVars({"inProgress": true})
 	GameCore.setGameMode('gt_local');
 }
