@@ -57,11 +57,17 @@ const broadcastMove = async (io, roomId, move) => {
 // Receive move from player
 const receiveMove = async (io, moveData, roomId) => {
   //if (game.playerId !== (game.switchPos ? 1 : 0)) return;
-  //let oldGameObj = await mongoDB().collection('games').findOne({'shortId': roomId});
-  broadcastMove(io, roomId, moveData);
-  await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$push': {
-    'moves': moveData
-  }});
+  //should find a faster way to check if it is the player's turn
+    // also, doesn't work with anonymous v anonymous games because they have the same name
+  let oldGameObj = await mongoDB().collection('games').findOne({'shortId': roomId});
+  if (moveData.username === oldGameObj[`p${oldGameObj.moves.length%2+1}Username`]) {
+    broadcastMove(io, roomId, moveData);
+    await mongoDB().collection('games').updateOne({'shortId': roomId}, {'$push': {
+      'moves': moveData
+    }});
+  } else {
+    console.log('move not from expected player')
+  }
 };
 
 const newGameId = async (username, private) => {
