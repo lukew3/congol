@@ -5,7 +5,8 @@ const { mongoDB } = require("./mongodb");
 const saltRounds = 10;
 
 const signJWT = (username, expiration) => {
-  return jwt.sign({username: username}, process.env.TOKEN_SECRET, { expiresIn: expiration }); // expires in 30 minutes
+  return jwt.sign({username: username}, process.env.TOKEN_SECRET);
+  //return jwt.sign({username: username}, process.env.TOKEN_SECRET, { expiresIn: expiration }); // expires in 30 minutes
 }
 
 const createAccessToken = (username) => {
@@ -60,8 +61,8 @@ const login = async (reqBody) => {
   if (match) {
     return {
       username: user.username,
-      accessToken: createAccessToken(reqBody.username),
-      refreshToken: createRefreshToken(reqBody.username)
+      accessToken: createAccessToken(user.username),
+      refreshToken: createRefreshToken(user.username)
     };
   } else {
     return {error: 'Password incorrect'};

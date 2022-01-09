@@ -4,6 +4,7 @@ const path = require('path');
 const dotenv = require('dotenv');
 const socketio = require('socket.io');
 const bodyParser = require('body-parser')
+const jwt = require('jsonwebtoken');
 const { connectDB, mongoDB } = require("./mongodb");
 const GameMethods = require('./gameMethods.js');
 const AccountMethods = require('./accountMethods.js');
@@ -14,7 +15,7 @@ const server = http.createServer(app);
 io = socketio(server);
 
 dotenv.config();
-const port = process.env.port || 3000;
+const port = process.env.PORT || 3000;
 const indexPg = path.join(__dirname, '../dist/index.html');
 
 app.use(bodyParser.json())
@@ -28,6 +29,7 @@ io.on('connection', async (socket) => {
   let roomId, playerId; // maybe should be playerRole instead of playerId
 
   socket.on('gameRequest', async (reqData) => {
+    reqData.username = usernameFromToken(reqData.token) || 'Anonymous';
     let retData = await GameMethods.handleGameRequest(io, socket, reqData);
     if (!retData) return;
     roomId = retData[0];
@@ -47,19 +49,28 @@ io.on('connection', async (socket) => {
   });
 });
 
-/*
-function authenticateToken(req, res, next) {
+const usernameFromTokenMiddleware = async (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
-  if (token == null) return res.sendStatus(401);
-  jwt.verify(token, process.env.TOKEN_SECRET as string, (err: any, user: any) => {
-    console.log(err);
-    if (err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  })
+  req.username = usernameFromToken(token);
+  next();
 }
-*/
+
+const usernameFromToken = (token) => {
+  if (token === null) {
+    return null;
+  }
+  let username;
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, data) => {
+    if (err) {
+      console.log(err);
+      username = null;
+    } else {
+      username = data.username;
+    }
+  });
+  return username;
+}
 
 /* Routes */
 app.post('/api/signup', async (req, res) => {
@@ -72,8 +83,9 @@ app.post('/api/login', async (req, res) => {
   res.json(token);
 });
 
-app.get('/api/user/:username', async (req, res) => {
+app.get('/api/user/:username', usernameFromTokenMiddleware, async (req, res) => {
   const user = await AccountMethods.getUser(req.params.username);
+  // if (username === user.username) // send private details
   res.send(user)
 });
 

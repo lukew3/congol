@@ -77,8 +77,8 @@ const requestGame = (roomId=undefined) => {
 		roomId = -1
 	socket.emit('gameRequest', {
     roomId,
-    username: localStorage.username || 'Anonymous',
-		private: $('privateCheckbox').checked
+		private: $('privateCheckbox').checked,
+		token: localStorage.access_token
   });
 };
 
