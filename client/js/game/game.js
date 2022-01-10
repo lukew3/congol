@@ -76,6 +76,7 @@ if (window.location.pathname.substring(0, 6) === '/game/') {
 } else if (window.location.pathname === '/soloGame') {
   Data.setGameVars({"inProgress": true});
   GameCore.setGameMode('gt_solo');
+  GameCore.resetBoard();
 } else {
 	Data.setGameVars({"inProgress": true})
 	GameCore.setGameMode('gt_local');
