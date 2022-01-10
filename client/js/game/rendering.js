@@ -1,4 +1,5 @@
 const Data = require('./data.js');
+const Theme = require('../theme.js');
 
 let domObjs = {
   "gameContainer": $("gameContainer"),
@@ -42,7 +43,7 @@ const initBoard = () => {
 
 const renderBoard = () => {
   let data = Data.getGameVars().data;
-  let colors = Data.getRules().colors;
+  let colors = Theme.getTheme();
   let boardSize = Data.getRules().boardSize;
   let cell, cellObj;
   data.forEach((row, y) => {
@@ -73,7 +74,7 @@ const renderPieces = () => {
     for (let i = 0; i < piecesAvail[p]; i++) {
       let newCell = document.createElement('div');
       newCell.classList.add('cell');
-      newCell.style = `width: ${gameRules.cellWH/2}px; height: ${gameRules.cellWH/2}px; background-color: ${gameRules.colors[p+1]}`
+      newCell.style = `width: ${gameRules.cellWH/2}px; height: ${gameRules.cellWH/2}px; background-color: ${Theme.getTheme()[p+1]}`
       domObjs.piecesObjs[p].append(newCell);
     }
   }

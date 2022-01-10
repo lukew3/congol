@@ -4,7 +4,13 @@
 html {
 	background-color: #E0E0E0;
 }
-
+/* Default colors, changed on load */
+:root {
+	--board-bg-color: #EDEDED;
+	--p1-color: blue;
+  --p2-color: red;
+	--grid-color: gray;
+}
 /* Nav */
 nav {
 	width: 100%;

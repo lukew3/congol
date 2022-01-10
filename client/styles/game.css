@@ -15,7 +15,7 @@
 .cell {
         width: 31px;
         height: 31px;
-        border: 1px grey solid;
+        border: 1px var(--grid-color) solid;
         background-color: #EDEDED;
 }
 
@@ -74,13 +74,13 @@
 
 input:checked + label #switchHandle {
         transform: translateX(33px);
-        background-color: red;
+        background-color: var(--p2-color);
         transition: 0.1s;
 }
 
 input + label #switchHandle {
         transform: translateX(0px);
-        background-color: blue;
+        background-color: var(--p1-color);
         transition: 0.1s;
 }
 

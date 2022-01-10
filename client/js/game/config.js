@@ -5,11 +5,6 @@ const baseConfig = {
 	"startingPieceCount": 3,
 	"maxPieceCount": 12,
 	"scoreLimit": 100,
-	"colors": [
-		"#EDEDED",
-		"blue",
-		"red"
-	],
 };
 
 const local2pConfig = {
@@ -19,11 +14,6 @@ const local2pConfig = {
 	"startingPieceCount": 3,
 	"maxPieceCount": 12,
 	"scoreLimit": 100,
-	"colors": [
-		"#EDEDED",
-		"blue",
-		"red"
-	],
 	"speciesCount": 2,
 	"startingTime": 3*60,
 };
@@ -35,10 +25,6 @@ const soloConfig = {
 	"startingPieceCount": -1,
 	"scoreLimit": -1,
 	"speciesCount": 1,
-	"colors": [
-		"#EDEDED",
-		"black"
-	],
 };
 
 module.exports = {

@@ -1,6 +1,7 @@
 const Data = require("./data.js");
 const Render = require("./rendering.js");
 const Router = require("../router.js");
+const Theme = require('../theme.js');
 const { local2pConfig, soloConfig } = require("./config.js");
 
 //rules and gameVars are separated so that rules can be modifiable in its entirety while gameVars cannot
@@ -175,13 +176,13 @@ const toggleCell = (cellNum, playerId) => {
   if (gv.data[cy][cellNum % Data.getRules().boardSize] == 0 && gv.piecesAvail[playerId - 1] != 0) {
     // fill empty square
     gv.data[cy][cellNum % Data.getRules().boardSize] = playerId;
-    $(`cell-${cellNum}`).style.backgroundColor = Data.getRules().colors[playerId];
+    $(`cell-${cellNum}`).style.backgroundColor = Theme.getTheme()[playerId];
     gv.piecesAvail[playerId - 1]--;
     gv.roundToggledCells.push(cellNum);
   } else if (Data.getGameVars().data[cy][cellNum % Data.getRules().boardSize] == playerId && Data.getGameVars().roundToggledCells.includes(cellNum)) {
     // empty filled square
     gv.data[cy][cellNum % Data.getRules().boardSize] = 0;
-    $(`cell-${cellNum}`).style.backgroundColor = Data.getRules().colors[0];
+    $(`cell-${cellNum}`).style.backgroundColor = Theme.getTheme()[0];
     gv.piecesAvail[playerId - 1]++;
     // remove num from roundToggledCells, not sure if this is the best way to do this
     gv.roundToggledCells = Data.getGameVars().roundToggledCells.filter((val) => {
