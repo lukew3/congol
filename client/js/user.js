@@ -2,6 +2,7 @@ const { axiosApiInstance } = require('./axiosHelper.js');
 const GameCore = require('./game/gameCore.js');
 const Data = require('./game/data.js');
 const OnlineGame = require('./game/onlineGame.js');
+const Router = require('./router.js');
 
 let loadedUser = {}
 let userGamesList = $('userGamesList');
@@ -32,6 +33,15 @@ const loadUser = async (username=undefined) => {
     	OnlineGame.requestGame(element.href.substring(element.href.lastIndexOf('/') + 1));
     });
   });
+  // listen for click on opponent view buttons
+  let oppBtns = document.getElementsByClassName('userOpponentLink');
+  Array.from(oppBtns).forEach((element) => {
+    element.addEventListener('click', () => {
+      event.preventDefault();
+      Router.setPath(`user/${element.innerHTML}`);
+      loadUser(element.innerHTML);
+    });
+  });
   $('uStatGames').innerHTML = Array.from(document.getElementsByClassName('userGame')).length;
   $('uStatRecord').innerHTML = `${loadedUser.record.wins}/${loadedUser.record.losses}/0`;
 }
@@ -48,10 +58,16 @@ const addGame = (game, username) => {
   let gameDiv = document.createElement('div');
   let date = new Date(game.startTime);
   gameDiv.classList.add('userGame');
+  let gamePlayers = (playerId === 0) ? `
+    <p>${game.p1Username}</p>
+    <a class='userOpponentLink clickable' href='/user/${game.p2Username}'>${game.p2Username}</a>
+  ` : `
+    <a class='userOpponentLink clickable' href='/user/${game.p1Username}'>${game.p1Username}</a>
+    <p>${game.p2Username}</p>
+  `
   gameDiv.innerHTML = `
     <div class='userGamePlayers'>
-      <p>${game.p1Username}</p>
-      <p>${game.p2Username}</p>
+      ${gamePlayers}
     </div>
     <div class='userGameScore'>
       <p>${game.scores[0]}</p>

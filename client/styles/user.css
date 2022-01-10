@@ -59,6 +59,11 @@
   font-weight: bold;
 }
 
+.userOpponentLink {
+  text-decoration: none;
+  color: black;
+}
+
 @media screen and (max-width: 1000px) {
   #userCont {
     width: calc(100% - 10px);
