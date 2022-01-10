@@ -29,6 +29,7 @@ nav {
 	color: black;
 	text-decoration: none;
 	cursor: pointer;
+	user-select: none;
 }
 .navLink:hover, .button:hover, .clickable:hover {
      opacity: 0.8;
