@@ -5,3 +5,12 @@
 #rulesCont ol {
         margin-left: 2em;
 }
+
+#tutImages {
+  display: flex;
+  justify-content: center;
+  margin: 15px;
+}
+#tutImages * {
+  margin: 0 10px;
+}

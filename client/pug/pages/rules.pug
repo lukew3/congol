@@ -2,14 +2,27 @@ div#rulesPage.page
   div#rulesCont.centeredCont
     h1 Rules
     p.
-      Congol is based off of John Conway's Game of Life.
-      All of the original rules of Conway's Game of Life are kept in Congol.
-      After each turn, the computer generates a new generation of cells.
-      The original rules are as follows:
+      In the game of Congol, players take turns placing pieces and competing to see who can get the most pieces on the board at the end of the round.
+    p.
+      In the first round, player one takes their turn and the computer generates the next board.
+      In the next round, the other player will take their turn and the next board will be generated.
+      This cycle of player_1/computer/player_2/computer continues until the game has ended.
+    p.
+      The computer follows a small set of rules to determine what the next board will look like.
+      Whether a cell is filled in depends on how many neighbors it has.
+      The rules are as follows:
     ol
       li Survival: A cell surrounded by two or three cells survives for the next generation
       li Death: A cell with 4 or more neighbors dies of overpopulation. A cell with one or no neighbors dies of isolation.
-      li Birth: An unoccupied square becomes a living cell if it has exactly 3 neighbors
-    p To make this game playable with multiple species of cells, another rule was added:
-    p(style='margin-left: 1rem') The species that contributes the most to the birth of a new cell decides the species of the new cell.
-    p As the game develops, rules will be formed concerning how the game should be played, but the rules stated previously shall always apply
+      li Birth: An unoccupied square becomes a living cell if it has exactly 3 neighbors. The color of the cell created in birth will be the color shared by 2 of it’s 3 parents
+    p.
+      See the graphics below for examples of how generations work.
+      Numbers have been added to show how many living neighbors each cell has.
+      These numbers will not be present in the actual game.
+    div#tutImages
+      img(src='./img/rules0.svg')
+      img(src='./img/rules_arrow_horiz.svg')
+      img(src='./img/rules1.svg')
+    p.
+      After each round, the number of cells of the player with the least living cells will be subtracted from the number of cells of the player with the most living cells and the difference will be added to the score of the player with the most living cells.
+      A standard game ends when one player reaches a score of 100 or one players timer runs out.

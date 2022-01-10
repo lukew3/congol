@@ -1,0 +1,21 @@
+<svg width="203" height="203" viewBox="0 0 203 203" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="1.5" y="1.5" width="201" height="201" fill="#F5F5F5" stroke="black"/>
+<line x1="42.5" y1="2" x2="42.5" y2="203" stroke="black"/>
+<line x1="1.50001" y1="1" x2="1.5" y2="202" stroke="black"/>
+<line x1="122.5" y1="2" x2="122.5" y2="203" stroke="black"/>
+<line x1="162.5" y1="2" x2="162.5" y2="203" stroke="black"/>
+<line x1="202.5" y1="1" x2="202.5" y2="202" stroke="black"/>
+<line x1="82.5" y1="2" x2="82.5" y2="203" stroke="black"/>
+<line x1="1.5" y1="161" x2="202.5" y2="161" stroke="black"/>
+<line x1="1" y1="202.5" x2="202" y2="202.5" stroke="black"/>
+<line x1="1.5" y1="81" x2="202.5" y2="81" stroke="black"/>
+<line x1="1.5" y1="41" x2="202.5" y2="41" stroke="black"/>
+<line x1="0.5" y1="0.999954" x2="201.5" y2="0.999963" stroke="black"/>
+<line x1="1.5" y1="121" x2="202.5" y2="121" stroke="black"/>
+<rect x="82.75" y="41.25" width="39.5" height="39.5" fill="#F72A2A" stroke="black" stroke-width="0.5"/>
+<rect x="42.75" y="41.25" width="39.5" height="39.5" fill="#F72A2A" stroke="black" stroke-width="0.5"/>
+<rect x="42.75" y="121.25" width="39.5" height="39.5" fill="#3E7CF3" stroke="black" stroke-width="0.5"/>
+<rect x="42.75" y="81.25" width="39.5" height="39.5" fill="#3E7CF3" stroke="black" stroke-width="0.5"/>
+<rect x="122.75" y="41.25" width="39.5" height="39.5" fill="#F72A2A" stroke="black" stroke-width="0.5"/>
+<rect x="82.75" y="121.25" width="39.5" height="39.5" fill="#3E7CF3" stroke="black" stroke-width="0.5"/>
+</svg>
