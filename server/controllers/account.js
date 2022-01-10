@@ -5,10 +5,13 @@ const saltRounds = 10;
 
 const signUp = async (reqBody) => {
   if (reqBody.password === undefined || reqBody.username === undefined || reqBody.email === undefined) {
-    return {error: 'Form incomplete'}
+    return {error: 'Form incomplete'};
   }
   if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(reqBody.email)) {
-    return {error: 'Email invalid'}
+    return {error: 'Email invalid'};
+  }
+  if (reqBody.username.substring(0,6) === 'guest_') {
+    return { error: 'Username invalid'};
   }
   let user = await mongoDB().collection('users').findOne({ username: reqBody.username });
   if (user !== null) {
@@ -16,7 +19,7 @@ const signUp = async (reqBody) => {
   }
   user = await mongoDB().collection('users').findOne({ email: reqBody.email });
   if (user !== null) {
-    return {error: 'Email in use by another user'}
+    return {error: 'Email in use by another user'};
   }
   if (user === null) {
     const pwdHash = await bcrypt.hash(reqBody.password, saltRounds);
