@@ -1,7 +1,7 @@
 const socketio = require('socket.io');
 const jwt = require('jsonwebtoken');
-const GameMethods = require('./gameMethods.js');
-const AccountMethods = require('./accountMethods.js');
+const GameMethods = require('./controllers/game.js');
+const Token = require('./token.js');
 let io, connectionsCounter
 
 const initSocketServer = (server) => {
@@ -14,7 +14,7 @@ const initSocketServer = (server) => {
     let roomId, playerId, username; // maybe should be playerRole instead of playerId
 
     socket.on('gameRequest', async (reqData) => {
-      username = AccountMethods.usernameFromToken(reqData.token) || 'Anonymous';
+      username = Token.usernameFromToken(reqData.token) || 'Anonymous';
       reqData.username = username;
       let retData = await GameMethods.handleGameRequest(io, socket, reqData);
       if (!retData) return;

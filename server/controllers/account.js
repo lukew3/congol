@@ -1,28 +1,7 @@
-const jwt = require('jsonwebtoken');
+const Token = require('../token.js');
 const bcrypt = require('bcrypt');
-const { mongoDB } = require("./mongodb");
-
+const { mongoDB } = require("../mongodb");
 const saltRounds = 10;
-
-const signJWT = (username, expiration) => {
-  return jwt.sign({username: username}, process.env.TOKEN_SECRET);
-}
-
-const usernameFromToken = (token) => {
-  if (!token) {
-    return null;
-  }
-  let username;
-  jwt.verify(token, process.env.TOKEN_SECRET, (err, data) => {
-    if (err) {
-      console.log(err);
-      username = null;
-    } else {
-      username = data.username;
-    }
-  });
-  return username;
-}
 
 const signUp = async (reqBody) => {
   if (reqBody.password === undefined || reqBody.username === undefined || reqBody.email === undefined) {
@@ -49,7 +28,7 @@ const signUp = async (reqBody) => {
     });
     return {
       username: reqBody.username,
-      accessToken: signJWT(reqBody.username)
+      accessToken: Token.signJWT(reqBody.username)
     };
   }
 }
@@ -66,7 +45,7 @@ const login = async (reqBody) => {
   if (match) {
     return {
       username: user.username,
-      accessToken: signJWT(user.username),
+      accessToken: Token.signJWT(user.username),
     };
   } else {
     return {error: 'Password incorrect'};
@@ -92,7 +71,6 @@ const getUser = async (username) => { // Include cookies or token in parameters?
 }
 
 module.exports = {
-  usernameFromToken,
   signUp,
   login,
   getUser

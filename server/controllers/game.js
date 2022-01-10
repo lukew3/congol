@@ -1,5 +1,5 @@
 const { nanoid } = require('nanoid');
-const { connectDB, mongoDB } = require("./mongodb");
+const { connectDB, mongoDB } = require("../mongodb");
 
 
 const handleGameRequest = async (io, socket, reqData) => {
