@@ -44,7 +44,7 @@ $('newGame2pButton').addEventListener('click', (e) => {
 
 $('resetGameButton').addEventListener('click', (e) => {
 	GameCore.resetBoard();
-  Data.setGameVars({'moves': [], 'selectedRound': 0});
+  Data.setGameVars({'moves': []});
 });
 
 // 2pPlayground Buttons
