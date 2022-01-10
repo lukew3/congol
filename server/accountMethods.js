@@ -8,6 +8,22 @@ const signJWT = (username, expiration) => {
   return jwt.sign({username: username}, process.env.TOKEN_SECRET);
 }
 
+const usernameFromToken = (token) => {
+  if (!token) {
+    return null;
+  }
+  let username;
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, data) => {
+    if (err) {
+      console.log(err);
+      username = null;
+    } else {
+      username = data.username;
+    }
+  });
+  return username;
+}
+
 const signUp = async (reqBody) => {
   if (reqBody.password === undefined || reqBody.username === undefined || reqBody.email === undefined) {
     return {error: 'Form incomplete'}
@@ -76,6 +92,7 @@ const getUser = async (username) => { // Include cookies or token in parameters?
 }
 
 module.exports = {
+  usernameFromToken,
   signUp,
   login,
   getUser
