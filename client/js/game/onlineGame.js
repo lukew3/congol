@@ -34,6 +34,11 @@ socket.on('setGame', (data) => {
   }
 });
 
+socket.on('setGuestUsername', (data) => {
+	localStorage.setItem('username', data.username);
+	localStorage.setItem('access_token', data.accessToken)
+})
+
 const setUsernames = (uData) => {
   $(`p1Username`).innerHTML = uData.p1Username;
 	$(`p2Username`).innerHTML = uData.p2Username;

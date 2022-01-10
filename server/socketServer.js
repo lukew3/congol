@@ -14,7 +14,14 @@ const initSocketServer = (server) => {
     let roomId, playerId, username; // maybe should be playerRole instead of playerId
 
     socket.on('gameRequest', async (reqData) => {
-      username = Token.usernameFromToken(reqData.token) || 'Anonymous';
+      username = Token.usernameFromToken(reqData.token);
+      if (!username) {
+        username = GameMethods.generateUsername();
+        socket.emit('setGuestUsername', {
+          username: username,
+          accessToken: Token.signJWT(username)
+        });
+      }
       reqData.username = username;
       let retData = await GameMethods.handleGameRequest(io, socket, reqData);
       if (!retData) return;

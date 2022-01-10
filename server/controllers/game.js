@@ -1,6 +1,10 @@
 const { nanoid } = require('nanoid');
 const { connectDB, mongoDB } = require("../mongodb");
+const Token = require('../token.js');
 
+const generateUsername = () => {
+  return `guest_${nanoid(8)}`
+}
 
 const handleGameRequest = async (io, socket, reqData) => {
   let roomId, playerId;
@@ -22,7 +26,7 @@ const handleGameRequest = async (io, socket, reqData) => {
   } else if (game.p2Username === 'waiting') {
     playerId = 1;
     // If trying to play a game with same account, return
-    if (game.p1Username === reqData.username && game.p1Username !== 'Anonymous') {
+    if (game.p1Username === reqData.username) {
       socket.emit('setGame', false);
       return;
     }
@@ -77,8 +81,8 @@ const newGameId = async (username, private) => {
   //Search for open game first
   if (!private) {
     // Don't need to search for a game if you are creating  private game
-    // If name is anonymous, don't check for a game without a user with the same name
-    if (username === 'Anonymous') {
+    // If user is a guest, don't check for a game without a user with the same name
+    if (username.substring(0,6) === 'guest_') {
       game = await mongoDB().collection('games').findOne({
         'p2Username': 'waiting',
         'private': false
@@ -136,6 +140,7 @@ const disconnect = async (roomId) => {
 }
 
 module.exports = {
+  generateUsername,
   handleGameRequest,
   sendGame,
   broadcastMove,
