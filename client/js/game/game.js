@@ -73,6 +73,9 @@ if (window.location.pathname.substring(0, 6) === '/game/') {
   Data.setRules({"boardSize": 15, "speciesCount": 2});
 	GameCore.resetBoard();
 	OnlineGame.requestGame();
+} else if (window.location.pathname === '/soloGame') {
+  Data.setGameVars({"inProgress": true});
+  GameCore.setGameMode('gt_solo');
 } else {
 	Data.setGameVars({"inProgress": true})
 	GameCore.setGameMode('gt_local');

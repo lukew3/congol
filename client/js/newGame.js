@@ -16,7 +16,7 @@ const setNewGameSelections = () => {
 };
 
 $('newGameStartButton').addEventListener('click', () => {
-	Router.setPath('game');
+	Router.setPage('gamePage');
 	// ensure that old finished game display stuff is hidden
 	$('submitMoveButton').style.display = 'block';
 	$('newGame2pButton').style.display = 'none';
@@ -26,8 +26,13 @@ $('newGameStartButton').addEventListener('click', () => {
 	Data.setRules({"boardSize": Number(bsSelected.slice(3, 5))});
 	Render.initBoard();
 	GameCore.resetBoard();
-	if (gtSelected === 'gt_online')
+	if (gtSelected === 'gt_local') {
+		Router.setPath('localGame');
+	} else if (gtSelected === 'gt_solo') {
+		Router.setPath('soloGame');
+	} else if (gtSelected === 'gt_online') {
 		OnlineGame.requestGame();
+	}
 });
 
 document.addEventListener('click', (e) => {

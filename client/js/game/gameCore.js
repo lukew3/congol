@@ -209,6 +209,7 @@ const setGameMode = (mode) => {
 			// Restrict user to only use one color
 			// Should the user always have the right or left player?
 			Data.setRules({});
+      Theme.setTheme(['#EDEDED', 'blue', 'red', 'gray'])
       break;
   	case 'gt_local':
 			// Remove player groups
@@ -219,6 +220,7 @@ const setGameMode = (mode) => {
 			$('local2pButtons').style.display = 'flex';
 			$('soloButtons').style.display = 'none';
 			Data.setRules(local2pConfig);
+      Theme.setTheme(['#EDEDED', 'blue', 'red', 'gray'])
       break;
 		case 'gt_solo':
 			// Remove player groups
@@ -232,6 +234,7 @@ const setGameMode = (mode) => {
 			Render.domObjs.playerSwitch.checked = false;
 			// Later: Remove timer
 			Data.setRules(soloConfig);
+      Theme.setTheme(['#EDEDED', 'black', null, 'gray'])
       break;
     default:
       console.log*("Game mode not recognized");
