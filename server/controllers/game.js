@@ -6,6 +6,27 @@ const generateUsername = () => {
   return `guest_${nanoid(8)}`
 }
 
+const winProbability = (rating0, rating1) => {
+  return 1.0 * 1.0 / (1 + 1.0 * Math.pow(10, 1.0 * (rating0 - rating1) / 400));
+}
+
+const updateRatings = async (player0Username, player1Username, outcome) => {
+  let k = 30;
+  let u0 = await mongoDB().collection('users').findOne({'username': player0Username});
+  let u1 = await mongoDB().collection('users').findOne({'username': player1Username});
+  let p0 = winProbability(u1.rating, u0.rating);
+  let p1 = winProbability(u0.rating, u1.rating);
+  if (outcome == 0) {
+    r0 = Math.round(u0.rating + k * (1 - p0));
+    r1 = Math.round(u1.rating + k * (0 - p1));
+  } else {
+    r0 = Math.round(u0.rating + k * (0 - p0));
+    r1 = Math.round(u1.rating + k * (1 - p1));
+  }
+  mongoDB().collection('users').updateOne({'username': player0Username}, {'$set': {'rating': r0}});
+  mongoDB().collection('users').updateOne({'username': player1Username}, {'$set': {'rating': r1}});
+}
+
 const handleGameRequest = async (io, socket, reqData) => {
   let roomId, playerId;
   if (reqData.roomId !== -1) {
@@ -129,6 +150,10 @@ const endGame = async (roomId, endData) => {
     'scores': endData.scores,
     'timers': endData.timers
   }});
+  let game = await mongoDB().collection('games').findOne({'shortId': roomId});
+  if (game.p1Username.substring(0, 6) !== 'guest_' && game.p2Username.substring(0, 6) !== 'guest_') {
+    updateRatings(game.p1Username, game.p2Username, game.winner);
+  }
 }
 
 const disconnect = async (roomId) => {
