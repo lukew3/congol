@@ -203,42 +203,38 @@ const endGame = (winner) => {
   $('submitMoveButton').style.display = 'none';
   $('newGame2pButton').style.display = 'block';
 };
+
 const setGameMode = (mode) => {
 	Data.setGameVars({ mode });
-	switch(mode) {
-  	case 'gt_online':
-			// Restrict user to only use one color
-			// Should the user always have the right or left player?
-			Data.setRules({});
-      Theme.setTheme(['#EDEDED', 'blue', 'red', 'gray'])
-      break;
-  	case 'gt_local':
-			// Remove player groups
-			$('underBoardLower').style.display = "flex";
-			$('p2PiecesAvail').style.display = "flex";
-			$('p1PiecesAvail').style.display = "flex";
-			// Switch buttons sets
-			$('local2pButtons').style.display = 'flex';
-			$('soloButtons').style.display = 'none';
-			Data.setRules(local2pConfig);
-      Theme.setTheme(['#EDEDED', 'blue', 'red', 'gray'])
-      break;
-		case 'gt_solo':
-			// Remove player groups
-			$('underBoardLower').style.display = "none";
-			$('p2PiecesAvail').style.display = "none";
-			$('p1PiecesAvail').style.display = "none";
-			// Switch buttons sets
-			$('local2pButtons').style.display = 'none';
-			$('soloButtons').style.display = 'flex';
-			// Set player to player 1
-			Render.domObjs.playerSwitch.checked = false;
-			// Later: Remove timer
-			Data.setRules(soloConfig);
-      Theme.setTheme(['#EDEDED', 'black', null, 'gray'])
-      break;
-    default:
-      console.log*("Game mode not recognized");
+  if (mode === 'gt_online' || mode === 'gt_local') {
+    // Remove player groups
+    $('underBoardLower').style.display = "flex";
+    $('p2PiecesAvail').style.display = "flex";
+    $('p1PiecesAvail').style.display = "flex";
+    // Switch buttons sets
+    $('local2pButtons').style.display = 'flex';
+    $('soloButtons').style.display = 'none';
+    Theme.setTheme(['#EDEDED', 'blue', 'red', 'gray'])
+    if (mode === 'gt_local') {
+      Data.setRules(local2pConfig);
+    } else {
+      Data.setRules({});
+    }
+  } else if (mode === 'gt_solo'){
+    // Remove player groups
+    $('underBoardLower').style.display = "none";
+    $('p2PiecesAvail').style.display = "none";
+    $('p1PiecesAvail').style.display = "none";
+    // Switch buttons sets
+    $('local2pButtons').style.display = 'none';
+    $('soloButtons').style.display = 'flex';
+    // Set player to player 1
+    Render.domObjs.playerSwitch.checked = false;
+    // Later: Remove timer
+    Data.setRules(soloConfig);
+    Theme.setTheme(['#EDEDED', 'black', null, 'gray'])
+  } else {
+    console.log("Game mode not recognized");
   }
 };
 
