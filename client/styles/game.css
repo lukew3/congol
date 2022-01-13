@@ -137,6 +137,9 @@ input + label #switchHandle {
 }
 .roundButton {
   background-color: #c4c4c4;
+  width: 15px;
+  padding: 0px 10px;
+  margin: 0px 3px;
   border-radius: 2px;
 }
 #roundGroup {

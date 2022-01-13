@@ -1,15 +1,15 @@
 div#gamePage.page
   div#gameContainer
     div#roundControl
-      div#roundMinusMax.roundButton.clickable -max
-      div#roundMinusOne.roundButton.clickable -1
-      div#roundMinusHalf.roundButton.clickable -½
+      img(src='/img/roundMax.svg')#roundMinusMax.roundButton.clickable.flipHoriz
+      img(src='/img/roundOne.svg')#roundMinusOne.roundButton.clickable.flipHoriz
+      img(src='/img/roundHalf.svg')#roundMinusHalf.roundButton.clickable.flipHoriz
       div#roundGroup
         p Round:
         p#roundCounter 0
-      div#roundPlusHalf.roundButton.clickable +½
-      div#roundPlusOne.roundButton.clickable +1
-      div#roundPlusMax.roundButton.clickable +max
+      img(src='/img/roundHalf.svg')#roundPlusHalf.roundButton.clickable
+      img(src='/img/roundOne.svg')#roundPlusOne.roundButton.clickable
+      img(src='/img/roundMax.svg')#roundPlusMax.roundButton.clickable
     div#gameBoard
     div#underBoard
       div#underBoardUpper
