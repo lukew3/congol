@@ -7,7 +7,8 @@ const generateUsername = () => {
 }
 
 const winProbability = (rating0, rating1) => {
-  return 1.0 * 1.0 / (1 + 1.0 * Math.pow(10, 1.0 * (rating0 - rating1) / 400));
+  //return 1.0 * 1.0 / (1 + 1.0 * Math.pow(10, 1.0 * (rating0 - rating1) / 400));
+  return 1.0 / (1 + Math.pow(10, (rating0 - rating1) / 400));
 }
 
 const updateRatings = async (player0Username, player1Username, outcome) => {
