@@ -28,15 +28,15 @@ const clearBoard = () => {
 const resetGame = () => {
   stopAutoGame();
   let inProgress = (Data.getGameVars().mode === 'gt_online') ? false : true;
-  Data.setGameVars({"data": createEmptyData(),
-											 "round": 0,
-                       "selectedRound": 0,
-											 "scores": [0, 0],
-											 "piecesAvail": [Data.getRules().startingPieceCount, Data.getRules().startingPieceCount],
-											 "timers": [Data.getRules().startingTime, Data.getRules().startingTime],
-											 "inProgress": inProgress,
-                       'moves': []
-										 });
+  Data.setGameVars({'data': createEmptyData(),
+                    'round': 0,
+                    'selectedRound': 0,
+										'scores': [0, 0],
+										'piecesAvail': [Data.getRules().startingPieceCount, Data.getRules().startingPieceCount],
+										'timers': [Data.getRules().startingTime, Data.getRules().startingTime],
+										'inProgress': inProgress,
+                    'moves': []
+									 });
 	Render.renderAll();
   Render.renderTimers();
   stopTimers();
