@@ -1,4 +1,14 @@
 div#settingsPage.page
   div.centeredCont
     h1 Settings
-    p Coming soon
+    form#settingsColors
+      div.settingsColorGroup
+        label player 1 cell color:
+        input#settingsColorPickerP1(type='color')
+        input#settingsColorTextP1(type='text')
+      div.settingsColorGroup
+        label player 2 cell color:
+        input#settingsColorPickerP2(type='color')
+        input#settingsColorTextP2(type='text')
+      input#settingsColorSubmit.button(type='submit' value='Submit')
+      p#settingsColorStatus

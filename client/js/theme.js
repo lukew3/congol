@@ -1,9 +1,17 @@
-let theme = [
-	'#EDEDED',
-	'blue',
-	'red',
-  'gray'
-];
+let presets = {
+	'2p': [
+		'#EDEDED',
+		'#0000FF',
+		'#FF0000',
+	  '#808080'
+	],
+	'solo': [
+		'#EDEDED',
+		'#000000',
+		null,
+	  '#808080'
+	]
+}
 
 const getTheme = () => {
   return theme;
@@ -18,9 +26,14 @@ const setTheme = (newTheme) => {
   r.style.setProperty('--grid-color', newTheme[3]);
 }
 
-setTheme(theme);
+const setThemePreset = (presetName) => {
+	setTheme(presets[presetName]);
+}
+
+setTheme(presets['2p']);
 
 module.exports = {
   getTheme,
-  setTheme
+  setTheme,
+	setThemePreset
 }

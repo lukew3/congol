@@ -1,0 +1,10 @@
+.settingsColorGroup {
+  display: flex;
+  align-content: center;
+}
+.settingsColorGroup label {
+  padding: 5px 0;
+}
+.settingsColorGroup * {
+  margin: 0 5px;
+}

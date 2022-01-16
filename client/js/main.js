@@ -4,3 +4,4 @@ require("./game/game.js");
 require("./newGame.js");
 require("./signupLogin.js");
 require("./user.js");
+require("./settings.js");
