@@ -85,7 +85,8 @@ socket.on('gameForfeited', (winner) => {
 })
 
 const sendForfeit = () => {
-	socket.emit('forfeit');
+	if (Data.getGameVars().inProgress)
+		socket.emit('forfeit');
 }
 
 const requestGame = (roomId=undefined) => {
