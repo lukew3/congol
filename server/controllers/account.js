@@ -35,7 +35,7 @@ const signUp = async (reqBody) => {
       username: reqBody.username,
       password: pwdHash,
       rating: 1000,
-      theme: defaultTheme
+      customTheme: defaultTheme
     });
     return {
       username: reqBody.username,
@@ -84,14 +84,14 @@ const getUser = async (username) => { // Include cookies or token in parameters?
 const getTheme = async (username) => {
   let user = await mongoDB().collection('users').findOne({ username: username });
   // Only need this if statement for accounts created before 1/16/22
-  if (user.theme)
-    return user.theme;
+  if (user.customTheme)
+    return user.customTheme;
   else
     return defaultTheme;
 }
 
 const setTheme = async (username, reqBody) => {
-  mongoDB().collection('users').updateOne({'username': username}, {'$set': { 'theme': reqBody }})
+  mongoDB().collection('users').updateOne({'username': username}, {'$set': { 'customTheme': reqBody }})
 }
 
 module.exports = {

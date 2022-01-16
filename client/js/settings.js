@@ -19,11 +19,16 @@ $('settingsColorPickerP2').addEventListener('change', () => {$('settingsColorTex
 $('settingsColorTextP2').value = theme[2];
 $('settingsColorTextP2').addEventListener('input', () => {$('settingsColorPickerP2').value = $('settingsColorTextP2').value});
 
+$('settingsColorPickerGrid').value = theme[3];
+$('settingsColorPickerGrid').addEventListener('change', () => {$('settingsColorTextGrid').value = $('settingsColorPickerGrid').value});
+$('settingsColorTextGrid').value = theme[3];
+$('settingsColorTextGrid').addEventListener('input', () => {$('settingsColorPickerGrid').value = $('settingsColorTextGrid').value});
 
 $('settingsColorSubmit').addEventListener('click', (e) => {
   e.preventDefault();
   setColor(1, $('settingsColorPickerP1').value);
   setColor(2, $('settingsColorPickerP2').value);
+  setColor(3, $('settingsColorPickerGrid').value);
   axiosApiInstance.post('/api/setTheme', theme);
   $('settingsColorStatus').innerHTML = 'Colors set successfully';
   setTimeout(() => {
