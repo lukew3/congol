@@ -33,7 +33,7 @@ const handleGameRequest = async (io, socket, reqData) => {
   if (reqData.roomId !== -1) {
     roomId = reqData.roomId;
   } else {
-    roomId = await newGameId(reqData.username, reqData.private);
+    roomId = await newGameId(reqData.username, reqData.private, reqData.rated);
   }
   let game = await mongoDB().collection('games').findOne({'shortId': roomId});
   // If game is null, tell the user that the game was not found and exit function
@@ -96,7 +96,7 @@ const receiveMove = async (io, moveData, roomId) => {
   }
 };
 
-const newGameId = async (username, private) => {
+const newGameId = async (username, private, rated) => {
   // Should take arguments like boardSize, time, and rating
   let game;
   // Should get the roomsize from game object, and game object should be updated when a user joins
@@ -104,18 +104,14 @@ const newGameId = async (username, private) => {
   if (!private) {
     // Don't need to search for a game if you are creating  private game
     // If user is a guest, don't check for a game without a user with the same name
-    if (username.substring(0,6) === 'guest_') {
-      game = await mongoDB().collection('games').findOne({
-        'p2Username': 'waiting',
-        'private': false
-      });
-    } else {
-      game = await mongoDB().collection('games').findOne({
-        'p2Username': 'waiting',
-        'p1Username': {'$ne': username},
-        'private': false
-      });
-    }
+    if (username.substring(0,6) === 'guest_')
+      rated = false;
+    game = await mongoDB().collection('games').findOne({
+      'p2Username': 'waiting',
+      'p1Username': {'$ne': username},
+      'private': false,
+      'rated': rated
+    });
   }
   // Create new game if no open game found
   if (!game) {
@@ -127,7 +123,8 @@ const newGameId = async (username, private) => {
       p2Username: 'waiting',
       winner: undefined,
       shortId: nanoid(3),
-      private: private
+      private: private,
+      rated: rated
     })
     game = await mongoDB().collection('games').findOne({'_id': insertData.insertedId});
   };
@@ -152,7 +149,7 @@ const endGame = async (roomId, endData) => {
     'timers': endData.timers
   }});
   let game = await mongoDB().collection('games').findOne({'shortId': roomId});
-  if (game.p1Username.substring(0, 6) !== 'guest_' && game.p2Username.substring(0, 6) !== 'guest_') {
+  if (game.rated && game.p1Username.substring(0, 6) !== 'guest_' && game.p2Username.substring(0, 6) !== 'guest_') {
     updateRatings(game.p1Username, game.p2Username, game.winner);
   }
 }

@@ -83,6 +83,7 @@ const requestGame = (roomId=undefined) => {
 	socket.emit('gameRequest', {
     roomId,
 		private: $('privateCheckbox').checked,
+		rated: $('ratedCheckbox').checked,
 		token: localStorage.access_token
   });
 };
