@@ -49,7 +49,7 @@ const loadUser = async (username=undefined) => {
 const addGame = (game, username) => {
   if (game.winner === null) return;
   let playerId = (game.p1Username === username) ? 0 : 1;
-  let outcome = (game.scores[playerId]>game.scores[Math.abs(playerId-1)]) ? 'W' : 'L';
+  let outcome = (game[`p${game.winner+1}Username`] === username) ? 'W' : 'L';
   if (outcome === 'W') {
     loadedUser.record.wins = loadedUser.record.wins + 1;
   } else if (outcome === 'L') {
