@@ -20,6 +20,7 @@ initColorGroup(0, 'BoardBg');
 initColorGroup(1, 'P1');
 initColorGroup(2, 'P2');
 initColorGroup(3, 'Grid');
+initColorGroup(4, 'PageBg');
 
 $('settingsColorSubmit').addEventListener('click', (e) => {
   e.preventDefault();
@@ -27,6 +28,7 @@ $('settingsColorSubmit').addEventListener('click', (e) => {
   setColor(1, $('settingsColorPickerP1').value);
   setColor(2, $('settingsColorPickerP2').value);
   setColor(3, $('settingsColorPickerGrid').value);
+  setColor(4, $('settingsColorPickerPageBg').value);
   axiosApiInstance.post('/api/setTheme', theme);
   $('settingsColorStatus').innerHTML = 'Colors set successfully';
   setTimeout(() => {

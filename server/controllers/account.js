@@ -7,7 +7,8 @@ const defaultTheme = [
 	'#EDEDED',
 	'#0000FF',
 	'#FF0000',
-	'#808080'
+	'#808080',
+  '#E0E0E0'
 ]
 
 const signUp = async (reqBody) => {
@@ -84,7 +85,7 @@ const getUser = async (username) => { // Include cookies or token in parameters?
 const getTheme = async (username) => {
   let user = await mongoDB().collection('users').findOne({ username: username });
   // Only need this if statement for accounts created before 1/16/22
-  if (user.customTheme)
+  if (user && user.customTheme)
     return user.customTheme;
   else
     return defaultTheme;
