@@ -43,13 +43,16 @@ const initBoard = () => {
 
 const renderBoard = () => {
   let data = Data.getGameVars().data;
-  let colors = Theme.getTheme();
   let boardSize = Data.getRules().boardSize;
   let cell, cellObj;
   data.forEach((row, y) => {
     row.forEach((cell, x) => {
       cellObj = $(`cell-${y*boardSize+x}`);
-      cellObj.style.backgroundColor = colors[cell];
+      if (cell == 0) {
+        cellObj.className = 'cell';
+      } else {
+        cellObj.className = `cell p${cell}Cell`
+      }
     });
   });
 };
@@ -73,8 +76,8 @@ const renderPieces = () => {
     domObjs.piecesObjs[p].innerHTML = "";
     for (let i = 0; i < piecesAvail[p]; i++) {
       let newCell = document.createElement('div');
-      newCell.classList.add('cell');
-      newCell.style = `width: ${gameRules.cellWH/2}px; height: ${gameRules.cellWH/2}px; background-color: ${Theme.getTheme()[p+1]}`
+      newCell.className = `cell p${p+1}Cell`
+      newCell.style = `width: ${gameRules.cellWH/2}px; height: ${gameRules.cellWH/2}px;`
       domObjs.piecesObjs[p].append(newCell);
     }
   }

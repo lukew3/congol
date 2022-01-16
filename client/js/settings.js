@@ -10,25 +10,25 @@ const setColor = (id, value) => {
 }
 
 const initColorGroup = (id, name) => {
-  $(`settingsColorPicker${name}`).value = theme[id];
-  $(`settingsColorPicker${name}`).addEventListener('change', () => {$(`settingsColorText${name}`).value = $(`settingsColorPicker${name}`).value});
-  $(`settingsColorText${name}`).value = theme[id];
-  $(`settingsColorText${name}`).addEventListener('input', () => {$(`settingsColorPicker${name}`).value = $(`settingsColorText${name}`).value});
+  $(`settingsColorPicker_${name}`).value = theme[name];
+  $(`settingsColorPicker_${name}`).addEventListener('change', () => {$(`settingsColorText_${name}`).value = $(`settingsColorPicker_${name}`).value});
+  $(`settingsColorText_${name}`).value = theme[name];
+  $(`settingsColorText_${name}`).addEventListener('input', () => {$(`settingsColorPicker_${name}`).value = $(`settingsColorText_${name}`).value});
 }
 
-initColorGroup(0, 'BoardBg');
-initColorGroup(1, 'P1');
-initColorGroup(2, 'P2');
-initColorGroup(3, 'Grid');
-initColorGroup(4, 'PageBg');
+initColorGroup(0, 'board-bg-color');
+initColorGroup(1, 'p1-color');
+initColorGroup(2, 'p2-color');
+initColorGroup(3, 'grid-color');
+initColorGroup(4, 'page-bg');
 
 $('settingsColorSubmit').addEventListener('click', (e) => {
   e.preventDefault();
-  setColor(0, $('settingsColorPickerBoardBg').value);
-  setColor(1, $('settingsColorPickerP1').value);
-  setColor(2, $('settingsColorPickerP2').value);
-  setColor(3, $('settingsColorPickerGrid').value);
-  setColor(4, $('settingsColorPickerPageBg').value);
+  setColor('board-bg-color', $('settingsColorPicker_board-bg-color').value);
+  setColor('p1-color', $('settingsColorPicker_p1-color').value);
+  setColor('p2-color', $('settingsColorPicker_p2-color').value);
+  setColor('grid-color', $('settingsColorPicker_grid-color').value);
+  setColor('page-bg', $('settingsColorPicker_page-bg').value);
   axiosApiInstance.post('/api/setTheme', theme);
   $('settingsColorStatus').innerHTML = 'Colors set successfully';
   setTimeout(() => {

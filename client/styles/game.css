@@ -19,6 +19,14 @@
         background-color: #EDEDED;
 }
 
+.p1Cell {
+  background-color: var(--p1-color);
+}
+
+.p2Cell {
+  background-color: var(--p2-color);
+}
+
 #roundCtrCont {
         display: flex;
         width: 100%;

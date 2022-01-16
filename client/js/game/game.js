@@ -12,7 +12,7 @@ document.addEventListener('click', (e) => {
     playerId = 1;
   else
     playerId = (Render.domObjs.playerSwitch.checked) ? 2 : 1;
-  if (element.className === "cell") {
+  if (element.classList.contains('cell')) {
 	  let num = -Number(element.id.match(/\-[0-9a-z]+$/i)[0]);
     GameCore.manualToggleCell(num, playerId);
   };

@@ -3,13 +3,13 @@ const bcrypt = require('bcrypt');
 const { mongoDB } = require("../mongodb");
 
 const saltRounds = 10;
-const defaultTheme = [
-	'#EDEDED',
-	'#0000FF',
-	'#FF0000',
-	'#808080',
-  '#E0E0E0'
-]
+const defaultTheme = {
+  'board-bg-color': '#EDEDED',
+  'p1-color': '#0000FF',
+  'p2-color': '#FF0000',
+  'grid-color': '#808080',
+  'page-bg': '#E0E0E0'
+};
 
 const signUp = async (reqBody) => {
   if (reqBody.password === undefined || reqBody.username === undefined || reqBody.email === undefined) {
