@@ -1,4 +1,5 @@
 const Theme = require('./theme.js');
+const { axiosApiInstance } = require('./axiosHelper.js');
 
 /* colors */
 let theme = Theme.getTheme();
@@ -23,6 +24,7 @@ $('settingsColorSubmit').addEventListener('click', (e) => {
   e.preventDefault();
   setColor(1, $('settingsColorPickerP1').value);
   setColor(2, $('settingsColorPickerP2').value);
+  axiosApiInstance.post('/api/setTheme', theme);
   $('settingsColorStatus').innerHTML = 'Colors set successfully';
   setTimeout(() => {
     $('settingsColorStatus').innerHTML = '';

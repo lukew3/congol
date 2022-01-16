@@ -1,7 +1,14 @@
 const Token = require('../token.js');
 const bcrypt = require('bcrypt');
 const { mongoDB } = require("../mongodb");
+
 const saltRounds = 10;
+const defaultTheme = [
+	'#EDEDED',
+	'#0000FF',
+	'#FF0000',
+	'#808080'
+]
 
 const signUp = async (reqBody) => {
   if (reqBody.password === undefined || reqBody.username === undefined || reqBody.email === undefined) {
@@ -27,7 +34,8 @@ const signUp = async (reqBody) => {
       email: reqBody.email,
       username: reqBody.username,
       password: pwdHash,
-      rating: 1000
+      rating: 1000,
+      theme: defaultTheme
     });
     return {
       username: reqBody.username,
@@ -73,8 +81,23 @@ const getUser = async (username) => { // Include cookies or token in parameters?
   }
 }
 
+const getTheme = async (username) => {
+  let user = await mongoDB().collection('users').findOne({ username: username });
+  // Only need this if statement for accounts created before 1/16/22
+  if (user.theme)
+    return user.theme;
+  else
+    return defaultTheme;
+}
+
+const setTheme = async (username, reqBody) => {
+  mongoDB().collection('users').updateOne({'username': username}, {'$set': { 'theme': reqBody }})
+}
+
 module.exports = {
   signUp,
   login,
-  getUser
+  getUser,
+  getTheme,
+  setTheme
 }

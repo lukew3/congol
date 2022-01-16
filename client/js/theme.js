@@ -1,3 +1,5 @@
+const { axiosApiInstance } = require('./axiosHelper.js');
+
 let presets = {
 	'2p': [
 		'#EDEDED',
@@ -5,20 +7,22 @@ let presets = {
 		'#FF0000',
 	  '#808080'
 	],
+	/*
 	'solo': [
 		'#EDEDED',
 		'#000000',
 		null,
 	  '#808080'
 	]
+	*/
 }
 
 const getTheme = () => {
-  return theme;
+  return JSON.parse(localStorage.getItem('theme'));
 }
 
 const setTheme = (newTheme) => {
-  theme = newTheme;
+	localStorage.setItem('theme', JSON.stringify(newTheme));
   var r = document.querySelector(':root');
   r.style.setProperty('--board-bg-color', newTheme[0]);
   r.style.setProperty('--p1-color', newTheme[1]);
@@ -30,7 +34,9 @@ const setThemePreset = (presetName) => {
 	setTheme(presets[presetName]);
 }
 
-setTheme(presets['2p']);
+axiosApiInstance.get('/api/getTheme').then((res) => {
+	setTheme(res.data);
+})
 
 module.exports = {
   getTheme,

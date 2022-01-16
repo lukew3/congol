@@ -17,6 +17,16 @@ const setup = (app) => {
     // if (username === user.username) // send private details
     res.send(user)
   });
+
+  app.get('/api/getTheme', Token.usernameFromTokenMiddleware, async (req, res) => {
+    console.log(req.username);
+    res.send(await AccountController.getTheme(req.username));
+  });
+
+  app.post('/api/setTheme', Token.usernameFromTokenMiddleware, async (req, res) => {
+    await AccountController.setTheme(req.username, req.body);
+    res.sendStatus(200);
+  });
 }
 
 module.exports = {

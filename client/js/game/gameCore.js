@@ -213,7 +213,6 @@ const setGameMode = (mode) => {
     // Switch buttons sets
     $('local2pButtons').style.display = 'flex';
     $('soloButtons').style.display = 'none';
-    Theme.setThemePreset('2p')
     if (mode === 'gt_local') {
       Data.setRules(local2pConfig);
     } else {
@@ -231,7 +230,6 @@ const setGameMode = (mode) => {
     Render.domObjs.playerSwitch.checked = false;
     // Later: Remove timer
     Data.setRules(soloConfig);
-    Theme.setThemePreset('solo')
   } else {
     console.log("Game mode not recognized");
   }
