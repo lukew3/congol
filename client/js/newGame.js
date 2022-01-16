@@ -25,7 +25,7 @@ $('newGameStartButton').addEventListener('click', () => {
 	GameCore.setGameMode(gtSelected);
 	Data.setRules({"boardSize": Number(bsSelected.slice(3, 5))});
 	Render.initBoard();
-	GameCore.resetBoard();
+	GameCore.resetGame();
 	if (gtSelected === 'gt_local') {
 		Router.setPath('localGame');
 	} else if (gtSelected === 'gt_solo') {

@@ -25,7 +25,7 @@ const clearBoard = () => {
   Render.renderAll();
   Render.domObjs.playerSwitch.checked = false;
 }
-const resetBoard = () => {
+const resetGame = () => {
   stopGame();
   let inProgress = (Data.getGameVars().mode === 'gt_online') ? false : true;
   Data.setGameVars({"data": createEmptyData(),
@@ -198,7 +198,6 @@ const endGame = (winner) => {
   stopTimers();
   // Should not use $
   $('winnerMessage').style.display = 'block';
-  // Set this to the actual winner of the game
   $('winnerMessage').innerHTML = `Player ${winner+1} wins!`;
   $('submitMoveButton').style.display = 'none';
   $('newGame2pButton').style.display = 'block';
@@ -273,7 +272,7 @@ module.exports = {
   manualToggleCell,
   runRound,
   clearBoard,
-  resetBoard,
+  resetGame,
   stopGame,
   runGame,
   setGameMode,

@@ -32,7 +32,7 @@ $('submitMoveButton').addEventListener('click', (e) => {
 });
 
 $('newGame2pButton').addEventListener('click', (e) => {
-  GameCore.resetBoard();
+  GameCore.resetGame();
   Data.setGameVars({'moves': []});
   if (Data.getGameVars().mode === 'gt_online') {
     OnlineGame.requestGame(-1);
@@ -43,7 +43,7 @@ $('newGame2pButton').addEventListener('click', (e) => {
 });
 
 $('resetGameButton').addEventListener('click', (e) => {
-	GameCore.resetBoard();
+	GameCore.resetGame();
   Data.setGameVars({'moves': []});
 });
 
@@ -71,12 +71,12 @@ Render.initBoard();
 if (window.location.pathname.substring(0, 6) === '/game/') {
   GameCore.setGameMode('gt_online');
   Data.setRules({"boardSize": 15, "speciesCount": 2});
-	GameCore.resetBoard();
+	GameCore.resetGame();
 	OnlineGame.requestGame();
 } else if (window.location.pathname === '/soloGame') {
   Data.setGameVars({"inProgress": true});
   GameCore.setGameMode('gt_solo');
-  GameCore.resetBoard();
+  GameCore.resetGame();
 } else {
 	Data.setGameVars({"inProgress": true})
 	GameCore.setGameMode('gt_local');

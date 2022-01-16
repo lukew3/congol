@@ -29,7 +29,7 @@ const loadUser = async (username=undefined) => {
       event.preventDefault();
       GameCore.setGameMode('gt_online');
       Data.setRules({"boardSize": 15, "speciesCount": 2});
-    	GameCore.resetBoard();
+    	GameCore.resetGame();
     	OnlineGame.requestGame(element.href.substring(element.href.lastIndexOf('/') + 1));
     });
   });
