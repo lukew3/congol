@@ -34,7 +34,8 @@ const resetGame = () => {
 											 "scores": [0, 0],
 											 "piecesAvail": [Data.getRules().startingPieceCount, Data.getRules().startingPieceCount],
 											 "timers": [Data.getRules().startingTime, Data.getRules().startingTime],
-											 "inProgress": inProgress
+											 "inProgress": inProgress,
+                       'moves': []
 										 });
 	Render.renderAll();
   Render.renderTimers();
@@ -162,13 +163,11 @@ const updatePieces = () => {
   Data.setGameVars(gv);
 };
 const manualToggleCell = (cellNum, playerId) => {
-  console.log('hit manual toggle')
   if (!Data.getGameVars().inProgress ||
   (Data.getGameVars().round !== Data.getGameVars().selectedRound) ||
 	(Data.getGameVars().mode === 'gt_online' && Data.getGameVars().playerId != playerId-1)) {
 		return;
   }
-  console.log('toggleCell')
   toggleCell(cellNum, playerId);
 }
 const toggleCell = (cellNum, playerId) => {
