@@ -38,7 +38,7 @@ const initSocketServer = (server) => {
       GameMethods.endGame(roomId, endData);
     });
     socket.on('disconnect', async () => {
-      GameMethods.disconnect(roomId, username);
+      GameMethods.disconnect(io, roomId, username);
       connectionsCounter--;
       io.sockets.emit('connectionCountUpdate', connectionsCounter);
     });

@@ -75,6 +75,15 @@ socket.on('broadcastMove', (move) => {
   Data.setGameVars({selectedRound: Data.getGameVars().round})
 })
 
+socket.on('gameForfeited', (winner) => {
+	GameCore.endGame(winner);
+	socket.emit('endGame', {
+		winner: winner,
+		timers: Data.getGameVars().timers,
+		scores: Data.getGameVars().scores
+	})
+})
+
 const requestGame = (roomId=undefined) => {
   if (!roomId)
 	 roomId = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);

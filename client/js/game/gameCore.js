@@ -281,5 +281,6 @@ module.exports = {
   toggleCells,
   runMove,
   runMoves,
-  pushMove
+  pushMove,
+  endGame
 }

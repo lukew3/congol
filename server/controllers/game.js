@@ -154,7 +154,7 @@ const endGame = async (roomId, endData) => {
   }
 }
 
-const forfeitGame = async (roomId, username, gameData=null) => {
+const forfeitGame = async (io, roomId, username, gameData=null) => {
   if (!gameData)
     gameData = await mongoDB().collection('games').findOne({'shortId': roomId});
   let winner = (username === gameData.p1Username) ? 1 : 0;
@@ -163,15 +163,16 @@ const forfeitGame = async (roomId, username, gameData=null) => {
     scores: ['-', '-'],
     timers: ['-', '-']
   });
+  io.sockets.in(`game-${roomId}`).emit('gameForfeited', winner);
 }
 
-const disconnect = async (roomId, username) => {
+const disconnect = async (io, roomId, username) => {
   let gameData = await mongoDB().collection('games').findOne({'shortId': roomId});
   // Delete game if player 2 didn't join
   if (gameData !== null && gameData.p2Username === 'waiting') {
     await mongoDB().collection('games').deleteOne({'shortId': roomId});
   } else if (gameData !== null && gameData.inProgress) {
-    forfeitGame(roomId, username, gameData);
+    forfeitGame(io, roomId, username, gameData);
   }
 }
 
