@@ -84,6 +84,10 @@ socket.on('gameForfeited', (winner) => {
 	})
 })
 
+const sendForfeit = () => {
+	socket.emit('forfeit');
+}
+
 const requestGame = (roomId=undefined) => {
   if (!roomId)
 	 roomId = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
@@ -104,4 +108,5 @@ const sendMove = () => {
 module.exports = {
   requestGame,
   sendMove,
+	sendForfeit
 }

@@ -184,5 +184,6 @@ module.exports = {
   receiveMove,
   newGameId,
   endGame,
-  disconnect
+  disconnect,
+  forfeitGame
 }

@@ -199,7 +199,7 @@ const endGame = (winner) => {
   // Should not use $
   $('winnerMessage').style.display = 'block';
   $('winnerMessage').innerHTML = `Player ${winner+1} wins!`;
-  $('submitMoveButton').style.display = 'none';
+  $('local2pButtons').style.display = 'none';
   $('newGame2pButton').style.display = 'block';
 };
 

@@ -32,6 +32,9 @@ const initSocketServer = (server) => {
       moveData.username = username;
       GameMethods.receiveMove(io, moveData, roomId);
     });
+    socket.on('forfeit', () => {
+      GameMethods.forfeitGame(io, roomId, username);
+    })
     socket.on('endGame', async (endData) => {
       // Should winner be set to the username of the winner instead of the playerId?
       endData.username = username;

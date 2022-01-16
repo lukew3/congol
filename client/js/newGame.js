@@ -18,7 +18,7 @@ const setNewGameSelections = () => {
 $('newGameStartButton').addEventListener('click', () => {
 	Router.setPage('gamePage');
 	// ensure that old finished game display stuff is hidden
-	$('submitMoveButton').style.display = 'block';
+	$('local2pButtons').style.display = 'flex';
 	$('newGame2pButton').style.display = 'none';
 	$('winnerMessage').style.display = 'none';
 	//gameObj.boardSize = Number(bsSelected.splice(3, 5));

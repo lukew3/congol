@@ -18,6 +18,10 @@ document.addEventListener('click', (e) => {
   };
 });
 
+$('forfeitButton').addEventListener('click', (e) => {
+  OnlineGame.sendForfeit();
+})
+
 $('submitMoveButton').addEventListener('click', (e) => {
   if (Data.getGameVars().mode === 'gt_online') {
     if (Data.getGameVars().playerId !== ((Render.domObjs.playerSwitch.checked) ? 1 : 0)) {
@@ -37,7 +41,7 @@ $('newGame2pButton').addEventListener('click', (e) => {
   if (Data.getGameVars().mode === 'gt_online') {
     OnlineGame.requestGame(-1);
   }
-	$('submitMoveButton').style.display = 'block';
+	$('local2pButtons').style.display = 'flex';
 	$('newGame2pButton').style.display = 'none';
 	$('winnerMessage').style.display = 'none';
 });
