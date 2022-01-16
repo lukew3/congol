@@ -50,10 +50,10 @@ $('resetGameButton').addEventListener('click', (e) => {
 // 2pPlayground Buttons
 $('startStopButton').addEventListener('click', (e) => {
   if (Data.getGameVars().running) {
-    GameCore.stopGame();
+    GameCore.stopAutoGame();
     $('startStopButton').innerHTML = "Start";
   } else {
-    GameCore.runGame();
+    GameCore.runAutoGame();
     $('startStopButton').innerHTML = "Stop";
   }
 });

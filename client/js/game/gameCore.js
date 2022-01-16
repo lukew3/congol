@@ -26,7 +26,7 @@ const clearBoard = () => {
   Render.domObjs.playerSwitch.checked = false;
 }
 const resetGame = () => {
-  stopGame();
+  stopAutoGame();
   let inProgress = (Data.getGameVars().mode === 'gt_online') ? false : true;
   Data.setGameVars({"data": createEmptyData(),
 											 "round": 0,
@@ -43,14 +43,14 @@ const resetGame = () => {
     updateTimer();
   Render.domObjs.playerSwitch.checked = false;
 };
-const stopGame = () => {
+const stopAutoGame = () => {
   // for each to in roundTimeouts, clear timeout
   Data.getGameVars().roundTimeouts.forEach((id) => {
     clearTimeout(id);
   });
   Data.setGameVars({"running": false});
 };
-const runGame = () => {
+const runAutoGame = () => {
   for (let r = 0; r < Data.getRules().totalRounds; r++) {
     Data.getGameVars().roundTimeouts.push(
       setTimeout(() => {
@@ -273,8 +273,8 @@ module.exports = {
   runRound,
   clearBoard,
   resetGame,
-  stopGame,
-  runGame,
+  stopAutoGame,
+  runAutoGame,
   setGameMode,
   createEmptyData,
   updateTimer,
