@@ -1,3 +1,6 @@
+.settingsGroup {
+  margin: 10px;
+}
 .settingsColorGroup {
   display: flex;
   align-content: center;
