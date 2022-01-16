@@ -11,3 +11,14 @@
 .settingsColorGroup * {
   margin: 0 5px;
 }
+#settingsColorSubmit {
+  font-size: 12pt;
+}
+#settingsImportExportButtons {
+  display: flex;
+}
+#settingsImportExportButtons * {
+  margin: 5px;
+  font-size: 10pt;
+  padding: 7px;
+}

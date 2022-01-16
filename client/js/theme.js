@@ -32,6 +32,7 @@ const setTheme = (newTheme) => {
   r.style.setProperty('--p2-color', newTheme['p2-color']);
   r.style.setProperty('--grid-color', newTheme['grid-color']);
 	r.style.setProperty('--page-bg', newTheme['page-bg']);
+	axiosApiInstance.post('/api/setTheme', newTheme);
 }
 
 const setThemePreset = (presetName) => {

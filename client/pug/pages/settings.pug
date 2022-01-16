@@ -3,6 +3,10 @@ div#settingsPage.page
     h1 Settings
     form#settingsColors.settingsGroup
       h2 Colors
+      div#settingsImportExportButtons
+        div#settingsColorsImport.button Import
+        input#settingsColorsImportFile(type='file' style='display: none;')
+        div#settingsColorsExport.button Export
       div.settingsColorGroup
         label Board background color:
         input#settingsColorPicker_board-bg-color(type='color')

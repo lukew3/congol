@@ -1,37 +1,60 @@
 const Theme = require('./theme.js');
-const { axiosApiInstance } = require('./axiosHelper.js');
+var FileSaver = require('file-saver');
 
 /* colors */
 let theme = Theme.getTheme();
 
-const setColor = (id, value) => {
-  theme[id] = value;
-  Theme.setTheme(theme);
+const initColorGroups = () => {
+  Object.keys(theme).forEach((key) => {
+    $(`settingsColorPicker_${key}`).value = theme[key];
+    $(`settingsColorPicker_${key}`).addEventListener('change', () => {$(`settingsColorText_${key}`).value = $(`settingsColorPicker_${key}`).value});
+    $(`settingsColorText_${key}`).value = theme[key];
+    $(`settingsColorText_${key}`).addEventListener('input', () => {$(`settingsColorPicker_${key}`).value = $(`settingsColorText_${key}`).value});
+  })
 }
 
-const initColorGroup = (id, name) => {
-  $(`settingsColorPicker_${name}`).value = theme[name];
-  $(`settingsColorPicker_${name}`).addEventListener('change', () => {$(`settingsColorText_${name}`).value = $(`settingsColorPicker_${name}`).value});
-  $(`settingsColorText_${name}`).value = theme[name];
-  $(`settingsColorText_${name}`).addEventListener('input', () => {$(`settingsColorPicker_${name}`).value = $(`settingsColorText_${name}`).value});
-}
-
-initColorGroup(0, 'board-bg-color');
-initColorGroup(1, 'p1-color');
-initColorGroup(2, 'p2-color');
-initColorGroup(3, 'grid-color');
-initColorGroup(4, 'page-bg');
-
-$('settingsColorSubmit').addEventListener('click', (e) => {
-  e.preventDefault();
-  setColor('board-bg-color', $('settingsColorPicker_board-bg-color').value);
-  setColor('p1-color', $('settingsColorPicker_p1-color').value);
-  setColor('p2-color', $('settingsColorPicker_p2-color').value);
-  setColor('grid-color', $('settingsColorPicker_grid-color').value);
-  setColor('page-bg', $('settingsColorPicker_page-bg').value);
-  axiosApiInstance.post('/api/setTheme', theme);
+const showSuccess = () => {
   $('settingsColorStatus').innerHTML = 'Colors set successfully';
   setTimeout(() => {
     $('settingsColorStatus').innerHTML = '';
   }, 2000);
+}
+
+$('settingsColorSubmit').addEventListener('click', (e) => {
+  e.preventDefault();
+  theme['board-bg-color'] = $('settingsColorPicker_board-bg-color').value;
+  theme['p1-color'] = $('settingsColorPicker_p1-color').value;
+  theme['p2-color'] = $('settingsColorPicker_p2-color').value;
+  theme['grid-color'] = $('settingsColorPicker_grid-color').value;
+  theme['page-bg'] = $('settingsColorPicker_page-bg').value;
+  Theme.setTheme(theme);
+  showSuccess();
 })
+
+$('settingsColorsExport').addEventListener('click', (e) => {
+  var blob = new Blob([JSON.stringify(Theme.getTheme(), null, 2)], {type: 'application/json'});
+  FileSaver.saveAs(blob, "theme.json");
+});
+
+$('settingsColorsImport').addEventListener('click', (e) => {
+  $('settingsColorsImportFile').click();
+});
+
+$('settingsColorsImportFile').addEventListener('change', (e) => {
+  console.log('file selected')
+  let file = $('settingsColorsImportFile').files[0];
+  if (!file) return;
+  var fr = new FileReader();
+  fr.onload = () => {
+    Theme.setTheme(JSON.parse(fr.result));
+    theme = JSON.parse(fr.result);
+    Object.keys(theme).forEach((key) => {
+      $(`settingsColorPicker_${key}`).value = theme[key];
+      $(`settingsColorText_${key}`).value = theme[key];
+    })
+    showSuccess();
+  }
+  fr.readAsText($('settingsColorsImportFile').files[0]);
+});
+
+initColorGroups();
