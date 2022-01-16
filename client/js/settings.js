@@ -10,14 +10,14 @@ const setColor = (id, value) => {
 }
 
 $('settingsColorPickerP1').value = theme[1];
-$('settingsColorPickerP2').addEventListener('change', () => {$('settingsColorTextP1').value = $('settingsColorPickerP1').value});
+$('settingsColorPickerP1').addEventListener('change', () => {$('settingsColorTextP1').value = $('settingsColorPickerP1').value});
 $('settingsColorTextP1').value = theme[1];
-$('settingsColorPickerP2').addEventListener('change', () => {$('settingsColorPickerP1').value = $('settingsColorTextP1').value});
+$('settingsColorTextP1').addEventListener('input', () => {$('settingsColorPickerP1').value = $('settingsColorTextP1').value});
 
 $('settingsColorPickerP2').value = theme[2];
 $('settingsColorPickerP2').addEventListener('change', () => {$('settingsColorTextP2').value = $('settingsColorPickerP2').value});
 $('settingsColorTextP2').value = theme[2];
-$('settingsColorPickerP2').addEventListener('change', () => {$('settingsColorPickerP2').value = $('settingsColorTextP2').value});
+$('settingsColorTextP2').addEventListener('input', () => {$('settingsColorPickerP2').value = $('settingsColorTextP2').value});
 
 
 $('settingsColorSubmit').addEventListener('click', (e) => {

@@ -19,7 +19,6 @@ const setup = (app) => {
   });
 
   app.get('/api/getTheme', Token.usernameFromTokenMiddleware, async (req, res) => {
-    console.log(req.username);
     res.send(await AccountController.getTheme(req.username));
   });
 
