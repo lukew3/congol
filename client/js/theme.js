@@ -21,7 +21,7 @@ let presets = {
 }
 
 const getTheme = () => {
-  return JSON.parse(localStorage.getItem('theme'));
+  return JSON.parse(localStorage.getItem('theme')) || presets['2p'];
 }
 
 const setTheme = (newTheme) => {
