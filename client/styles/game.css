@@ -16,7 +16,7 @@
         width: 31px;
         height: 31px;
         border: 1px var(--grid-color) solid;
-        background-color: #EDEDED;
+        background-color: var(--board-bg-color);
 }
 
 .p1Cell {
