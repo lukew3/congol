@@ -1,15 +1,13 @@
 const { axiosApiInstance } = require('./axiosHelper.js');
 
 let presets = {
-	'2p': [
-		{
+	'2p': {
 			'board-bg-color': '#EDEDED',
 			'p1-color': '#0000FF',
 			'p2-color': '#FF0000',
 			'grid-color': '#808080',
 			'page-bg': '#E0E0E0'
-		}
-	],
+	}
 	/*
 	'solo': [
 		'#EDEDED',
