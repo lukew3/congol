@@ -8,7 +8,9 @@ const defaultTheme = {
   'p1-color': '#0000FF',
   'p2-color': '#FF0000',
   'grid-color': '#808080',
-  'page-bg': '#E0E0E0'
+  'page-bg': '#E0E0E0',
+  'button-bg': '#C4C4C4',
+  'text-color': '#000000'
 };
 
 const signUp = async (reqBody) => {
