@@ -44,8 +44,6 @@ const setThemePreset = (presetName) => {
 
 setTheme(getTheme(), false);
 axiosApiInstance.get('/api/getTheme').then((res) => {
-	console.log(Object.keys(res.data).length);
-	console.log(Object.keys(presets['2p']).length)
 	if (Object.keys(res.data).length === Object.keys(presets['2p']).length)
 		setTheme(res.data);
 })
