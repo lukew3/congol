@@ -22,11 +22,9 @@ const showSuccess = () => {
 
 $('settingsColorSubmit').addEventListener('click', (e) => {
   e.preventDefault();
-  theme['board-bg-color'] = $('settingsColorPicker_board-bg-color').value;
-  theme['p1-color'] = $('settingsColorPicker_p1-color').value;
-  theme['p2-color'] = $('settingsColorPicker_p2-color').value;
-  theme['grid-color'] = $('settingsColorPicker_grid-color').value;
-  theme['page-bg'] = $('settingsColorPicker_page-bg').value;
+  Object.keys(theme).forEach((key) => {
+    theme[key] = $(`settingsColorPicker_${key}`).value;
+  });
   Theme.setTheme(theme);
   showSuccess();
 })

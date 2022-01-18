@@ -22,7 +22,7 @@ const getTheme = () => {
   return JSON.parse(localStorage.getItem('theme')) || presets['2p'];
 }
 
-const setTheme = (newTheme) => {
+const setTheme = (newTheme, upload=true) => {
 	localStorage.setItem('theme', JSON.stringify(newTheme));
   var r = document.querySelector(':root');
   r.style.setProperty('--board-bg-color', newTheme['board-bg-color']);
@@ -30,16 +30,23 @@ const setTheme = (newTheme) => {
   r.style.setProperty('--p2-color', newTheme['p2-color']);
   r.style.setProperty('--grid-color', newTheme['grid-color']);
 	r.style.setProperty('--page-bg', newTheme['page-bg']);
-	axiosApiInstance.post('/api/setTheme', newTheme);
+	// Set values of settings colors
+	Object.keys(newTheme).forEach((key) => {
+    $(`settingsColorPicker_${key}`).value = newTheme[key];
+    $(`settingsColorText_${key}`).value = newTheme[key];
+  })
+	if (upload) axiosApiInstance.post('/api/setTheme', newTheme);
 }
 
 const setThemePreset = (presetName) => {
 	setTheme(presets[presetName]);
 }
 
-setTheme(getTheme());
+setTheme(getTheme(), false);
 axiosApiInstance.get('/api/getTheme').then((res) => {
-	if (Object.keys(res.data).length === presets['2p'].length)
+	console.log(Object.keys(res.data).length);
+	console.log(Object.keys(presets['2p']).length)
+	if (Object.keys(res.data).length === Object.keys(presets['2p']).length)
 		setTheme(res.data);
 })
 
