@@ -7,8 +7,8 @@
     "build": "gulp build",
     "build-dev": "browserify client/js/main.js -o dist/bundle.js",
     "start": "npm run build; concurrently 'cd server; nodemon app.js' 'gulp watch'",
-    "deploy-local": "git pull; gulp build; cd server ; pm2 restart app.js",
-    "deploy": "gulp build; rsync -avP dist/ luke@congol.net:/home/luke/congol/dist; ssh luke@congol.net \"cd congol; git pull; cd server; pm2 restart app.js\"",
+    "deploy-local": "git pull; gulp build; cd server ; pm2 reload app.js",
+    "deploy": "gulp build; rsync -avP dist/ luke@congol.net:/home/luke/congol/dist; ssh luke@congol.net \"cd congol; git pull; cd server; pm2 reload app.js\"",
     "deploy-ghp": "gh-pages -d dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
