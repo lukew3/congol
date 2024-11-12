@@ -25,7 +25,7 @@ const initBoard = () => {
   let piecesAvail = Data.getGameVars().piecesAvail;
   let width = Math.min(screen.availWidth, 500);
   rules.boardWH = (width - 10) - ((width - 10) % rules.boardSize); // 10 pixels of space between board and edge of screen
-  rules.cellWH = rules.boardWH / rules.boardSize - 2; // 2 pixels for the border
+  rules.cellWH = rules.boardWH / rules.boardSize; // 2 pixels for the border
   domObjs.boardObj.innerHTML = "";
   domObjs.boardObj.style = `width: ${rules.boardWH}px; height: ${rules.boardWH}px`;
   domObjs.gameContainer.style = `width: ${rules.boardWH}px; height: ${rules.boardWH}px`;
